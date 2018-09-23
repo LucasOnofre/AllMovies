@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import onoffrice.allmovies.R
 
-class DiscoverActivity : AppCompatActivity() {
+class ActivityDiscover : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
