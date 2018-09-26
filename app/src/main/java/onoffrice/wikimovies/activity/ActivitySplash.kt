@@ -1,4 +1,4 @@
-package onoffrice.allmovies.activity
+package onoffrice.wikimovies.activity
 
 import android.os.Bundle
 import android.os.Handler
@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import kotlinx.android.synthetic.main.activity_splash.*
-import onoffrice.allmovies.R
-import onoffrice.allmovies.extension.startActivity
+import onoffrice.wikimovies.R
+import onoffrice.wikimovies.extension.startActivity
 
 
 class ActivitySplash : AppCompatActivity() {
@@ -20,24 +20,18 @@ class ActivitySplash : AppCompatActivity() {
         setDelayForActivity()
     }
 
-    /**
-     * Sets the handle that makes the transition delay
-     **/
     private fun setDelayForActivity() {
         val handle = Handler()
         handle.postDelayed({ startActivity<ActivityDiscover>()
-            finish() }, 3000)
+            finish() }, 4000)
     }
 
-    /**
-     * Set's the logo animation
-     **/
     private fun setLogoAnimation() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.logo_transition)
-        animation.duration = 3000
-        animation.fillAfter = true
-        animation.repeatMode = Animation.REVERSE
-        animation.repeatCount = 1
-        logo_all_movies.startAnimation(animation)
+        animation.repeatCount    = 1
+        animation.duration       = 2000
+        animation.fillAfter      = true
+        animation.repeatMode     = Animation.REVERSE
+        logo_wiki_movie.startAnimation(animation)
     }
 }

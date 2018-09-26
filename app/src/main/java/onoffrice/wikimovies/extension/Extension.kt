@@ -1,4 +1,4 @@
-package onoffrice.allmovies.extension
+package onoffrice.wikimovies.extension
 
 import android.app.Activity
 import android.content.Intent

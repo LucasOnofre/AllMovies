@@ -1,4 +1,4 @@
-package onoffrice.allmovies
+package onoffrice.wikimovies
 
 import org.junit.Test
 
