@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">WikiMovies</string>
     <string name="api_key">037b83eda5aad6b5c90898ea8ea94da3</string>
-    <string name="base_url_movieapi">https://api.themoviedb.org/3/</string>
+    <string name="base_url_movie_api">https://api.themoviedb.org/3/</string>
     <string name="url_movies_discover">discover/movie</string>
-
-
+    <string name="url_genres">genre/movie/list</string>
+    <string name="base_url_images">https://image.tmdb.org/t/p/w500</string>
 </resources>

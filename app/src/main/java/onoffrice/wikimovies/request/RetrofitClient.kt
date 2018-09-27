@@ -13,7 +13,7 @@ object RetrofitClient{
      */
     fun instance(context: Context): Retrofit {
 
-        val baseURL = context.resources.getString(R.string.base_url_movieapi)
+        val baseURL = context.resources.getString(R.string.base_url_movie_api)
         val retrofit     = Retrofit.Builder()
                                     .baseUrl(baseURL)
                                     .addConverterFactory(GsonConverterFactory.create())
