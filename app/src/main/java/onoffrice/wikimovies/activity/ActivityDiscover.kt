@@ -15,45 +15,51 @@ import retrofit2.Response
 
 class ActivityDiscover : AppCompatActivity() {
 
+   var  listMovies: ArrayList<Movie> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discover)
 
         requestMovies()
-        requestGenres()
 
     }
 
     /**
      * Return a movie list from the Discover
      */
-    fun requestMovies(){
+    fun requestMovies(count:Int=1){
 
-        var call: Call<Result>?
+        var page = count
+        RequestMovies(this).getDiscoverMovies(page).enqueue(object : retrofit2.Callback<Result> {
 
-        call = RequestMovies(this).getDiscoverMovies()
-        call?.enqueue(object:retrofit2.Callback<Result>{
+            override fun onResponse(call: Call<Result>, response: Response<Result>?) {
+                response?.body()?.movies?.let {
+                    listMovies.addAll(it)
+                }
 
-           override fun onResponse(call: Call<Result>, response: Response<Result>?) {
-               setMovieList(response?.body()?.movies)
+                if (page == 3)
+                    setMovieList(listMovies)
+                else{
+                    page = page + 1
+                    requestMovies(page)
+                }
+            }
 
-           }
-
-           override fun onFailure(call: Call<Result>, t: Throwable) {
-              //Resposta caso haja erro
-           }
-       })
+            override fun onFailure(call: Call<Result>, t: Throwable) {
+                //Resposta caso haja erro
+            }
+        })
     }
     /**
      * Return a movie list from the Discover
      */
     fun requestGenres(){
 
-        var call: Call<Genres>?
+        var call: Call<Genres>
 
         call = RequestMovies(this).getGenres()
-        call?.enqueue(object : retrofit2.Callback<Genres> {
+        call.enqueue(object : retrofit2.Callback<Genres> {
 
             override fun onResponse(call: Call<Genres>, response: Response<Genres>) {
                 response.body()
@@ -67,9 +73,7 @@ class ActivityDiscover : AppCompatActivity() {
     }
 
 
-
     private fun setMovieList(listMovies: ArrayList<Movie>?) {
-        TODO("NECESSARIO FAZER UM ARRAY DE ARRAYS, POIS É UMA LISTA COM LISTAS DENTRO!!!!!!!!!!")
 
         var recyclerView = lista_descobrir
         val layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)

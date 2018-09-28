@@ -24,9 +24,10 @@ class RequestMovies(private val context:Context){
     /**
      * Return a movie list from the Discover
      */
-    fun getDiscoverMovies():Call<Result>{
+    fun getDiscoverMovies(page:Int):Call<Result>{
         val endpoint = context.resources.getString(R.string.url_movies_discover)
         params.put("api_key",API_KEY)
+        params.put("page",page)
 
         return service.getDiscoverMovies(endpoint,params)
 
@@ -45,7 +46,7 @@ class RequestMovies(private val context:Context){
     private interface Service {
 
         @GET
-        fun getDiscoverMovies(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
+        fun getDiscoverMovies(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
 
         @GET
         fun getGenres(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Genres>
