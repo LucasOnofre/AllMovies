@@ -22,11 +22,11 @@ class ActivityDiscover : AppCompatActivity() {
         setContentView(R.layout.activity_discover)
 
         requestMovies()
-
     }
 
     /**
-     * Return a movie list from the Discover
+     * Return a movie list from the Discover, passing page as a param for the request
+     * Also its done a recursive function
      */
     fun requestMovies(count:Int=1){
 
@@ -41,11 +41,10 @@ class ActivityDiscover : AppCompatActivity() {
                 if (page == 3)
                     setMovieList(listMovies)
                 else{
-                    page = page + 1
+                    page += 1
                     requestMovies(page)
                 }
             }
-
             override fun onFailure(call: Call<Result>, t: Throwable) {
                 //Resposta caso haja erro
             }
@@ -72,7 +71,9 @@ class ActivityDiscover : AppCompatActivity() {
         })
     }
 
-
+    /**
+     * Send the list of movies to adapter
+     */
     private fun setMovieList(listMovies: ArrayList<Movie>?) {
 
         var recyclerView = lista_descobrir
