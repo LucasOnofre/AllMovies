@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".activity.ActivityDiscover">
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline"
@@ -30,89 +24,12 @@
 
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_favoritos"
+            android:id="@+id/lista"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_descobrir"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lista_favoritos" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_acao"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lista_descobrir" />
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_animacao"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lista_acao" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_comedia"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lista_animacao" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_fantasia"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lista_comedia"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_terror"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lista_fantasia"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_romance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lista_terror" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_ficcao"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/lista_romance" />
-
-    </android.support.constraint.ConstraintLayout>
-
-</ScrollView>
+</android.support.constraint.ConstraintLayout>
