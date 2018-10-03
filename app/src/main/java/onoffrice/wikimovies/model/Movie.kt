@@ -39,6 +39,12 @@ class Movie{
 
 }
 
+class ResultGenre {
+
+    @SerializedName("genres")
+    var genres:List<Genre>? = null
+}
+
 class Genre {
     var id:Int? = null
     var name:String? = null
@@ -55,12 +61,3 @@ class MovieListGenre{
 }
 
 
-
-class MovieCategory {
-
-    @SerializedName("name")
-    var name:String? = null
-
-    @SerializedName("id")
-    var id:Int? = null
-}

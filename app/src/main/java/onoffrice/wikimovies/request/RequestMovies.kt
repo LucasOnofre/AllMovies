@@ -2,8 +2,7 @@ package onoffrice.wikimovies.request
 
 import android.content.Context
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.activity.ResultGenre
-import onoffrice.wikimovies.model.Result
+import onoffrice.wikimovies.model.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
@@ -24,13 +23,12 @@ class RequestMovies(private val context:Context){
     /**
      * Return a movie list from the Discover
      */
-    fun getDiscoverMovies(page:Int):Call<Result>{
-        val endpoint = context.resources.getString(R.string.url_movies_discover)
+    fun getPopularsMovies(page:Int):Call<Result>{
+        val endpoint = context.resources.getString(R.string.url_movies_popular)
         params.put("api_key",API_KEY)
         params.put("page",page)
 
-        return service.getDiscoverMovies(endpoint,params)
-
+        return service.getPopularsMovies(endpoint,params)
     }
 
     /**
@@ -46,7 +44,7 @@ class RequestMovies(private val context:Context){
     private interface Service {
 
         @GET
-        fun getDiscoverMovies(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
+        fun getPopularsMovies(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
 
         @GET
         fun getGenres(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<ResultGenre>

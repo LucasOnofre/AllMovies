@@ -2,15 +2,13 @@ package onoffrice.wikimovies.activity
 
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import kotlinx.android.synthetic.main.activity_splash.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.extension.startActivity
 
-
-class ActivitySplash : AppCompatActivity() {
+class ActivitySplash : ActivityBase(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +20,7 @@ class ActivitySplash : AppCompatActivity() {
 
     private fun setDelayForActivity() {
         val handle = Handler()
-        handle.postDelayed({ startActivity<ActivityDiscover>()
+        handle.postDelayed({ startActivity<ActivityPopulars>()
             finish() }, 4000)
     }
 

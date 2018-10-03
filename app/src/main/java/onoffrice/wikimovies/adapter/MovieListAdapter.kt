@@ -11,7 +11,9 @@ import kotlinx.android.synthetic.main.adapter_movie_list.view.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.model.Movie
 import android.support.v7.widget.LinearLayoutManager
+import android.widget.Toast
 import onoffrice.wikimovies.model.MovieListGenre
+import onoffrice.wikimovies.extension.*
 
 class MovieListAdapter (private val context:Context, private val moviesList:ArrayList<MovieListGenre>): RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
 
@@ -39,7 +41,7 @@ class MovieListAdapter (private val context:Context, private val moviesList:Arra
         llm.orientation = LinearLayoutManager.HORIZONTAL
         holder.list.layoutManager = llm
 
-        val movieGenre= moviesList.get(position)
+        val movieGenre= moviesList[position]
 
         holder.title.text   = movieGenre.genre?.name
         holder.list.adapter = MoviesAdapter(context, movieGenre.movies)
@@ -49,8 +51,9 @@ class MovieListAdapter (private val context:Context, private val moviesList:Arra
      * Create a viewHolder
      */
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title = itemView.list_title!!
+        val title    = itemView.list_title!!
         val list  = itemView.movie_item_list!!
+
     }
 
     class MoviesAdapter (private val context:Context, private val movies:List<Movie>): RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>() {
@@ -74,20 +77,21 @@ class MovieListAdapter (private val context:Context, private val moviesList:Arra
          * Makes the bind for every item in the view
          */
         override fun onBindViewHolder(holder: ViewHolderItem, position: Int) {
-            val movie = movies.get(position)
+            val movie    = movies.get(position)
             val urlImage = context.resources.getString(R.string.base_url_images) + movie.posterPath
             Picasso.get().load(urlImage).into(holder.poster)
-        }
 
+            holder.itemView.setOnClickListener { Toast.makeText(context,movie.title,Toast.LENGTH_SHORT).show() }
+
+        }
 
         /**
          * Create a viewHolder
          */
         class ViewHolderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
             val poster = itemView.movie_poster!!
+
         }
-
     }
-
-
 }
