@@ -8,17 +8,14 @@
         android:layout_height="wrap_content"
         android:background="#242625"
         android:elevation="4dp"
+        app:contentInsetStart="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextColor="@android:color/white"
-        android:textAlignment="center">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="left">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:layout_weight="1"
@@ -36,14 +33,15 @@
                 android:layout_weight="2"
                 android:src="@drawable/logo_wiki_movie_2"
                 android:text="Category Name"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:textSize="15dp"/>
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="3"
                 android:id="@+id/divider"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="50dp"
+                android:layout_height="50dp">
             </LinearLayout>
         </LinearLayout>
 
