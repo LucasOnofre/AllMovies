@@ -1,6 +1,8 @@
 package onoffrice.wikimovies.adapter
 
 import android.app.Activity
+import android.content.res.Configuration
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
@@ -9,9 +11,6 @@ import onoffrice.wikimovies.R
 import onoffrice.wikimovies.model.Movie
 import android.util.DisplayMetrics
 import android.view.*
-
-
-
 
 class MoviesAdapter (private val contextActivity: Activity, private val movies:ArrayList<Movie>): RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>() {
 
@@ -41,7 +40,6 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
         getScreenSize(holder.poster)
 
         holder.itemView.setOnClickListener { Toast.makeText(contextActivity,movie.title, Toast.LENGTH_SHORT).show() }
-
     }
 
     /**
@@ -52,12 +50,25 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
         val poster = itemView.movie_poster!!
     }
 
-    fun getScreenSize(itemView: View) {
+    /**
+     * Set's the widht and heigh of the movie poster according to the screen size
+     */
+    private fun getScreenSize(itemView: View) {
+
+        var orientation = contextActivity.resources.configuration.orientation
+
         val displayMetrics = DisplayMetrics()
         contextActivity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-        var width  = displayMetrics.widthPixels
+        var width   = displayMetrics.widthPixels
+        var height  = displayMetrics.heightPixels
 
-        itemView.movie_poster.maxWidth = (width/3)*2
+        itemView.movie_poster.maxWidth  = (width/3)
 
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE){
+
+            itemView.movie_poster.layoutParams.height = (height * 3) /5
+
+        }else
+            itemView.movie_poster.layoutParams.height = (height * 2) /7
     }
 }

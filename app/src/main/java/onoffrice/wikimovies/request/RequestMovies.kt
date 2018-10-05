@@ -17,15 +17,16 @@ class RequestMovies(private val context:Context){
         this.service = RetrofitClient.instance(context).create(Service::class.java)
     }
 
-    val API_KEY  = context.resources.getString(R.string.api_key)
-    val params = HashMap<String,Any?>()
+    private val API_KEY  = context.resources.getString(R.string.api_key)
+    private val params = HashMap<String,Any?>()
 
     /**
-     * Return a movie list from the Discover
+     * Return a movie list of Popular movies
      */
     fun getPopularsMovies():Call<Result>{
         val endpoint = context.resources.getString(R.string.url_movies_popular)
         params.put("api_key",API_KEY)
+       // params.put("page",page)
 
         return service.getPopularsMovies(endpoint,params)
     }

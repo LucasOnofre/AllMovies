@@ -7,8 +7,10 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
+import onoffrice.wikimovies.extension.toast
 import onoffrice.wikimovies.model.*
 import onoffrice.wikimovies.request.RequestMovies
 import retrofit2.Call
@@ -17,44 +19,69 @@ import kotlin.collections.ArrayList
 
 class ActivityPopulars : ActivityBase() {
 
-    var         listMovies  : ArrayList<Movie>           = ArrayList()
+    private var manager     : GridLayoutManager?         = null
+    private var listMovies  : ArrayList<Movie>           = ArrayList()
     private var progressBar : ProgressBar?               = null
     private var recyclerList: RecyclerView?              = null
-
-    var manager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_populars)
 
-        setOrientationLayoutManager()
         setUpViews()
         requestMovies()
         setupToolbar("Popular")
 
-        recyclerList?.layoutManager = manager
-        progressBar?.visibility     = View.VISIBLE
-
     }
 
+    /**
+     * Set's the views and the progress bar
+     */
     private fun setUpViews() {
         progressBar  = findViewById(R.id.progressBar)
         recyclerList = findViewById(R.id.lista)
+        progressBar?.visibility  = View.VISIBLE
+
+        setOrientationLayoutManager()
     }
 
+    /**
+     * Set's the layout manager of the recycler view according to the device's orientation
+     */
     private fun setOrientationLayoutManager() {
-        val orientation = resources.configuration.orientation
 
+        val orientation = resources.configuration.orientation
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            manager = GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+            manager = GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false)
         }
+        else
+            manager = GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+
+        recyclerList?.layoutManager = manager
+
+        setInfiniteScroll()
+    }
+
+    private fun setInfiniteScroll() {
+        var isLoading = true
+        recyclerList?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                if (!recyclerView.canScrollVertically(1 ) && isLoading){
+                    toast("ACABOU SCROLL")
+
+                }
+            }
+        })
     }
 
     /**
      * Return a movie list from the Discover, passing page as a param for the request
      * Also its done a recursive function
      */
-    fun requestMovies(){
+    private fun requestMovies(){
 
         RequestMovies(this).getPopularsMovies().enqueue(object : retrofit2.Callback<Result> {
 
@@ -71,6 +98,7 @@ class ActivityPopulars : ActivityBase() {
             }
         })
     }
+
 //
 //    /**
 //     * Return a movie list from the Discover
