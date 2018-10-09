@@ -23,10 +23,10 @@ class RequestMovies(private val context:Context){
     /**
      * Return a movie list of Popular movies
      */
-    fun getPopularsMovies():Call<Result>{
+    fun getPopularsMovies(page: Int):Call<Result>{
         val endpoint = context.resources.getString(R.string.url_movies_popular)
         params.put("api_key",API_KEY)
-       // params.put("page",page)
+        params.put("page",page)
 
         return service.getPopularsMovies(endpoint,params)
     }

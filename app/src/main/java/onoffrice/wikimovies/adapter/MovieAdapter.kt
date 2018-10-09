@@ -2,7 +2,6 @@ package onoffrice.wikimovies.adapter
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
@@ -14,12 +13,37 @@ import android.view.*
 
 class MoviesAdapter (private val contextActivity: Activity, private val movies:ArrayList<Movie>): RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>() {
 
+    private object VIEW_TYPES {
+        const val header = 1
+        const val normal = 0
+    }
+
+    override fun getItemViewType(position: Int): Int {
+
+        return if (movies.get(position).isHeader)
+            VIEW_TYPES.header
+        else
+            VIEW_TYPES.normal
+
+    }
+
     /**
      * Return a movie list from the Discover
      */
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): MoviesAdapter.ViewHolderItem {
-        val view = LayoutInflater.from(contextActivity).inflate(R.layout.adapter_movie_item,parent,false)
-        return MoviesAdapter.ViewHolderItem(view)
+
+        var view:View? = null
+
+//        when(p1){
+//
+//            VIEW_TYPES.normal ->
+//                view = LayoutInflater.from(contextActivity).inflate(R.layout.adapter_movie_item,parent,false)
+//
+//            VIEW_TYPES.header ->
+//                view = LayoutInflater.from(contextActivity).inflate(R.layout.adapter_header_item,parent,false)
+//        }
+
+        return MoviesAdapter.ViewHolderItem(view!!)
     }
 
     /**
@@ -33,13 +57,18 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      * Makes the bind for every item in the view
      */
     override fun onBindViewHolder(holder: ViewHolderItem, position: Int) {
-        val movie    = movies.get(position)
-        val urlImage = contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
+        val movie         = movies.get(position)
+        val urlImage      = contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
+
         Picasso.get().load(urlImage).into(holder.poster)
 
-        getScreenSize(holder.poster)
+        if (!movie.isHeader) {
+            getScreenSize(holder.poster)
+        }
 
-        holder.itemView.setOnClickListener { Toast.makeText(contextActivity,movie.title, Toast.LENGTH_SHORT).show() }
+
+        //Listener that when clicked goes to the movie Info
+        holder.itemView.setOnClickListener { Toast.makeText(contextActivity, movie.title, Toast.LENGTH_SHORT).show() }
     }
 
     /**
@@ -47,7 +76,7 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      */
     class ViewHolderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val poster = itemView.movie_poster!!
+        val poster  = itemView.movie_poster!!
     }
 
     /**
@@ -59,6 +88,7 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
 
         val displayMetrics = DisplayMetrics()
         contextActivity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+
         var width   = displayMetrics.widthPixels
         var height  = displayMetrics.heightPixels
 

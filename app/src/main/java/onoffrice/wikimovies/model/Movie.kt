@@ -37,6 +37,8 @@ class Movie{
     @SerializedName("release_date")
     var releaseDate:String? = null
 
+    var isHeader:Boolean = false
+
 }
 
 class ResultGenre {

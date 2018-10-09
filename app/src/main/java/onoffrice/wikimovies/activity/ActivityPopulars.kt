@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.toast
@@ -16,8 +15,18 @@ import onoffrice.wikimovies.request.RequestMovies
 import retrofit2.Call
 import retrofit2.Response
 import kotlin.collections.ArrayList
+import android.view.animation.AnimationUtils.loadLayoutAnimation
+import android.view.animation.LayoutAnimationController
+import android.view.animation.AnimationUtils.loadLayoutAnimation
+
+
+
+
 
 class ActivityPopulars : ActivityBase() {
+
+    private var page                                     = 1
+    private var isLoading                                = true
 
     private var manager     : GridLayoutManager?         = null
     private var listMovies  : ArrayList<Movie>           = ArrayList()
@@ -30,6 +39,7 @@ class ActivityPopulars : ActivityBase() {
 
         setUpViews()
         requestMovies()
+        setInfiniteScroll()
         setupToolbar("Popular")
 
     }
@@ -42,6 +52,7 @@ class ActivityPopulars : ActivityBase() {
         recyclerList = findViewById(R.id.lista)
         progressBar?.visibility  = View.VISIBLE
 
+        recyclerList?.adapter = MoviesAdapter(this@ActivityPopulars,listMovies)
         setOrientationLayoutManager()
     }
 
@@ -51,50 +62,69 @@ class ActivityPopulars : ActivityBase() {
     private fun setOrientationLayoutManager() {
 
         val orientation = resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            manager = GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false)
+
+        manager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false)
         }
         else
-            manager = GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+            GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
 
         recyclerList?.layoutManager = manager
 
-        setInfiniteScroll()
+     //   spanSizeIfHeader()
     }
 
-    private fun setInfiniteScroll() {
-        var isLoading = true
-        recyclerList?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                if (!recyclerView.canScrollVertically(1 ) && isLoading){
-                    toast("ACABOU SCROLL")
-
-                }
-            }
-        })
-    }
+//    private fun spanSizeIfHeader() {
+//        manager?.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+//            override fun getSpanSize(position: Int): Int {
+//                if (position == 0) {
+//                    return manager?.spanCount ?: 0
+//                }
+//                return 1
+//            }
+//        }
+//    }
 
     /**
      * Return a movie list from the Discover, passing page as a param for the request
      * Also its done a recursive function
      */
-    private fun requestMovies(){
+    private fun requestMovies(page:Int = 1){
 
-        RequestMovies(this).getPopularsMovies().enqueue(object : retrofit2.Callback<Result> {
+        RequestMovies(this).getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result> {
 
             override fun onResponse(call: Call<Result>, response: Response<Result>?) {
                 progressBar?.visibility = View.GONE
                 response?.body()?.movies?.let { movies ->
                     listMovies.addAll(movies)
-                    recyclerList?.adapter = MoviesAdapter(this@ActivityPopulars,listMovies)
+                 //   listMovies.get(0).isHeader = true
+                    recyclerList?.adapter?.notifyDataSetChanged()
+                    isLoading = false
+
                 }
 
             }
             override fun onFailure(call: Call<Result>, t: Throwable) {
                 Log.i("Resposta: ", t.message)
+            }
+        })
+    }
+
+    /**
+     * Make's new requests when user scrolls the list to the last item
+     */
+    private fun setInfiniteScroll() {
+        recyclerList?.addOnScrollListener(object:RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                //direction = 1 = list ends
+                if (!recyclerView.canScrollVertically(1 ) && !isLoading){
+                    isLoading = true
+                    page++
+                    requestMovies(page)
+                }
             }
         })
     }
