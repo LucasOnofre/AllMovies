@@ -32,7 +32,7 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      */
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): MoviesAdapter.ViewHolderItem {
 
-        var view:View? = null
+        var view:View = LayoutInflater.from(contextActivity).inflate(R.layout.adapter_movie_item,parent,false)
 
 //        when(p1){
 //
@@ -43,7 +43,7 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
 //                view = LayoutInflater.from(contextActivity).inflate(R.layout.adapter_header_item,parent,false)
 //        }
 
-        return MoviesAdapter.ViewHolderItem(view!!)
+        return MoviesAdapter.ViewHolderItem(view)
     }
 
     /**

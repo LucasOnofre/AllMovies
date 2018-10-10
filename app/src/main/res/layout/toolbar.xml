@@ -6,9 +6,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="#00000000"
         android:elevation="4dp"
         app:contentInsetStart="0dp"
+         app:layout_collapseMode="pin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -40,7 +41,8 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:padding="18dp"
-                android:src="@drawable/ic_filter" />
+                android:src="@drawable/ic_filter"
+                android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
 

@@ -2,6 +2,7 @@ package onoffrice.wikimovies.activity
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -9,18 +10,14 @@ import android.view.View
 import android.widget.ProgressBar
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
-import onoffrice.wikimovies.extension.toast
 import onoffrice.wikimovies.model.*
 import onoffrice.wikimovies.request.RequestMovies
 import retrofit2.Call
 import retrofit2.Response
 import kotlin.collections.ArrayList
-import android.view.animation.AnimationUtils.loadLayoutAnimation
-import android.view.animation.LayoutAnimationController
-import android.view.animation.AnimationUtils.loadLayoutAnimation
-
-
-
+import android.widget.ImageView
+import android.widget.TextView
+import com.squareup.picasso.Picasso
 
 
 class ActivityPopulars : ActivityBase() {
@@ -28,10 +25,14 @@ class ActivityPopulars : ActivityBase() {
     private var page                                     = 1
     private var isLoading                                = true
 
-    private var manager     : GridLayoutManager?         = null
-    private var listMovies  : ArrayList<Movie>           = ArrayList()
-    private var progressBar : ProgressBar?               = null
-    private var recyclerList: RecyclerView?              = null
+    private var layout           : AppBarLayout?         = null
+    private var manager          : GridLayoutManager?    = null
+    private var listMovies       : ArrayList<Movie>      = ArrayList()
+    private var progressBar      : ProgressBar?          = null
+    private var recyclerList     : RecyclerView?         = null
+    private var movieBanner      : ImageView?            = null
+    private var movieBannerTittle: TextView?             = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,11 +49,20 @@ class ActivityPopulars : ActivityBase() {
      * Set's the views and the progress bar
      */
     private fun setUpViews() {
-        progressBar  = findViewById(R.id.progressBar)
-        recyclerList = findViewById(R.id.lista)
+        layout            = findViewById(R.id.appBarLayout)
+        progressBar       = findViewById(R.id.progressBar)
+        movieBanner       = findViewById(R.id.movieBanner)
+        recyclerList      = findViewById(R.id.lista)
+        movieBannerTittle = findViewById(R.id.banner_movie_tittle)
+
         progressBar?.visibility  = View.VISIBLE
 
-        recyclerList?.adapter = MoviesAdapter(this@ActivityPopulars,listMovies)
+        setAdapter()
+    }
+
+    private fun setAdapter() {
+        //Set's the adapter
+        recyclerList?.adapter = MoviesAdapter(this@ActivityPopulars, listMovies)
         setOrientationLayoutManager()
     }
 
@@ -94,20 +104,27 @@ class ActivityPopulars : ActivityBase() {
         RequestMovies(this).getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result> {
 
             override fun onResponse(call: Call<Result>, response: Response<Result>?) {
+
                 progressBar?.visibility = View.GONE
-                response?.body()?.movies?.let { movies ->
+                layout?.visibility      = View.VISIBLE
+
+                response?.body()?.movies?.let { movies -> if (page == 1){ setBannerBar(movies) }
+
                     listMovies.addAll(movies)
-                 //   listMovies.get(0).isHeader = true
                     recyclerList?.adapter?.notifyDataSetChanged()
                     isLoading = false
 
                 }
-
             }
             override fun onFailure(call: Call<Result>, t: Throwable) {
                 Log.i("Resposta: ", t.message)
             }
         })
+    }
+
+    private fun setBannerBar(movies: ArrayList<Movie>) {
+        Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
+        movieBannerTittle?.text = movies[0].title
     }
 
     /**
