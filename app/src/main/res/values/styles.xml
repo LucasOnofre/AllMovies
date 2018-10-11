@@ -15,5 +15,9 @@
 
 
 
+    <style name="BottomNavigation">
+        <item name="itemBackground">@drawable/bottom_item_background</item>
+    </style>
+
 
 </resources>

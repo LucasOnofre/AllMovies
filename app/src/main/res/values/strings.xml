@@ -7,4 +7,7 @@
     <string name="url_genres">genre/movie/list</string>
     <string name="base_url_images">https://image.tmdb.org/t/p/w500</string>
     <string name="title_activity_base">BaseActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

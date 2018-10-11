@@ -3,21 +3,22 @@ package onoffrice.wikimovies.activity
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
+import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
-import onoffrice.wikimovies.model.*
+import onoffrice.wikimovies.model.Movie
+import onoffrice.wikimovies.model.Result
 import onoffrice.wikimovies.request.RequestMovies
 import retrofit2.Call
 import retrofit2.Response
-import kotlin.collections.ArrayList
-import android.widget.ImageView
-import android.widget.TextView
-import com.squareup.picasso.Picasso
 
 
 class ActivityPopulars : ActivityBase() {
@@ -32,6 +33,7 @@ class ActivityPopulars : ActivityBase() {
     private var recyclerList     : RecyclerView?         = null
     private var movieBanner      : ImageView?            = null
     private var movieBannerTittle: TextView?             = null
+    private var bottomNavigation : BottomNavigationView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,10 +56,30 @@ class ActivityPopulars : ActivityBase() {
         movieBanner       = findViewById(R.id.movieBanner)
         recyclerList      = findViewById(R.id.lista)
         movieBannerTittle = findViewById(R.id.banner_movie_tittle)
+        bottomNavigation  = findViewById(R.id.bottomNavigation)
 
         progressBar?.visibility  = View.VISIBLE
 
         setAdapter()
+        setBottomNavigation()
+    }
+
+    //Get's the item clicked in the bottomNavigation - item
+    private fun setBottomNavigation() {
+//        bottomNavigation?.setOnNavigationItemSelectedListener { item ->
+//
+//            when (item.itemId) {
+//
+//                R.id.action_home      -> homeActivity()
+//
+//                R.id.action_search    -> searchActivity()
+//
+//                R.id.action_category  -> categoryActivity()
+//
+//                R.id.action_favorites -> favoritesActivity()
+//            }
+//            true
+//        }
     }
 
     private fun setAdapter() {
@@ -125,6 +147,7 @@ class ActivityPopulars : ActivityBase() {
     private fun setBannerBar(movies: ArrayList<Movie>) {
         Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
         movieBannerTittle?.text = movies[0].title
+        movies.removeAt(0)
     }
 
     /**

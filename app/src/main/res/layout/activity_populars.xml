@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/device"
     android:layout_width="match_parent"
@@ -106,5 +107,26 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:background="@drawable/bottom_item_background"
+        app:itemIconTint="@drawable/bottom_item_color"
+        app:itemTextColor="@drawable/bottom_item_color"
+        app:menu="@menu/menu_bottom_navigation"
+        style="@style/BottomNavigation"
+        app:labelVisibilityMode="labeled"
+        android:elevation="4dp"/>
+
+    <!--<android.support.design.widget.TabLayout-->
+        <!--android:id="@+id/tabs"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:tabMode="fixed"-->
+        <!--app:tabGravity="fill"/>-->
+
 
 </android.support.design.widget.CoordinatorLayout>
