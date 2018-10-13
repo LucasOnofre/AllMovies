@@ -24,7 +24,6 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
             VIEW_TYPES.header
         else
             VIEW_TYPES.normal
-
     }
 
     /**
@@ -33,15 +32,6 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): MoviesAdapter.ViewHolderItem {
 
         var view:View = LayoutInflater.from(contextActivity).inflate(R.layout.adapter_movie_item,parent,false)
-
-//        when(p1){
-//
-//            VIEW_TYPES.normal ->
-//                view = LayoutInflater.from(contextActivity).inflate(R.layout.adapter_movie_item,parent,false)
-//
-//            VIEW_TYPES.header ->
-//                view = LayoutInflater.from(contextActivity).inflate(R.layout.adapter_header_item,parent,false)
-//        }
 
         return MoviesAdapter.ViewHolderItem(view)
     }
@@ -65,7 +55,6 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
         if (!movie.isHeader) {
             getScreenSize(holder.poster)
         }
-
 
         //Listener that when clicked goes to the movie Info
         holder.itemView.setOnClickListener { Toast.makeText(contextActivity, movie.title, Toast.LENGTH_SHORT).show() }

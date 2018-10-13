@@ -1,4 +1,5 @@
-package onoffrice.wikimovies.activity
+package onoffrice.wikimovies.fragment
+
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -7,11 +8,14 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.model.Movie
@@ -20,8 +24,7 @@ import onoffrice.wikimovies.request.RequestMovies
 import retrofit2.Call
 import retrofit2.Response
 
-
-class ActivityPopulars : ActivityBase() {
+class HomeFragment : BaseFragment() {
 
     private var page                                     = 1
     private var isLoading                                = true
@@ -35,56 +38,37 @@ class ActivityPopulars : ActivityBase() {
     private var movieBannerTittle: TextView?             = null
     private var bottomNavigation : BottomNavigationView? = null
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_populars)
+        var container = inflater.inflate(R.layout.fragment_home, container, false)
 
-        setUpViews()
+        setUpViews(container)
         requestMovies()
         setInfiniteScroll()
-        setupToolbar("Popular")
+        setupToolbar("Popular",container)
 
+        return container
     }
 
     /**
      * Set's the views and the progress bar
      */
-    private fun setUpViews() {
-        layout            = findViewById(R.id.appBarLayout)
-        progressBar       = findViewById(R.id.progressBar)
-        movieBanner       = findViewById(R.id.movieBanner)
-        recyclerList      = findViewById(R.id.lista)
-        movieBannerTittle = findViewById(R.id.banner_movie_tittle)
-        bottomNavigation  = findViewById(R.id.bottomNavigation)
+    private fun setUpViews(container: View) {
+        layout            = container.findViewById(R.id.appBarLayout)
+        progressBar       = container.findViewById(R.id.progressBar)
+        movieBanner       = container.findViewById(R.id.movieBanner)
+        recyclerList      = container.findViewById(R.id.lista)
+        movieBannerTittle = container.findViewById(R.id.banner_movie_tittle)
+        bottomNavigation  = container.findViewById(R.id.bottomNavigation)
 
         progressBar?.visibility  = View.VISIBLE
 
         setAdapter()
-        setBottomNavigation()
-    }
-
-    //Get's the item clicked in the bottomNavigation - item
-    private fun setBottomNavigation() {
-//        bottomNavigation?.setOnNavigationItemSelectedListener { item ->
-//
-//            when (item.itemId) {
-//
-//                R.id.action_home      -> homeActivity()
-//
-//                R.id.action_search    -> searchActivity()
-//
-//                R.id.action_category  -> categoryActivity()
-//
-//                R.id.action_favorites -> favoritesActivity()
-//            }
-//            true
-//        }
     }
 
     private fun setAdapter() {
         //Set's the adapter
-        recyclerList?.adapter = MoviesAdapter(this@ActivityPopulars, listMovies)
+        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies) }
         setOrientationLayoutManager()
     }
 
@@ -96,26 +80,13 @@ class ActivityPopulars : ActivityBase() {
         val orientation = resources.configuration.orientation
 
         manager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false)
+            GridLayoutManager(activity, 4, GridLayoutManager.VERTICAL, false)
         }
         else
-            GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+            GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
 
         recyclerList?.layoutManager = manager
-
-     //   spanSizeIfHeader()
     }
-
-//    private fun spanSizeIfHeader() {
-//        manager?.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-//            override fun getSpanSize(position: Int): Int {
-//                if (position == 0) {
-//                    return manager?.spanCount ?: 0
-//                }
-//                return 1
-//            }
-//        }
-//    }
 
     /**
      * Return a movie list from the Discover, passing page as a param for the request
@@ -123,7 +94,8 @@ class ActivityPopulars : ActivityBase() {
      */
     private fun requestMovies(page:Int = 1){
 
-        RequestMovies(this).getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result> {
+        activity?.let {
+            RequestMovies(it).getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result> {
 
             override fun onResponse(call: Call<Result>, response: Response<Result>?) {
 
@@ -142,6 +114,7 @@ class ActivityPopulars : ActivityBase() {
                 Log.i("Resposta: ", t.message)
             }
         })
+        }
     }
 
     private fun setBannerBar(movies: ArrayList<Movie>) {
@@ -168,51 +141,4 @@ class ActivityPopulars : ActivityBase() {
             }
         })
     }
-
-//
-//    /**
-//     * Return a movie list from the Discover
-//     */
-//    fun requestGenres(){
-//        RequestMovies(this).getGenres().enqueue(object : retrofit2.Callback<ResultGenre> {
-//            override fun onResponse(call: Call<ResultGenre>, response: Response<ResultGenre>) {
-//
-//                var removedSectionsList = filterSectionsGenres(response)
-//                removedSectionsList?.let { genres ->
-//
-//                    filterGenres(genres)
-//                }?:run {
-//                    Toast.makeText(this@ActivityPopulars, "Not possible to load list", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ResultGenre>, t: Throwable) {
-//                Toast.makeText(this@ActivityPopulars, "Not possible to load list", Toast.LENGTH_SHORT).show()
-//            }
-//        })
-//    }
-//
-//    /**
-//     * Make's the filter to exclude some genres
-//     */
-//    private fun filterSectionsGenres(response: Response<ResultGenre>) =
-//            response.body()?.genres?.filter { it.name != "TV Movie" && it.name != "Music" }
-//
-//    /**
-//     * Make's the filter by genre with all the movies and send to adapter
-//     */
-//    private fun filterGenres(genres:List<Genre>){
-//
-//        for (genre in genres){
-//            val movies =  listMovies.filter {
-//                it.genres!!.contains(genre!!.id)
-//            }
-//
-//            if (!movies.isEmpty()){
-//                listSections.add(MovieListGenre(genre, movies))
-//            }
-//        }
-//        recyclerList?.adapter = MovieListAdapter(this@ActivityPopulars, listSections)
-//        progressBar?.visibility = View.GONE
-//    }
 }

@@ -20,7 +20,7 @@ class ActivitySplash : ActivityBase(){
 
     private fun setDelayForActivity() {
         val handle = Handler()
-        handle.postDelayed({ startActivity<ActivityPopulars>()
+        handle.postDelayed({ startActivity<ActivityMain>()
             finish() }, 4000)
     }
 

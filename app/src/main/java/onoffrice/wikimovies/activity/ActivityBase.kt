@@ -13,10 +13,10 @@ open class ActivityBase : AppCompatActivity() {
     }
 
      protected fun setupToolbar(title:String){
-         var toolbar:Toolbar?   = null
-         var titleSection:TextView?    = null
+         var toolbar:Toolbar?           = null
+         var titleSection:TextView?     = null
 
-         toolbar = findViewById(R.id.toolbar)
+         toolbar        = findViewById(R.id.toolbar)
          titleSection   = findViewById(R.id.title_section)
 
          toolbar.let {

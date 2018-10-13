@@ -36,13 +36,18 @@
                 android:textColor="#ffffff"
                 android:textSize="20dp"/>
 
-            <ImageView
-                android:id="@+id/btn_filter"
+            <View
+                android:id="@+id/divider2"
                 android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:padding="18dp"
-                android:src="@drawable/ic_filter"
-                android:layout_gravity="center_vertical"/>
+                android:layout_height="56dp" />
+
+            <!--<ImageView-->
+                <!--android:id="@+id/btn_filter"-->
+                <!--android:layout_width="56dp"-->
+                <!--android:layout_height="56dp"-->
+                <!--android:padding="18dp"-->
+                <!--android:src="@drawable/ic_filter"-->
+                <!--android:layout_gravity="center_vertical"/>-->
 
         </LinearLayout>
 
