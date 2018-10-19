@@ -27,7 +27,9 @@ class ActivityMain : AppCompatActivity() {
         bottomNavigation  = findViewById(R.id.bottomNavigation)
     }
 
-    //Get's the item clicked in the bottomNavigation - item
+    /**
+     * Get's the item clicked in the bottomNavigation - item
+     **/
     private fun setBottomNavigation() {
         bottomNavigation?.setOnNavigationItemSelectedListener { item ->
 
@@ -69,7 +71,16 @@ class ActivityMain : AppCompatActivity() {
         openFragment(favoritesFragment)
     }
 
-    private fun openFragment(fragment: Fragment) {
+    private fun movieDetailFragment() {
+        // setupToolbar("Favorites")
+        val favoritesFragment = FavoriteFragment()
+        openFragment(favoritesFragment)
+    }
+
+    /**
+     * Open the selected fragment and replace the container for him
+     **/
+    fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
         transaction.addToBackStack(null)

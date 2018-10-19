@@ -53,8 +53,8 @@ class Genre {
 }
 
 class MovieListGenre{
-    var genre: Genre? = null
-    var movies:List<Movie> = ArrayList()
+    var genre: Genre?       = null
+    var movies:List<Movie>  = ArrayList()
 
     constructor(genre: Genre?, movies:List<Movie>) {
         this.genre  = genre

@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
 
     <!--&lt;!&ndash;Wrapper da Toolbar&ndash;&gt;-->
     <!--<android.support.design.widget.AppBarLayout-->
@@ -84,6 +84,7 @@
         <!--</android.support.design.widget.CollapsingToolbarLayout>-->
     <!--</android.support.design.widget.AppBarLayout>-->
 
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -105,8 +106,7 @@
         app:menu="@menu/bottom_navigation_menu"
         app:itemBackground="@drawable/bottom_item_background"
         app:itemIconTint="@drawable/bottom_item_tint"
-        app:itemTextColor="#ffffff"
-        />
+        app:itemTextColor="@drawable/bottom_item_tint" />
 
 
 </android.support.constraint.ConstraintLayout>

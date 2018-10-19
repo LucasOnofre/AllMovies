@@ -14,9 +14,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-
 import onoffrice.wikimovies.R
+import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.Result
@@ -28,6 +29,7 @@ class HomeFragment : BaseFragment() {
 
     private var page                                     = 1
     private var isLoading                                = true
+    private val gson:Gson?                               = null
 
     private var layout           : AppBarLayout?         = null
     private var manager          : GridLayoutManager?    = null
@@ -38,6 +40,15 @@ class HomeFragment : BaseFragment() {
     private var movieBannerTittle: TextView?             = null
     private var bottomNavigation : BottomNavigationView? = null
 
+    private val preferences = context?.getSharedPreferences("MyPref", 0)
+    val editor         = preferences?.edit()
+
+    /**
+     * Implementing interface to handle the click on the movie
+     */
+    private val movieClickListener = object:MovieInterface{ override fun onMovieSelected(movie: Movie?) { openDetailMovieFragment(movie) } }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
         var container = inflater.inflate(R.layout.fragment_home, container, false)
@@ -46,8 +57,19 @@ class HomeFragment : BaseFragment() {
         requestMovies()
         setInfiniteScroll()
         setupToolbar("Popular",container)
+        setAdapter()
 
         return container
+    }
+
+    private fun openDetailMovieFragment(movie:Movie?){
+
+        var movieJson = gson?.toJson(movie)
+
+        editor?.putString("movieJson",movieJson)
+        editor?.commit()
+
+        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container, MovieDetailFragment())?.addToBackStack(null)?.commit()
     }
 
     /**
@@ -63,29 +85,12 @@ class HomeFragment : BaseFragment() {
 
         progressBar?.visibility  = View.VISIBLE
 
-        setAdapter()
     }
 
     private fun setAdapter() {
         //Set's the adapter
-        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies) }
+        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
         setOrientationLayoutManager()
-    }
-
-    /**
-     * Set's the layout manager of the recycler view according to the device's orientation
-     */
-    private fun setOrientationLayoutManager() {
-
-        val orientation = resources.configuration.orientation
-
-        manager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GridLayoutManager(activity, 4, GridLayoutManager.VERTICAL, false)
-        }
-        else
-            GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
-
-        recyclerList?.layoutManager = manager
     }
 
     /**
@@ -111,7 +116,7 @@ class HomeFragment : BaseFragment() {
                 }
             }
             override fun onFailure(call: Call<Result>, t: Throwable) {
-                Log.i("Resposta: ", t.message)
+                Log.i("Error: ", t.message)
             }
         })
         }
@@ -140,5 +145,22 @@ class HomeFragment : BaseFragment() {
                 }
             }
         })
+    }
+
+
+    /**
+     * Set's the layout manager of the recycler view according to the device's orientation
+     */
+    private fun setOrientationLayoutManager() {
+
+        val orientation = resources.configuration.orientation
+
+        manager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            GridLayoutManager(activity, 4, GridLayoutManager.VERTICAL, false)
+        }
+        else
+            GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
+
+        recyclerList?.layoutManager = manager
     }
 }
