@@ -20,7 +20,7 @@ class ActivityMain : AppCompatActivity() {
 
         setUpViews()
         setBottomNavigation()
-        homeFragment()
+        openFragment(HomeFragment())
 
     }
     private fun setUpViews() {
@@ -35,52 +35,23 @@ class ActivityMain : AppCompatActivity() {
 
             when (item.itemId) {
 
-                R.id.action_home      -> homeFragment()
+                R.id.action_home      -> openFragment(HomeFragment())
 
-                R.id.action_search    -> searchFragment()
+                R.id.action_search    -> openFragment(SearchFragment())
 
-                R.id.action_category  -> categoryFragment()
+                R.id.action_category  -> openFragment(CategoryFragment())
 
-                R.id.action_favorites -> favoritesFragment()
+                R.id.action_favorites -> openFragment(FavoriteFragment())
             }
             true
         }
     }
 
-    private fun homeFragment() {
-        //setupToolbar("Populars")
-        val homeFragment = HomeFragment()
-        openFragment(homeFragment)
-    }
-
-    private fun searchFragment() {
-        //setupToolbar("Search")
-        val searchFragment = SearchFragment()
-        openFragment(searchFragment)
-    }
-
-    private fun categoryFragment() {
-        //setupToolbar("Categorys")
-        val categoryFragment = CategoryFragment()
-        openFragment(categoryFragment)
-    }
-
-    private fun favoritesFragment() {
-       // setupToolbar("Favorites")
-        val favoritesFragment = FavoriteFragment()
-        openFragment(favoritesFragment)
-    }
-
-    private fun movieDetailFragment() {
-        // setupToolbar("Favorites")
-        val favoritesFragment = FavoriteFragment()
-        openFragment(favoritesFragment)
-    }
 
     /**
      * Open the selected fragment and replace the container for him
      **/
-    fun openFragment(fragment: Fragment) {
+    private fun openFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
         transaction.addToBackStack(null)

@@ -1,6 +1,7 @@
 package onoffrice.wikimovies.fragment
 
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
@@ -25,11 +26,13 @@ import onoffrice.wikimovies.request.RequestMovies
 import retrofit2.Call
 import retrofit2.Response
 
+
+
 class HomeFragment : BaseFragment() {
 
     private var page                                     = 1
     private var isLoading                                = true
-    private val gson:Gson?                               = null
+    private var gson             :Gson?                  = Gson()
 
     private var layout           : AppBarLayout?         = null
     private var manager          : GridLayoutManager?    = null
@@ -40,8 +43,7 @@ class HomeFragment : BaseFragment() {
     private var movieBannerTittle: TextView?             = null
     private var bottomNavigation : BottomNavigationView? = null
 
-    private val preferences = context?.getSharedPreferences("MyPref", 0)
-    val editor         = preferences?.edit()
+
 
     /**
      * Implementing interface to handle the click on the movie
@@ -51,25 +53,32 @@ class HomeFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
-        var container = inflater.inflate(R.layout.fragment_home, container, false)
+        var view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        setUpViews(container)
+        setUpViews(view)
         requestMovies()
         setInfiniteScroll()
-        setupToolbar("Popular",container)
+        setupToolbar("Popular",view)
         setAdapter()
 
-        return container
+        return view
     }
 
+    /**
+     * Convert's the movie in a Json,
+     * save on shared preferences and also open de Movie Detail Fragment
+     */
     private fun openDetailMovieFragment(movie:Movie?){
+         val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
+         val editor = preferences?.edit()
 
+        // Transform the movie into an Json to save in shared preferences
         var movieJson = gson?.toJson(movie)
 
         editor?.putString("movieJson",movieJson)
         editor?.commit()
 
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container, MovieDetailFragment())?.addToBackStack(null)?.commit()
+        openFragment(MovieDetailFragment())
     }
 
     /**

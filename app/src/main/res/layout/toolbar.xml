@@ -9,10 +9,11 @@
         android:background="#00000000"
         android:elevation="4dp"
         app:contentInsetStart="0dp"
-         app:layout_collapseMode="pin"
+        app:layout_collapseMode="pin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/Theme.ToolbarTheme">
 
         <LinearLayout
             android:gravity="center|left"
@@ -32,7 +33,6 @@
                 android:textAlignment="center"
                 android:layout_weight="2"
                 android:src="@drawable/logo_wiki_movie_2"
-                android:text="Category Name"
                 android:textColor="#ffffff"
                 android:textSize="20dp"/>
 

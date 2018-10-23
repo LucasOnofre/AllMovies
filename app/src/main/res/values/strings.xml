@@ -8,8 +8,9 @@
     <string name="base_url_images">https://image.tmdb.org/t/p/w500</string>
     <string name="title_activity_base">BaseActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_detail_movie">ActivityDetailMovie</string>
+    <string name="favorite">Favorite</string>
+    <string name="Classificar">Classifique</string>
 </resources>

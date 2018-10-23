@@ -18,4 +18,8 @@
         <item name="itemBackground">@drawable/bottom_item_background</item>
     </style>
 
+    <style name="Theme.ToolbarTheme" parent="android:Theme.Holo">
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+    </style>
+
 </resources>

@@ -25,4 +25,21 @@ open class BaseFragment : Fragment() {
             titleSection?.text = title
         }
     }
+
+    protected fun setupToolbar(container: View){
+        var toolbar:Toolbar?       = container.findViewById(R.id.toolbar)
+        var titleSection:TextView? = container.findViewById(R.id.title_section)
+
+        toolbar.let {
+            (activity as AppCompatActivity).setSupportActionBar(it)
+        }
+    }
+
+    protected fun openFragment(fragment:Fragment){
+        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container,fragment)?.addToBackStack(null)?.commit()
+    }
+
+    protected fun exitFragment(fragment:Fragment){
+        activity?.supportFragmentManager?.beginTransaction()?.remove(fragment)?.commit()
+    }
 }

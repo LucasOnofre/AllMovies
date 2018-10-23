@@ -50,17 +50,19 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:foreground="@drawable/bottom_item_background"/>
 
-                    <!--Gradiente da imagem-->
-                    <View
-                        android:id="@+id/img_gradient"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-                    <!--android:background="@drawable/gradient_background" />-->
+                    <!--&lt;!&ndash;Gradiente da imagem&ndash;&gt;-->
+                    <!--<View-->
+                        <!--android:id="@+id/img_gradient"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                        <!--app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--app:layout_constraintStart_toStartOf="parent"-->
+                        <!--android:foreground="@drawable/bottom_item_background"/>-->
+                    <!--&lt;!&ndash;android:background="@drawable/gradient_background" />&ndash;&gt;-->
 
                     <!--nome do filme-->
                     <TextView
@@ -68,7 +70,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
                         android:ellipsize="end"
                         android:maxLines="3"
