@@ -2,12 +2,13 @@ package onoffrice.wikimovies.request
 
 import android.content.Context
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.model.*
+import onoffrice.wikimovies.model.Result
+import onoffrice.wikimovies.model.ResultGenre
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 import retrofit2.http.Url
-import java.util.HashMap
+import java.util.*
 
 class RequestMovies(private val context:Context){
 
@@ -41,6 +42,18 @@ class RequestMovies(private val context:Context){
         return service.getGenres(endpoint,params)
     }
 
+    /**
+     * Return the simmilar movies of a movie
+     */
+
+    fun getSimilarMovies(page: Int, movieId:Int?):Call<Result>{
+        val endpoint = (context.resources.getString(R.string.url_movie) + movieId + "/similar")
+
+        params.put("api_key",API_KEY)
+        params.put("page",page)
+        return service.getSimilarMovies(endpoint,params)
+    }
+
     private interface Service {
 
         @GET
@@ -48,6 +61,9 @@ class RequestMovies(private val context:Context){
 
         @GET
         fun getGenres(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<ResultGenre>
+
+        @GET
+        fun getSimilarMovies(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
     }
 
 }

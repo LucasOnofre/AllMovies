@@ -47,11 +47,10 @@ class ActivityMain : AppCompatActivity() {
         }
     }
 
-
     /**
      * Open the selected fragment and replace the container for him
      **/
-    private fun openFragment(fragment: Fragment) {
+    private fun openFragment(fragment: Fragment){
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
         transaction.addToBackStack(null)

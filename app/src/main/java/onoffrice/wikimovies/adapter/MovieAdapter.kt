@@ -3,13 +3,13 @@ package onoffrice.wikimovies.adapter
 import android.app.Activity
 import android.content.res.Configuration
 import android.support.v7.widget.RecyclerView
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.adapter_movie_item.view.*
 import onoffrice.wikimovies.R
+import onoffrice.wikimovies.extension.getScreenSize
+import onoffrice.wikimovies.extension.loadPicasso
 import onoffrice.wikimovies.model.Movie
 
 interface MovieInterface{
@@ -39,19 +39,18 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      * Makes the bind for every item in the view
      */
     override fun onBindViewHolder(holder: ViewHolderItem, position: Int) {
-        val movie         = movies[position]
-        val urlImage      = contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
+        val movie   = movies[position]
+        val urlImage= contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
 
-        Picasso.get().load(urlImage).into(holder.poster)
+        // Load's the image using picasso and open in an ImageView parameter
+        urlImage.loadPicasso(holder.poster)
 
         if (!movie.isHeader) {
             getScreenSize(holder.poster)
         }
 
         //Listener that when clicked goes to the detail Movie
-        holder.itemView.setOnClickListener {
-            listener?.onMovieSelected(movie)
-        }
+        holder.itemView.setOnClickListener { listener?.onMovieSelected(movie) }
     }
 
     /**
@@ -67,21 +66,16 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      */
     private fun getScreenSize(itemView: View) {
 
-        var orientation = contextActivity.resources.configuration.orientation
+        //Get's the screen size and return a triple
+        var (orientation, width, height) = contextActivity.getScreenSize()
 
-        val displayMetrics = DisplayMetrics()
-        contextActivity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-        var width   = displayMetrics.widthPixels
-        var height  = displayMetrics.heightPixels
-
-        itemView.movie_poster.maxWidth  = (width/3)
+        itemView.movie_poster.maxWidth  = (width / 3)
 
         if (orientation == Configuration.ORIENTATION_LANDSCAPE){
 
-            itemView.movie_poster.layoutParams.height = (height * 3) /5
+            itemView.movie_poster.layoutParams.height = (height * 3) / 5
 
         }else
-            itemView.movie_poster.layoutParams.height = (height * 2) /7
+            itemView.movie_poster.layoutParams.height = (height * 2) / 7
     }
 }

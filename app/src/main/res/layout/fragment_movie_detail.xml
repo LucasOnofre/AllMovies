@@ -48,7 +48,7 @@
             android:text="Movie Name"
             android:textAlignment="viewStart"
             android:textColor="@color/white"
-            android:textSize="21sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/gradient"
             app:layout_constraintStart_toStartOf="parent" />
@@ -74,6 +74,42 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="@+id/semelhantes"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/semelhantes"
+            app:layout_constraintTop_toBottomOf="@id/movieInfo" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="150dp"
+            android:layout_height="4dp"
+            android:background="@color/colorSecondaryDark"
+            app:layout_constraintEnd_toEndOf="@+id/semelhantes"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/semelhantes"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <TextView
+            android:id="@+id/txt_overview"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="overview"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider2" />
 
         <TextView
             android:id="@+id/movieDescript"
@@ -84,59 +120,115 @@
             android:textAlignment="viewStart"
             android:textColor="@color/white"
             android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/lista_botoes"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/movieInfo" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_overview" />
 
-        <android.support.constraint.ConstraintLayout
-            android:orientation="horizontal"
-            android:id="@+id/lista_botoes"
+        <!--<android.support.constraint.ConstraintLayout-->
+            <!--android:orientation="horizontal"-->
+            <!--android:id="@+id/lista_botoes"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent">-->
+
+            <!--<onoffrice.wikimovies.custom.UserButton-->
+                <!--android:id="@+id/btn_favorite"-->
+                <!--android:layout_width="70dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--app:image="@drawable/ic_favorite"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintEnd_toStartOf="@+id/btn_rate"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent"-->
+                <!--app:text="Favorite"/>-->
+
+            <!--<onoffrice.wikimovies.custom.UserButton-->
+                <!--android:id="@+id/btn_rate"-->
+                <!--android:layout_width="70dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--app:image="@drawable/ic_thumb_up"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintEnd_toStartOf="@id/btn_see_more"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/btn_favorite"-->
+                <!--app:layout_constraintTop_toTopOf="parent"-->
+                <!--app:layout_constraintVertical_bias="0.0"-->
+                <!--app:text="Rate" />-->
+
+            <!--<onoffrice.wikimovies.custom.UserButton-->
+                <!--android:id="@+id/btn_see_more"-->
+                <!--android:layout_width="70dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--app:image="@drawable/ic_go_out"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/btn_rate"-->
+                <!--app:layout_constraintTop_toTopOf="parent"-->
+                <!--app:layout_constraintVertical_bias="0.0"-->
+                <!--app:text="More"/>-->
+
+        <!--</android.support.constraint.ConstraintLayout>-->
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"
+
+
+            app:layout_constraintEnd_toEndOf="@+id/semelhantes"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/semelhantes"
+            app:layout_constraintTop_toBottomOf="@id/movieDescript" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="150dp"
+            android:layout_height="4dp"
+            android:background="@color/colorSecondaryDark"
+            app:layout_constraintEnd_toEndOf="@+id/semelhantes"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/semelhantes"
+            app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+
+        <TextView
+            android:id="@+id/semelhantes"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="SIMILAR MOVIES"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider4"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lista"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/semelhantes" />
 
-            <onoffrice.wikimovies.custom.UserButton
-                android:id="@+id/btn_favorite"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                app:image="@drawable/ic_favorite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_rate"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:text="Favorite"/>
 
-            <onoffrice.wikimovies.custom.UserButton
-                android:id="@+id/btn_rate"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                app:image="@drawable/ic_thumb_up"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_see_more"
-                app:layout_constraintStart_toEndOf="@+id/btn_favorite"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:text="Rate" />
 
-            <onoffrice.wikimovies.custom.UserButton
-                android:id="@+id/btn_see_more"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                app:image="@drawable/ic_go_out"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_rate"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:text="More"/>
-
-        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 

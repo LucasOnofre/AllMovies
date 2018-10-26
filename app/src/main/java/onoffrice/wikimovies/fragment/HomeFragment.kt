@@ -2,7 +2,6 @@ package onoffrice.wikimovies.fragment
 
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
@@ -48,7 +47,7 @@ class HomeFragment : BaseFragment() {
     /**
      * Implementing interface to handle the click on the movie
      */
-    private val movieClickListener = object:MovieInterface{ override fun onMovieSelected(movie: Movie?) { openDetailMovieFragment(movie) } }
+    private val movieClickListener = object: MovieInterface{ override fun onMovieSelected(movie: Movie?) { openDetailMovieFragment(movie) } }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -69,8 +68,8 @@ class HomeFragment : BaseFragment() {
      * save on shared preferences and also open de Movie Detail Fragment
      */
     private fun openDetailMovieFragment(movie:Movie?){
-         val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-         val editor = preferences?.edit()
+        val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
+        val editor = preferences?.edit()
 
         // Transform the movie into an Json to save in shared preferences
         var movieJson = gson?.toJson(movie)
@@ -84,13 +83,13 @@ class HomeFragment : BaseFragment() {
     /**
      * Set's the views and the progress bar
      */
-    private fun setUpViews(container: View) {
-        layout            = container.findViewById(R.id.appBarLayout)
-        progressBar       = container.findViewById(R.id.progressBar)
-        movieBanner       = container.findViewById(R.id.movieBanner)
-        recyclerList      = container.findViewById(R.id.lista)
-        movieBannerTittle = container.findViewById(R.id.banner_movie_tittle)
-        bottomNavigation  = container.findViewById(R.id.bottomNavigation)
+    private fun setUpViews(view: View) {
+        layout            = view.findViewById(R.id.appBarLayout)
+        progressBar       = view.findViewById(R.id.progressBar)
+        movieBanner       = view.findViewById(R.id.movieBanner)
+        recyclerList      = view.findViewById(R.id.lista)
+        movieBannerTittle = view.findViewById(R.id.banner_movie_tittle)
+        bottomNavigation  = view.findViewById(R.id.bottomNavigation)
 
         progressBar?.visibility  = View.VISIBLE
 
@@ -99,7 +98,7 @@ class HomeFragment : BaseFragment() {
     private fun setAdapter() {
         //Set's the adapter
         recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
-        setOrientationLayoutManager()
+        setGridLayout(recyclerList)
     }
 
     /**
@@ -111,23 +110,23 @@ class HomeFragment : BaseFragment() {
         activity?.let {
             RequestMovies(it).getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result> {
 
-            override fun onResponse(call: Call<Result>, response: Response<Result>?) {
+                override fun onResponse(call: Call<Result>, response: Response<Result>?) {
 
-                progressBar?.visibility = View.GONE
-                layout?.visibility      = View.VISIBLE
+                    progressBar?.visibility = View.GONE
+                    layout?.visibility      = View.VISIBLE
 
-                response?.body()?.movies?.let { movies -> if (page == 1){ setBannerBar(movies) }
+                    response?.body()?.movies?.let { movies -> if (page == 1){ setBannerBar(movies) }
 
-                    listMovies.addAll(movies)
-                    recyclerList?.adapter?.notifyDataSetChanged()
-                    isLoading = false
+                        listMovies.addAll(movies)
+                        recyclerList?.adapter?.notifyDataSetChanged()
+                        isLoading = false
 
+                    }
                 }
-            }
-            override fun onFailure(call: Call<Result>, t: Throwable) {
-                Log.i("Error: ", t.message)
-            }
-        })
+                override fun onFailure(call: Call<Result>, t: Throwable) {
+                    Log.i("Error: ", t.message)
+                }
+            })
         }
     }
 
@@ -154,22 +153,5 @@ class HomeFragment : BaseFragment() {
                 }
             }
         })
-    }
-
-
-    /**
-     * Set's the layout manager of the recycler view according to the device's orientation
-     */
-    private fun setOrientationLayoutManager() {
-
-        val orientation = resources.configuration.orientation
-
-        manager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GridLayoutManager(activity, 4, GridLayoutManager.VERTICAL, false)
-        }
-        else
-            GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
-
-        recyclerList?.layoutManager = manager
     }
 }

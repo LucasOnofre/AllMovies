@@ -16,6 +16,7 @@ class ActivitySplash : ActivityBase(){
 
         setLogoAnimation()
         setDelayForActivity()
+
     }
 
     private fun setDelayForActivity() {
