@@ -39,6 +39,8 @@ class Movie{
 
     var isHeader:Boolean = false
 
+    var isFavorite:Boolean = false
+
 }
 
 class ResultGenre {

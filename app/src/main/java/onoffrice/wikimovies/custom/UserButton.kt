@@ -1,7 +1,9 @@
 package onoffrice.wikimovies.custom
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
+import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -10,17 +12,35 @@ import onoffrice.wikimovies.R
 
 class UserButton constructor(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
+    var imageParameter: ImageView
+    var textParameter : TextView
+
     init {
-        inflate(context, R.layout.user_button, this)
 
-        val imageView: ImageView  = findViewById(R.id.image)
-        val textView:  TextView   = findViewById(R.id.text)
+        //Set's the layout parameters
+        gravity     = Gravity.CENTER
+        orientation = LinearLayout.VERTICAL
 
-        val attributes = context.obtainStyledAttributes(attrs, R.styleable.userButton)
-        imageView.setImageDrawable(attributes.getDrawable(R.styleable.userButton_image))
-        textView.text = attributes.getString(R.styleable.userButton_text)
+        //Instantiate and Set's the view's parameters
+        textParameter  = TextView(context)
+        imageParameter = ImageView(context)
+
+        imageParameter.layoutParams = LinearLayout.LayoutParams(30, 30)
+        textParameter .layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        textParameter .setPadding(0,5,0,0)
+
+        //Add's the view's in the layout
+        addView(imageParameter)
+        addView(textParameter)
+
+        //Get the parameters on the XML
+        val attributes = context.obtainStyledAttributes(attrs, R.styleable.UserButton)
+        textParameter .setTextColor(Color.WHITE)
+        imageParameter.setImageDrawable(attributes.getDrawable(R.styleable.UserButton_image))
+        textParameter.text = attributes.getString(R.styleable.UserButton_text)
+
         attributes.recycle()
-
     }
-
 }
+
+

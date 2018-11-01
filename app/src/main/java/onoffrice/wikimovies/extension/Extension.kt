@@ -1,11 +1,14 @@
 package onoffrice.wikimovies.extension
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.DisplayMetrics
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import java.text.ParseException
@@ -73,3 +76,15 @@ fun SharedPreferences.getPreferenceKey(key:String): String? {
     return Triple(orientation, width, height)
 }
 
+
+/**
+ * Anima o ProgressBar
+ */
+fun ProgressBar.circleAnimate(to:Int){
+    this?.postDelayed({
+        val animation = ObjectAnimator.ofInt(this, "progress", to)
+        animation.duration = 500
+        animation.interpolator = LinearInterpolator()
+        animation.start()
+    }, 100)
+}

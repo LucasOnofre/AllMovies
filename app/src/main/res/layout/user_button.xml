@@ -26,4 +26,4 @@
             tools:text="Favoritos"
             android:textColor="@color/white" />
 
-    </LinearLayout>
+</LinearLayout>
