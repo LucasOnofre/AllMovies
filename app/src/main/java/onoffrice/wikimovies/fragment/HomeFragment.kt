@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,7 +33,6 @@ class HomeFragment : BaseFragment() {
     private var gson             :Gson?                  = Gson()
 
     private var layout           : AppBarLayout?         = null
-    private var manager          : GridLayoutManager?    = null
     private var listMovies       : ArrayList<Movie>      = ArrayList()
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null

@@ -10,6 +10,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -60,8 +61,17 @@ fun Context.getPreferencesEditor():SharedPreferences.Editor?{
 }
 
 fun SharedPreferences.getPreferenceKey(key:String): String? {
+    return this?.getString(key,"")
+}
 
-    return this?.getString(key,"0")
+inline fun<reified T> Context.parseJson(json:String?):T?{
+    try{
+        return Gson().fromJson(json, T::class.java)
+    }
+    catch (exception:Exception){
+        exception.stackTrace
+    }
+    return null
 }
 
  fun Activity.getScreenSize(): Triple<Int, Int, Int> {

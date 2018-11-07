@@ -41,7 +41,6 @@ class MovieDetailFragment : BaseFragment() {
     private var btnFavorite         :UserButton?               = null
     private var btnGoOut            :UserButton?               = null
     private var favoriteMovieList   :ArrayList<Movie>          = ArrayList()
-
     private var preferences         :SharedPreferences?        = null
     private var editor              :SharedPreferences.Editor? = null
 
@@ -54,6 +53,7 @@ class MovieDetailFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
         var view = inflater.inflate(R.layout.fragment_movie_detail, container, false)
+
 
         preferences             = context?.getPreferences()
         editor                  = context?.getPreferencesEditor()
@@ -69,23 +69,24 @@ class MovieDetailFragment : BaseFragment() {
     }
 
     override fun onResume() {
-
-        getFavorites()
         super.onResume()
+
+        val json = preferences?.getPreferenceKey("favoriteMovieList")
+        context?.parseJson<Array<Movie>>(json)?.let {
+            favoriteMovieList = it.toCollection(ArrayList())
+            getFavorites()
+        }
     }
 
     private fun getFavorites() {
 
-        var favoritosJson     = gson?.fromJson(preferences?.getPreferenceKey("favoriteMovieList"), Array<Movie>::class.java)
-        var listaFavoritos = favoritosJson?.toCollection(ArrayList())
+        if (!favoriteMovieList.isEmpty()) {
 
-        if (listaFavoritos != null) {
-            favoriteMovieList = listaFavoritos
-
-            for (movieOnList in listaFavoritos){
+            for (movieOnList in favoriteMovieList){
                 if (movieOnList.id == movie?.id){
                     if (movieOnList.isFavorite){
                         favoriteMovie(movie!!)
+                        break
                     }
                 }
             }
@@ -93,9 +94,9 @@ class MovieDetailFragment : BaseFragment() {
     }
 
     override fun onPause() {
-
-        saveFavoriteMovies(favoriteMovieList)
         super.onPause()
+        saveFavoriteMovies(favoriteMovieList)
+
     }
 
     /**
@@ -146,19 +147,39 @@ class MovieDetailFragment : BaseFragment() {
     }
 
     private fun unFavoriteMovie(movie:Movie) {
-        movie?.isFavorite = false
-        favoriteMovieList.remove(movie!!)
+
         btnFavorite?.imageParameter?.setImageResource(R.drawable.ic_favorite_border)
         btnFavorite?.textParameter?.text = "Favorite"
-        //Toast.makeText(context, "Removido dos favoritos", Toast.LENGTH_SHORT).show()
+
+        movie?.isFavorite = false
+
+        if (isFavorite()){
+            val index = favoriteMovieList.indexOfFirst { it.id == movie.id }
+            if(index != -1)
+                favoriteMovieList.removeAt(index)
+        }
+
     }
 
     private fun favoriteMovie(movie:Movie) {
-        movie?.isFavorite = true
-        favoriteMovieList.add(movie!!)
+
         btnFavorite?.imageParameter?.setImageResource(R.drawable.ic_favorite)
         btnFavorite?.textParameter?.text = "Favorited"
-        //Toast.makeText(context, "Adicionado aos favoritos", Toast.LENGTH_SHORT).show()
+
+        movie?.isFavorite = true
+
+        if (!isFavorite()){ favoriteMovieList.add(movie) }
+    }
+
+    private fun isFavorite(): Boolean {
+
+        for (movieinList in favoriteMovieList) {
+            if (movieinList.id == movie?.id) {
+                return true
+                break
+            }
+        }
+        return false
     }
 
     private fun saveFavoriteMovies(favoriteMovieList: ArrayList<Movie>) {
