@@ -20,6 +20,7 @@ open class BaseFragment : Fragment() {
         return container
     }
     protected fun setupToolbar(title: String, container: View){
+
         var toolbar:Toolbar?       = container.findViewById(R.id.toolbar)
         var titleSection:TextView? = container.findViewById(R.id.title_section)
 
@@ -31,7 +32,6 @@ open class BaseFragment : Fragment() {
 
     protected fun setupToolbar(container: View){
         var toolbar:Toolbar?       = container.findViewById(R.id.toolbar)
-        var titleSection:TextView? = container.findViewById(R.id.title_section)
 
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)

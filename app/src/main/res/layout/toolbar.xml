@@ -34,9 +34,10 @@
                 android:layout_weight="2"
                 android:src="@drawable/logo_wiki_movie_2"
                 android:textColor="#ffffff"
-                android:textSize="20dp"/>
+                android:textSize="18dp"
+                android:textStyle="bold"/>
 
-            <View
+            <ImageView
                 android:id="@+id/divider2"
                 android:layout_width="56dp"
                 android:layout_height="56dp" />

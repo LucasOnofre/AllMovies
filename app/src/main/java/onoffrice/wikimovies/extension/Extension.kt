@@ -33,7 +33,7 @@ fun Activity.toast(message:String){
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
- fun String.convertDate(): String? {
+ fun String.formatDateToYear(): String? {
 
     try {
         val date  = SimpleDateFormat("yyyy-MM-dd").parse(this)
@@ -47,6 +47,9 @@ fun Activity.toast(message:String){
     return null
 }
 
+/**
+ * Load's the String URL in the Image View param
+ */
 fun String.loadPicasso(local:ImageView?){
     Picasso.get().load(this).into(local)
 }
@@ -64,6 +67,9 @@ fun SharedPreferences.getPreferenceKey(key:String): String? {
     return this?.getString(key,"")
 }
 
+/**
+ * Convert's the object param to Json
+ */
 inline fun<reified T> Context.parseJson(json:String?):T?{
     try{
         return Gson().fromJson(json, T::class.java)
@@ -86,9 +92,8 @@ inline fun<reified T> Context.parseJson(json:String?):T?{
     return Triple(orientation, width, height)
 }
 
-
 /**
- * Anima o ProgressBar
+ * Animate the ProgressBar
  */
 fun ProgressBar.circleAnimate(to:Int){
     this?.postDelayed({

@@ -29,16 +29,16 @@ import retrofit2.Response
 class HomeFragment : BaseFragment() {
 
     private var page                                     = 1
-    private var isLoading                                = true
-    private var gson             :Gson?                  = Gson()
-
     private var layout           : AppBarLayout?         = null
-    private var listMovies       : ArrayList<Movie>      = ArrayList()
+    private var isLoading                                = true
+    private var movieBanner      : ImageView?            = null
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
-    private var movieBanner      : ImageView?            = null
-    private var movieBannerTittle: TextView?             = null
     private var bottomNavigation : BottomNavigationView? = null
+    private var movieBannerTittle: TextView?             = null
+
+    private var gson             : Gson?            = Gson()
+    private var listMovies       : ArrayList<Movie> = ArrayList()
 
 
 
