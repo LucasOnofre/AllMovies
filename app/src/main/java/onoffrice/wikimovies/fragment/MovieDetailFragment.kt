@@ -64,7 +64,7 @@ class MovieDetailFragment : BaseFragment() {
 
         getSelectedMovie()
         setUpViews(view)
-        configureToolbar(view)
+        configureToolbar(view, movie.title.toString())
         setAdapter()
         setInfiniteScroll()
         requestSimilarMovies(movieId = movie.id)
@@ -120,7 +120,7 @@ class MovieDetailFragment : BaseFragment() {
     private fun setUpViews(view: View) {
 
         movieBanner         = view.findViewById(R.id.movieBanner)
-        movieName           = view.findViewById(R.id.movieTittle)
+        //movieName           = view.findViewById(R.id.movie_text)
         movieDescript       = view.findViewById(R.id.movieDescript)
         movieReleaseDate    = view.findViewById(R.id.movie_release_date)
         progressBar         = view.findViewById(R.id.circle_progress)
@@ -202,11 +202,12 @@ class MovieDetailFragment : BaseFragment() {
         editor?.commit()
     }
 
-    private fun configureToolbar(view: View) {
+    private fun configureToolbar(view: View, title:String) {
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         setupToolbar(view)
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)
+            it.title = title
             it.setNavigationIcon(R.drawable.ic_arrow_back)
             it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
         }

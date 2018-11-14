@@ -21,8 +21,8 @@ class ActivityMain : AppCompatActivity() {
         setUpViews()
         setBottomNavigation()
         openFragment(HomeFragment())
-
     }
+
     private fun setUpViews() {
         bottomNavigation  = findViewById(R.id.bottomNavigation)
     }

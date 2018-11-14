@@ -40,8 +40,6 @@ class HomeFragment : BaseFragment() {
     private var gson             : Gson?            = Gson()
     private var listMovies       : ArrayList<Movie> = ArrayList()
 
-
-
     /**
      * Implementing interface to handle the click on the movie
      */
@@ -50,15 +48,17 @@ class HomeFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
-        var view = inflater.inflate(R.layout.fragment_home, container, false)
+        if (rootView == null){
+            rootView = inflater.inflate(R.layout.fragment_home, container, false)
 
-        setUpViews(view)
-        requestMovies()
-        setInfiniteScroll()
-        setupToolbar("Popular",view)
-        setAdapter()
+            setUpViews(rootView!!)
+            requestMovies()
+            setInfiniteScroll()
+            setupToolbar("Popular", rootView!!)
+            setAdapter()
+        }
 
-        return view
+        return rootView
     }
 
     /**

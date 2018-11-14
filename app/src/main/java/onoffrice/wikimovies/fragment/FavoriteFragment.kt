@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.TextView
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
@@ -27,7 +26,6 @@ class FavoriteFragment : BaseFragment() {
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
     private var bottomNavigation : BottomNavigationView? = null
-    private var movieBannerTittle: TextView?             = null
 
     private var preferences : SharedPreferences?        = null
     private var editor      : SharedPreferences.Editor? = null
@@ -62,7 +60,7 @@ class FavoriteFragment : BaseFragment() {
     private fun getPreferecences() {
 
         preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-        editor = preferences?.edit()
+        editor      = preferences?.edit()
     }
 
     /**
@@ -86,11 +84,10 @@ class FavoriteFragment : BaseFragment() {
      */
     private fun setUpViews(view: View) {
 
-        layout = view.findViewById(R.id.appBarLayout)
-        progressBar = view.findViewById(R.id.progressBar)
-        recyclerList = view.findViewById(R.id.lista_favoritos)
-        bottomNavigation = view.findViewById(R.id.bottomNavigation)
-        movieBannerTittle = view.findViewById(R.id.banner_movie_tittle)
+        layout            = view.findViewById(R.id.appBarLayout)
+        progressBar       = view.findViewById(R.id.progressBar)
+        recyclerList      = view.findViewById(R.id.lista_favoritos)
+        bottomNavigation  = view.findViewById(R.id.bottomNavigation)
 
 
         progressBar?.visibility = View.VISIBLE
