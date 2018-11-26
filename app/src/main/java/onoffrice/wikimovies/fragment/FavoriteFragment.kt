@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
@@ -113,8 +114,13 @@ class FavoriteFragment : BaseFragment() {
         context?.parseJson<Array<Movie>>(json)?.let {
             listMovies = it.toCollection(ArrayList())
             progressBar?.visibility = View.GONE
-            recyclerList?.adapter?.notifyDataSetChanged()
             isLoading = false
+
+            if (!listMovies.isEmpty())
+                recyclerList?.adapter?.notifyDataSetChanged()
+
+            else
+                Toast.makeText(context,"Favoritos vazio",Toast.LENGTH_SHORT).show()
         }
     }
 }
