@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.adapter_movie_item.view.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.extension.getScreenSize
@@ -15,6 +16,8 @@ import onoffrice.wikimovies.model.Movie
 interface MovieInterface{
     fun onMovieSelected(movie:Movie?)
 }
+
+
 
 class MoviesAdapter (private val contextActivity: Activity, private val movies:ArrayList<Movie>, private val listener:MovieInterface) : RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>() {
 
@@ -50,7 +53,12 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
         }
 
         //Listener that when clicked goes to the detail Movie
-        holder.itemView.setOnClickListener { listener?.onMovieSelected(movie) }
+        holder.itemView.setOnClickListener {listener?.onMovieSelected(movie)}
+
+        holder.itemView.setOnLongClickListener {
+            Toast.makeText(contextActivity,movie.title,Toast.LENGTH_LONG).show()
+            true
+        }
     }
 
     /**

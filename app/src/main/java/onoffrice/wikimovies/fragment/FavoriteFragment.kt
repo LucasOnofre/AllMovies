@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.fragment_favorite.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
@@ -41,6 +42,7 @@ class FavoriteFragment : BaseFragment() {
     private val movieClickListener = object : MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
             openDetailMovieFragment(movie)
+
         }
     }
 
@@ -51,7 +53,6 @@ class FavoriteFragment : BaseFragment() {
         setUpViews(view)
         getPreferecences()
         getFavorites()
-        setupToolbar("Favorites",view)
         setAdapter()
 
         return view
@@ -90,12 +91,7 @@ class FavoriteFragment : BaseFragment() {
         recyclerList      = view.findViewById(R.id.lista_favoritos)
         bottomNavigation  = view.findViewById(R.id.bottomNavigation)
 
-
         progressBar?.visibility = View.VISIBLE
-
-    }
-
-    private fun deleteFavorites() {
 
     }
 
@@ -119,8 +115,11 @@ class FavoriteFragment : BaseFragment() {
             if (!listMovies.isEmpty())
                 recyclerList?.adapter?.notifyDataSetChanged()
 
-            else
-                Toast.makeText(context,"Favoritos vazio",Toast.LENGTH_SHORT).show()
+//            else
+//                progressBar?.visibility    = View.GONE
+//                lista_favoritos.visibility = View.GONE
+//                emptyFavMessage.visibility = View.VISIBLE
+
         }
     }
 }
