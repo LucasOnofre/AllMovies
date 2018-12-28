@@ -1,6 +1,7 @@
 package onoffrice.wikimovies.request
 
 import android.content.Context
+import android.util.Log
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.model.Result
 import onoffrice.wikimovies.model.ResultGenre
@@ -28,6 +29,7 @@ class RequestMovies(private val context:Context){
         val endpoint = context.resources.getString(R.string.url_movies_popular)
         params.put("api_key",API_KEY)
         params.put("page",page)
+        Log.i("Request",endpoint + params)
 
         return service.getPopularsMovies(endpoint,params)
     }
@@ -36,10 +38,13 @@ class RequestMovies(private val context:Context){
      * Return the genres list
      */
 
-    fun getGenres():Call<ResultGenre>{
-        val endpoint = context.resources.getString(R.string.url_genres)
+    fun getGenresMovieList(page: Int, genreId:Int?):Call<Result>{
+        val endpoint = context.resources.getString(R.string.url_movies_list_genres)
         params.put("api_key",API_KEY)
-        return service.getGenres(endpoint,params)
+        params.put("page",page)
+        params.put("with_genres",genreId)
+        Log.i("Request",endpoint + params)
+        return service.getGenresMovieList(endpoint,params)
     }
 
     /**
@@ -60,7 +65,8 @@ class RequestMovies(private val context:Context){
         fun getPopularsMovies(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
 
         @GET
-        fun getGenres(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<ResultGenre>
+        fun getGenresMovieList(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
+
 
         @GET
         fun getSimilarMovies(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>

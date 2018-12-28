@@ -2,6 +2,7 @@ package onoffrice.wikimovies.fragment
 
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
@@ -16,8 +17,12 @@ import android.widget.TextView
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
+import onoffrice.wikimovies.adapter.CategoryInterface
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
+import onoffrice.wikimovies.extension.getPreferenceKey
+import onoffrice.wikimovies.extension.parseJson
+import onoffrice.wikimovies.model.Genre
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.Result
 import onoffrice.wikimovies.request.RequestMovies
@@ -26,19 +31,18 @@ import retrofit2.Response
 
 
 
-class HomeFragment : BaseFragment() {
+class CategoryMovieListFragment : BaseFragment() {
 
     private var page                                     = 1
-    private var layout           : AppBarLayout?         = null
     private var isLoading                                = true
-    private var movieBanner      : ImageView?            = null
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
-    private var bottomNavigation : BottomNavigationView? = null
-    private var movieBannerTittle: TextView?             = null
-
     private var gson             : Gson?            = Gson()
     private var listMovies       : ArrayList<Movie> = ArrayList()
+
+
+    private var genre:Genre? = null
+
 
     /**
      * Implementing interface to handle the click on the movie
@@ -49,16 +53,29 @@ class HomeFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
         if (rootView == null){
-            rootView = inflater.inflate(R.layout.fragment_home, container, false)
+            rootView = inflater.inflate(R.layout.fragment_category_movie_list, container, false)
 
             setUpViews(rootView!!)
+            getSelectedGenre()
             requestMovies()
             setInfiniteScroll()
-            setupToolbar("Popular", rootView!!)
+            setupToolbar(genre?.name.toString(), rootView!!)
             setAdapter()
         }
 
         return rootView
+    }
+
+    /**
+     * Get's the genre Selected saved on preferences
+     */
+    private fun  getSelectedGenre(){
+        val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
+        var genreSelected = (preferences?.getPreferenceKey("categoryChosen"))
+
+        gson?.fromJson(genreSelected, Genre::class.java)?.let { genre = it }
+
+
     }
 
     /**
@@ -78,17 +95,15 @@ class HomeFragment : BaseFragment() {
         openFragment(MovieDetailFragment())
     }
 
+
+
     /**
      * Set's the views and the progress bar
      */
     private fun setUpViews(view: View) {
-        layout            = view.findViewById(R.id.appBarLayout)
-        progressBar       = view.findViewById(R.id.progressBar)
-        movieBanner       = view.findViewById(R.id.movieBanner)
-        recyclerList      = view.findViewById(R.id.lista)
-        movieBannerTittle = view.findViewById(R.id.banner_movie_tittle)
-        bottomNavigation  = view.findViewById(R.id.bottomNavigation)
 
+        progressBar       = view.findViewById(R.id.progressBar)
+        recyclerList      = view.findViewById(R.id.category_list)
         progressBar?.visibility  = View.VISIBLE
 
     }
@@ -100,19 +115,19 @@ class HomeFragment : BaseFragment() {
     }
 
     /**
-     * Return a movie list from the Discover, passing page as a param for the request
-     * Also its done a recursive function
+     * Return a movie list of the selected genre
+     * Also a recursive function
      */
     private fun requestMovies(page:Int = 1){
         activity?.let {
-            RequestMovies(it).getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result>{
+            RequestMovies(it).getGenresMovieList(page,genre?.id).enqueue(object : retrofit2.Callback<Result>{
 
                 override fun onResponse(call: Call<Result>, response: Response<Result>?) {
 
                     progressBar?.visibility = View.GONE
-                    layout?.visibility      = View.VISIBLE
 
-                    response?.body()?.movies?.let { movies -> if (page == 1){ setBannerBar(movies) }
+
+                    response?.body()?.movies?.let { movies ->
 
                         listMovies.addAll(movies)
                         recyclerList?.adapter?.notifyDataSetChanged()
@@ -124,12 +139,6 @@ class HomeFragment : BaseFragment() {
                 }
             })
         }
-    }
-
-    private fun setBannerBar(movies: ArrayList<Movie>) {
-        Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
-        movieBannerTittle?.text = movies[0].title
-        movies.removeAt(0)
     }
 
     /**

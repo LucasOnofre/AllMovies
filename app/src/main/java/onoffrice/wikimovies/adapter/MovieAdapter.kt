@@ -2,8 +2,10 @@ package onoffrice.wikimovies.adapter
 
 import android.app.Activity
 import android.content.res.Configuration
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -42,8 +44,8 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      * Makes the bind for every item in the view
      */
     override fun onBindViewHolder(holder: ViewHolderItem, position: Int) {
-        val movie   = movies[position]
-        val urlImage= contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
+        val movie = movies[position]
+        val urlImage = contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
 
         // Load's the image using picasso and open in an ImageView parameter
         urlImage.loadPicasso(holder.poster)
@@ -53,10 +55,39 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
         }
 
         //Listener that when clicked goes to the detail Movie
-        holder.itemView.setOnClickListener {listener?.onMovieSelected(movie)}
+        holder.itemView.setOnClickListener { listener?.onMovieSelected(movie) }
+
 
         holder.itemView.setOnLongClickListener {
-            Toast.makeText(contextActivity,movie.title,Toast.LENGTH_LONG).show()
+            val dropDownMenu = PopupMenu(contextActivity, holder.itemView)
+            if (movie.isFavorite) {
+
+                dropDownMenu.menuInflater.inflate(R.menu.unfavorite_fragment_menu, dropDownMenu.menu)
+                dropDownMenu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.unfavorite -> {
+                            listener?.onMovieSelected(movie)
+                            true}
+
+                        else -> {false}
+                    }
+                }
+            } else {
+                dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
+                dropDownMenu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.favoritar -> {
+                            listener?.onMovieSelected(movie)
+                            true
+                        }
+
+                        else -> {
+                            false
+                        }
+                    }
+                }
+            }
+            dropDownMenu.show()
             true
         }
     }

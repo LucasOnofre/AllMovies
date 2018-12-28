@@ -11,9 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.TextView
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.fragment_favorite.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
@@ -24,6 +23,7 @@ import onoffrice.wikimovies.model.Movie
 class FavoriteFragment : BaseFragment() {
 
     private var layout           : AppBarLayout?         = null
+    private var emptyMessage     : TextView?             = null
     private var isLoading                                = true
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
@@ -36,22 +36,23 @@ class FavoriteFragment : BaseFragment() {
     private var listMovies  : ArrayList<Movie> = ArrayList()
 
 
+
     /**
      * Implementing interface to handle the click on the movie
      */
     private val movieClickListener = object : MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
             openDetailMovieFragment(movie)
-
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
 
         var view = inflater.inflate(R.layout.fragment_favorite, container, false)
 
         setUpViews(view)
         getPreferecences()
+        setupToolbar("Favorites", view)
         getFavorites()
         setAdapter()
 
@@ -88,8 +89,9 @@ class FavoriteFragment : BaseFragment() {
 
         layout            = view.findViewById(R.id.appBarLayout)
         progressBar       = view.findViewById(R.id.progressBar)
-        recyclerList      = view.findViewById(R.id.lista_favoritos)
+        recyclerList      = view.findViewById(R.id.listaFavoritos)
         bottomNavigation  = view.findViewById(R.id.bottomNavigation)
+        emptyMessage      = view.findViewById(R.id.emptyFavMessage)
 
         progressBar?.visibility = View.VISIBLE
 
@@ -112,14 +114,15 @@ class FavoriteFragment : BaseFragment() {
             progressBar?.visibility = View.GONE
             isLoading = false
 
-            if (!listMovies.isEmpty())
+            if (!listMovies.isEmpty()) {
                 recyclerList?.adapter?.notifyDataSetChanged()
 
-//            else
-//                progressBar?.visibility    = View.GONE
-//                lista_favoritos.visibility = View.GONE
-//                emptyFavMessage.visibility = View.VISIBLE
 
+            }else{
+                recyclerList?.visibility  = View.GONE
+                emptyMessage?.visibility  = View.VISIBLE
+
+            }
         }
     }
 }

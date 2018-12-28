@@ -120,7 +120,7 @@ class MovieDetailFragment : BaseFragment() {
     private fun setUpViews(view: View) {
 
         movieBanner         = view.findViewById(R.id.movieBanner)
-        //movieName           = view.findViewById(R.id.movie_text)
+        //movieName         = view.findViewById(R.id.movie_text)
         movieDescript       = view.findViewById(R.id.movieDescript)
         movieReleaseDate    = view.findViewById(R.id.movie_release_date)
         progressBar         = view.findViewById(R.id.circle_progress)
