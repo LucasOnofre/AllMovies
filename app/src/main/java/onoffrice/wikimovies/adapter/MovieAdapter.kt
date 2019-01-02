@@ -57,39 +57,58 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
         //Listener that when clicked goes to the detail Movie
         holder.itemView.setOnClickListener { listener?.onMovieSelected(movie) }
 
+        //Listener that when clicked show's a dropDown menu
+        holder.itemView.setOnLongClickListener { setLongClickListener(holder, movie)
+            true }
+    }
 
-        holder.itemView.setOnLongClickListener {
-            val dropDownMenu = PopupMenu(contextActivity, holder.itemView)
-            if (movie.isFavorite) {
 
-                dropDownMenu.menuInflater.inflate(R.menu.unfavorite_fragment_menu, dropDownMenu.menu)
-                dropDownMenu.setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.unfavorite -> {
-                            listener?.onMovieSelected(movie)
-                            true}
+    /**
+     * Set's the Long Click Listeners of the movies
+     */
+    private fun setLongClickListener(holder: ViewHolderItem, movie: Movie) {
+        val dropDownMenu = PopupMenu(contextActivity, holder.itemView)
 
-                        else -> {false}
-                    }
+        dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
+
+        setMenuItemForLongClick(movie, dropDownMenu)
+
+        dropDownMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+
+                R.id.unFavorite -> {
+                    Toast.makeText(contextActivity, "Deletado", Toast.LENGTH_SHORT).show()
+                    true
                 }
-            } else {
-                dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
-                dropDownMenu.setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.favoritar -> {
-                            listener?.onMovieSelected(movie)
-                            true
-                        }
 
-                        else -> {
-                            false
-                        }
-                    }
+                R.id.favorite -> {
+                    Toast.makeText(contextActivity, "Favoritado", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+
+                else -> {
+                    false
                 }
             }
-            dropDownMenu.show()
-            true
         }
+
+        dropDownMenu.show()
+    }
+
+    /**
+     * Get's the menu item and shows only the right one according to the movie favorite status
+     */
+    private fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+
+        var menuItem: MenuItem? = if (movie.isFavorite) {
+        dropDownMenu.menu.findItem(R.id.favorite)
+
+    } else {
+        dropDownMenu.menu.findItem(R.id.unFavorite)
+    }
+        menuItem?.isVisible = false
+        menuItem?.isEnabled = false
     }
 
     /**

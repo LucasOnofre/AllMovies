@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/favoritar"
-        android:title="Favoritar"
+        android:id="@+id/favorite"
+        android:title="Favorite"
+        android:visible="true" />
+
+    <item
+        android:id="@+id/unFavorite"
+        android:title="Delete"
         android:visible="true" />
 
 </menu>

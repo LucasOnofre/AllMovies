@@ -30,8 +30,7 @@ class CategoryAdapter(private var context: Context?, private var categoryList: A
         propTxt.text = genreItem.name
 
 
-        view?.setOnClickListener { Toast.makeText(context, categoryList?.get(position)?.name, Toast.LENGTH_SHORT).show()
-        listener.onCategorySelected(genreItem)}
+        view?.setOnClickListener {listener.onCategorySelected(genreItem)}
 
         return view
     }
