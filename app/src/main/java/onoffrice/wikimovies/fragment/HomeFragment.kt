@@ -86,7 +86,7 @@ class HomeFragment : BaseFragment() {
         progressBar       = view.findViewById(R.id.progressBar)
         movieBanner       = view.findViewById(R.id.movieBanner)
         recyclerList      = view.findViewById(R.id.lista)
-        movieBannerTittle = view.findViewById(R.id.banner_movie_tittle)
+        //movieBannerTittle = view.findViewById(R.id.banner_movie_tittle)
         bottomNavigation  = view.findViewById(R.id.bottomNavigation)
 
         progressBar?.visibility  = View.VISIBLE

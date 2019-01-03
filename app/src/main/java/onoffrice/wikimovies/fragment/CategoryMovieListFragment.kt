@@ -2,26 +2,20 @@ package onoffrice.wikimovies.fragment
 
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.BottomNavigationView
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import com.google.gson.Gson
-import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.adapter.CategoryInterface
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
-import onoffrice.wikimovies.extension.parseJson
 import onoffrice.wikimovies.model.Genre
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.Result
@@ -57,9 +51,10 @@ class CategoryMovieListFragment : BaseFragment() {
 
             setUpViews(rootView!!)
             getSelectedGenre()
+            configureToolbar(rootView!!,genre?.name.toString())
             requestMovies()
             setInfiniteScroll()
-            setupToolbar(genre?.name.toString(), rootView!!)
+
             setAdapter()
         }
 
@@ -75,7 +70,19 @@ class CategoryMovieListFragment : BaseFragment() {
 
         gson?.fromJson(genreSelected, Genre::class.java)?.let { genre = it }
 
+    }
 
+    private fun configureToolbar(view: View, title:String) {
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        setupToolbar(view)
+        toolbar.let {
+            (activity as AppCompatActivity).setSupportActionBar(it)
+
+            it.title = title
+
+            it.setNavigationIcon(R.drawable.ic_arrow_back)
+            it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
+        }
     }
 
     /**

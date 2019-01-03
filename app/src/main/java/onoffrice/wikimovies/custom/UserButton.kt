@@ -25,7 +25,7 @@ class UserButton constructor(context: Context, attrs: AttributeSet) : LinearLayo
         textParameter  = TextView(context)
         imageParameter = ImageView(context)
 
-        imageParameter.layoutParams = LinearLayout.LayoutParams(30, 30)
+        imageParameter.layoutParams = LinearLayout.LayoutParams(60, 60)
         textParameter .layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         textParameter .setPadding(0,5,0,0)
 
@@ -36,6 +36,7 @@ class UserButton constructor(context: Context, attrs: AttributeSet) : LinearLayo
         //Get the parameters on the XML
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.UserButton)
         textParameter .setTextColor(Color.WHITE)
+        //imageParameter.scaleType = ImageView.ScaleType.FIT_XY
         imageParameter.setImageDrawable(attributes.getDrawable(R.styleable.UserButton_image))
         textParameter.text = attributes.getString(R.styleable.UserButton_text)
 
