@@ -3,9 +3,7 @@ package onoffrice.wikimovies.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +14,7 @@ import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
+import onoffrice.wikimovies.extension.parseJson
 import onoffrice.wikimovies.model.Genre
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.Result
@@ -51,7 +50,7 @@ class CategoryMovieListFragment : BaseFragment() {
 
             setUpViews(rootView!!)
             getSelectedGenre()
-            configureToolbar(rootView!!,genre?.name.toString())
+            setToolbarGoBackArrow(rootView!!,genre?.name.toString())
             requestMovies()
             setInfiniteScroll()
 
@@ -68,22 +67,11 @@ class CategoryMovieListFragment : BaseFragment() {
         val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
         var genreSelected = (preferences?.getPreferenceKey("categoryChosen"))
 
-        gson?.fromJson(genreSelected, Genre::class.java)?.let { genre = it }
+        genre = context?.parseJson<Genre>(genreSelected)
+        //gson?.fromJson(genreSelected, Genre::class.java)?.let { genre = it }
 
     }
 
-    private fun configureToolbar(view: View, title:String) {
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        setupToolbar(view)
-        toolbar.let {
-            (activity as AppCompatActivity).setSupportActionBar(it)
-
-            it.title = title
-
-            it.setNavigationIcon(R.drawable.ic_arrow_back)
-            it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
-        }
-    }
 
     /**
      * Convert's the movie in a Json,
@@ -101,8 +89,6 @@ class CategoryMovieListFragment : BaseFragment() {
 
         openFragment(MovieDetailFragment())
     }
-
-
 
     /**
      * Set's the views and the progress bar

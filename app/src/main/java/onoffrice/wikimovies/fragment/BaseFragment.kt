@@ -21,24 +21,29 @@ open class BaseFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container
     }
-    protected fun setupToolbar(title: String, container: View){
+
+    protected fun setupToolbar(title: String?, container: View){
 
         var toolbar:Toolbar?       = container.findViewById(R.id.toolbar)
         var titleSection:TextView? = container.findViewById(R.id.title_section)
 
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)
-            titleSection?.text = title
+            titleSection?.let { titleSection?.text = title }
         }
     }
 
-    protected fun setupToolbar(container: View){
-        var toolbar:Toolbar?       = container.findViewById(R.id.toolbar)
-
+    protected fun setToolbarGoBackArrow(view: View, title:String) {
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)
+
+            it.title = title
+            it.setNavigationIcon(R.drawable.ic_arrow_back)
+            it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
         }
     }
+
 
     protected fun openFragment(fragment:Fragment){
 

@@ -32,16 +32,6 @@
             app:expandedTitleTextAppearance="@style/expanded_title_style"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-            <!--Imagem do filme-->
-            <ImageView
-                android:id="@+id/movieBanner"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="1.0" />
-
             <!--Toolbar-->
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -49,6 +39,32 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--Imagem do filme-->
+                <ImageView
+                    android:id="@+id/movieBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="1.0" />
+
+                <!--Imagem do filme-->
+                <View
+                    android:id="@+id/movieBannerGradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/image_bottom_gradient"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="1.0" />
+            </FrameLayout>
+
+
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -209,7 +225,7 @@
                 android:id="@+id/movieDescript"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:text="@string/lorem_txt"
                 android:textAlignment="viewStart"
                 android:textColor="@color/white"

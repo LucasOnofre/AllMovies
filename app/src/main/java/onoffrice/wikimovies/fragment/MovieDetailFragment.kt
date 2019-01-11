@@ -4,9 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -64,7 +62,7 @@ class MovieDetailFragment : BaseFragment() {
 
         getSelectedMovie()
         setUpViews(view)
-        configureToolbar(view, movie.title.toString())
+        setToolbarGoBackArrow(view, movie.title.toString())
         setAdapter()
         setInfiniteScroll()
         requestSimilarMovies(movieId = movie.id)
@@ -201,17 +199,17 @@ class MovieDetailFragment : BaseFragment() {
         editor?.putString("favoriteMovieList", favoritedList)
         editor?.commit()
     }
-
-    private fun configureToolbar(view: View, title:String) {
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        setupToolbar(view)
-        toolbar.let {
-            (activity as AppCompatActivity).setSupportActionBar(it)
-            it.title = title
-            it.setNavigationIcon(R.drawable.ic_arrow_back)
-            it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
-        }
-    }
+//
+//    private fun configureToolbar(view: View, title:String) {
+//        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+//        setupToolbar(view)
+//        toolbar.let {
+//            (activity as AppCompatActivity).setSupportActionBar(it)
+//            it.title = title
+//            it.setNavigationIcon(R.drawable.ic_arrow_back)
+//            it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
+//        }
+//    }
 
     /**
      * Convert's the movie in a Json,
