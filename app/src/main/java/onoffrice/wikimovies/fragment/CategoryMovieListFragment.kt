@@ -30,8 +30,8 @@ class CategoryMovieListFragment : BaseFragment() {
     private var isLoading                                = true
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
-    private var gson             : Gson?            = Gson()
-    private var listMovies       : ArrayList<Movie> = ArrayList()
+    private var gson             : Gson?                 = Gson()
+    private var listMovies       : ArrayList<Movie>      = ArrayList()
 
 
     private var genre:Genre? = null
@@ -53,7 +53,6 @@ class CategoryMovieListFragment : BaseFragment() {
             setToolbarGoBackArrow(rootView!!,genre?.name.toString())
             requestMovies()
             setInfiniteScroll()
-
             setAdapter()
         }
 

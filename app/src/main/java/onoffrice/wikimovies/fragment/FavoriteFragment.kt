@@ -52,7 +52,7 @@ class FavoriteFragment : BaseFragment() {
 
         setUpViews(view)
         getPreferecences()
-        setupToolbar("Favorites", view)
+        setupToolbar(view,"Favorites")
         getFavorites()
         setAdapter()
 

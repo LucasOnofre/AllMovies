@@ -54,7 +54,7 @@ class HomeFragment : BaseFragment() {
             setUpViews(rootView!!)
             requestMovies()
             setInfiniteScroll()
-            setupToolbar("Popular", rootView!!)
+            setupToolbar(rootView!!,"Popular")
             setAdapter()
         }
 

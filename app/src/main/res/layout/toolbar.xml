@@ -20,10 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <View
+            <ImageView
                 android:id="@+id/divider"
                 android:layout_width="56dp"
-                android:layout_height="56dp" />
+                android:layout_height="56dp"
+                android:layout_weight="0"/>
 
             <TextView
                 android:id="@+id/title_section"
@@ -31,16 +32,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textAlignment="center"
-                android:layout_weight="2"
-                android:src="@drawable/logo_wiki_movie_2"
+                android:layout_weight="1"
                 android:textColor="#ffffff"
                 android:textSize="18dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginRight="?android:attr/actionBarSize"/>
 
             <ImageView
                 android:id="@+id/divider2"
                 android:layout_width="56dp"
-                android:layout_height="56dp" />
+                android:layout_height="56dp"
+                android:layout_weight="0"/>
 
             <!--<ImageView-->
                 <!--android:id="@+id/btn_filter"-->

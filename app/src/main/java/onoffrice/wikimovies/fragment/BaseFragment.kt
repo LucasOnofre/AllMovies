@@ -22,7 +22,7 @@ open class BaseFragment : Fragment() {
         return container
     }
 
-    protected fun setupToolbar(title: String?, container: View){
+    protected fun setupToolbar(container: View, title: String?){
 
         var toolbar:Toolbar?       = container.findViewById(R.id.toolbar)
         var titleSection:TextView? = container.findViewById(R.id.title_section)
@@ -34,11 +34,13 @@ open class BaseFragment : Fragment() {
     }
 
     protected fun setToolbarGoBackArrow(view: View, title:String) {
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        val toolbar       = view.findViewById<Toolbar>(R.id.toolbar)
+        var titleSection:TextView? = view.findViewById(R.id.title_section)
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)
+            (activity as AppCompatActivity).setSupportActionBar(it)
 
-            it.title = title
+            titleSection?.text = title
             it.setNavigationIcon(R.drawable.ic_arrow_back)
             it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
         }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.model.Result
-import onoffrice.wikimovies.model.ResultGenre
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
@@ -59,6 +58,19 @@ class RequestMovies(private val context:Context){
         return service.getSimilarMovies(endpoint,params)
     }
 
+    /**
+     * Return the result of the query
+     */
+
+    fun getSearchedMovie(page: Int, query:Int?):Call<Result>{
+        val endpoint = (context.resources.getString(R.string.url_search_query))
+
+        params.put("api_key",API_KEY)
+        params.put("page",page)
+        params.put("query",query)
+        return service.getSimilarMovies(endpoint,params)
+    }
+
     private interface Service {
 
         @GET
@@ -70,6 +82,9 @@ class RequestMovies(private val context:Context){
 
         @GET
         fun getSimilarMovies(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
+
+
+        fun getSearchedMovie(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
     }
 
 }

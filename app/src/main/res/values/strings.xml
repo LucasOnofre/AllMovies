@@ -7,6 +7,8 @@
     <string name="favorite">Favorite</string>
     <string name="Classificar">Classifique</string>
 
+    <string name="lorem_txt">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+
     <!-- API info -->
     <string name="base_url_movie_api">https://api.themoviedb.org/3/</string>
     <string name="api_key">037b83eda5aad6b5c90898ea8ea94da3</string>
@@ -15,8 +17,9 @@
     <string name="url_movies_list_genres">discover/movie</string>
     <string name="base_url_images">https://image.tmdb.org/t/p/w500</string>
     <string name="url_movie">movie/</string>
-    <string name="lorem_txt">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+    <string name="url_search_query">search/movie</string>
 
+    <!-- All Categorys -->
     <string-array name="category_array">
         <item>Action</item>
         <item>Adventure</item>
@@ -36,7 +39,6 @@
         <item>Thriller</item>
         <item>War</item>
         <item>Western</item>
-
     </string-array>
 
 
