@@ -112,7 +112,7 @@ class CategoryMovieListFragment : BaseFragment() {
      */
     private fun requestMovies(page:Int = 1){
         activity?.let {
-            RequestMovies(it).getGenresMovieList(page,genre?.id).enqueue(object : retrofit2.Callback<Result>{
+            RequestMovies().getGenresMovieList(page,genre?.id).enqueue(object : retrofit2.Callback<Result>{
 
                 override fun onResponse(call: Call<Result>, response: Response<Result>?) {
 

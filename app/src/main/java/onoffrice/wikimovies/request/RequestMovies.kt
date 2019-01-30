@@ -1,8 +1,6 @@
 package onoffrice.wikimovies.request
 
-import android.content.Context
 import android.util.Log
-import onoffrice.wikimovies.R
 import onoffrice.wikimovies.model.Result
 import retrofit2.Call
 import retrofit2.http.GET
@@ -10,22 +8,22 @@ import retrofit2.http.QueryMap
 import retrofit2.http.Url
 import java.util.*
 
-class RequestMovies(private val context:Context){
+class RequestMovies{
 
     private val service:Service
 
     init {
-        this.service = RetrofitClient.instance(context).create(Service::class.java)
+        this.service = RetrofitClient.instance().create(Service::class.java)
     }
 
-    private val API_KEY  = context.resources.getString(R.string.api_key)
+    private val API_KEY  = "037b83eda5aad6b5c90898ea8ea94da3"
     private val params = HashMap<String,Any?>()
 
     /**
      * Return a movie list of Popular movies
      */
     fun getPopularsMovies(page: Int):Call<Result>{
-        val endpoint = context.resources.getString(R.string.url_movies_popular)
+        val endpoint = "movie/popular"
         params.put("api_key",API_KEY)
         params.put("page",page)
         Log.i("Request",endpoint + params)
@@ -38,7 +36,7 @@ class RequestMovies(private val context:Context){
      */
 
     fun getGenresMovieList(page: Int, genreId:Int?):Call<Result>{
-        val endpoint = context.resources.getString(R.string.url_movies_list_genres)
+        val endpoint = "discover/movie"
         params.put("api_key",API_KEY)
         params.put("page",page)
         params.put("with_genres",genreId)
@@ -51,7 +49,7 @@ class RequestMovies(private val context:Context){
      */
 
     fun getSimilarMovies(page: Int, movieId:Int?):Call<Result>{
-        val endpoint = (context.resources.getString(R.string.url_movie) + movieId + "/similar")
+        val endpoint = ("movie/$movieId/similar")
 
         params.put("api_key",API_KEY)
         params.put("page",page)
@@ -63,7 +61,7 @@ class RequestMovies(private val context:Context){
      */
 
     fun getSearchedMovie(page: Int, query:Int?):Call<Result>{
-        val endpoint = (context.resources.getString(R.string.url_search_query))
+        val endpoint = "search/movie"
 
         params.put("api_key",API_KEY)
         params.put("page",page)

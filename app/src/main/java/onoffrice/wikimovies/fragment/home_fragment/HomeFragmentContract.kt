@@ -1,40 +1,33 @@
-package onoffrice.wikimovies.fragment.HomeFragment
+package onoffrice.wikimovies.fragment.home_fragment
 
 import onoffrice.wikimovies.model.Movie
 
 interface HomeFragmentContract {
 
-
     interface Model{
 
-         interface OnFinishedListener {
+         interface OnRequestResultListener {
 
-            fun onFinished(movieArrayList: List<Movie>)
-
-            fun onFailure(t: Throwable)
+            fun onSucess(movieArrayList: List<Movie>)
+            fun onFailure(error: Throwable)
         }
 
-        fun requestMovies(page: Int, onFinishedListener: HomeFragmentContract.Model.OnFinishedListener)
+        fun requestMovies(page: Int, onFinishedListener: HomeFragmentContract.Model.OnRequestResultListener)
+
     }
 
     interface View{
 
-        //fun openDetailMovieFragment(movie: Movie)
-        //fun openFragment()
         fun showProgress()
         fun hideProgress()
-
-       // fun setBannerBar(movies: ArrayList<Movie>)
-
         fun setDataToRecyclerView(movieArrayList: List<Movie>)
-        fun onResponseFailure(throwable: Throwable)
+        fun onResponseError(throwable: Throwable)
 
     }
 
     interface Presenter{
 
-        //fun setBannerBar(movies: ArrayList<Movie>)
-        fun bindTo(view:HomeFragment)
+        fun bindTo(view:HomeFragmentView)
         fun destroy()
         fun requestDataFromServer()
         fun getMoreData(page: Int)

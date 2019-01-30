@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.fragment.CategoryFragment
 import onoffrice.wikimovies.fragment.FavoriteFragment
-import onoffrice.wikimovies.fragment.HomeFragment
 import onoffrice.wikimovies.fragment.SearchFragment
+import onoffrice.wikimovies.fragment.home_fragment.HomeFragmentView
 
 class ActivityMain : AppCompatActivity() {
 
@@ -20,7 +20,7 @@ class ActivityMain : AppCompatActivity() {
 
         setUpViews()
         setBottomNavigation()
-        openFragment(HomeFragment())
+        openFragment(HomeFragmentView())
     }
 
     private fun setUpViews() {
@@ -35,7 +35,7 @@ class ActivityMain : AppCompatActivity() {
 
             when (item.itemId) {
 
-                R.id.action_home      -> openFragment(HomeFragment())
+                R.id.action_home      -> openFragment(HomeFragmentView())
 
                 R.id.action_search    -> openFragment(SearchFragment())
 

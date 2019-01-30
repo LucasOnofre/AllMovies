@@ -1,16 +1,15 @@
-package onoffrice.wikimovies.fragment.HomeFragment
+package onoffrice.wikimovies.fragment.home_fragment
 
 import onoffrice.wikimovies.model.Movie
 
-class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContract.Model.OnFinishedListener{
+class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContract.Model.OnRequestResultListener{
 
     private var model = HomeFragmentModel()
-    private var view:HomeFragment? = null
+    private var view: HomeFragmentView? = null
 
     private val TAG = "HomeFragmentPresenter"
 
-
-    override fun bindTo(view:HomeFragment){
+    override fun bindTo(view:HomeFragmentView){
         this.view = view
     }
 
@@ -20,9 +19,8 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
 
     override fun requestDataFromServer() {
 
-        if (view != null){
-            view?.showProgress()
-        }
+        if (view != null){ view?.showProgress() }
+        
         model.requestMovies(1, this)
     }
 
@@ -31,7 +29,7 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
         model.requestMovies(page, this)
     }
 
-    override fun onFinished(movieArrayList: List<Movie>) {
+    override fun onSucess(movieArrayList: List<Movie>) {
 
         view?.setDataToRecyclerView(movieArrayList)
         if (view != null){
@@ -40,7 +38,7 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
     }
 
     override fun onFailure(error: Throwable) {
-        view?.onResponseFailure(error)
+        view?.onResponseError(error)
 
         if (view != null){
             view?.hideProgress()

@@ -22,7 +22,7 @@ open class BaseFragment : Fragment() {
         return container
     }
 
-    protected fun setupToolbar(container: View, title: String?){
+    protected fun setupToolbar(container: View, title: String? = ""){
 
         var toolbar:Toolbar?       = container.findViewById(R.id.toolbar)
         var titleSection:TextView? = container.findViewById(R.id.title_section)

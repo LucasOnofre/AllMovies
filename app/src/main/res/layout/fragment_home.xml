@@ -79,9 +79,10 @@
         android:id="@+id/lista"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:scrollbars="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:backgroundTint="@color/colorPrimaryDark"/>
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

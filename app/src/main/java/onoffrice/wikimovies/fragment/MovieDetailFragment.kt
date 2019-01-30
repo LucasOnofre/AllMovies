@@ -271,7 +271,7 @@ class MovieDetailFragment : BaseFragment() {
     private fun requestSimilarMovies(page:Int = 1,movieId:Int?){
 
         activity?.let {
-            RequestMovies(it).getSimilarMovies(page, movieId).enqueue(object : retrofit2.Callback<Result> {
+            RequestMovies().getSimilarMovies(page, movieId).enqueue(object : retrofit2.Callback<Result> {
 
                 override fun onResponse(call: Call<Result>, response: Response<Result>?) {
 

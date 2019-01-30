@@ -1,4 +1,4 @@
-package onoffrice.wikimovies.fragment.HomeFragment
+package onoffrice.wikimovies.fragment.home_fragment
 
 import android.util.Log
 import onoffrice.wikimovies.model.Result
@@ -14,19 +14,20 @@ class HomeFragmentModel: HomeFragmentContract.Model {
      * Return a movie list from the Discover, passing page as a param for the request
      * Also its done a recursive function
      */
-     override fun requestMovies(page: Int, onFinishedListener: HomeFragmentContract.Model.OnFinishedListener) {
+    override fun requestMovies(page: Int, onRequestResultListener: HomeFragmentContract.Model.OnRequestResultListener) {
 
-                 RequestMovies().getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result>{
+        RequestMovies().getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result>{
 
-                     override fun onResponse(call: Call<Result>, response: Response<Result>?) {
-                         val movies = response?.body()?.movies
-                         onFinishedListener.onFinished(movies!!)
-                     }
+            override fun onResponse(call: Call<Result>, response: Response<Result>?) {
+                val movies = response?.body()?.movies
+                onRequestResultListener.onSucess(movies!!)
+            }
 
-                     override fun onFailure(call: Call<Result>, error: Throwable) {
-                         Log.i(TAG, error.message)
-                         onFinishedListener.onFailure(error)
-                     }
-                 })
-     }
+            override fun onFailure(call: Call<Result>, error: Throwable) {
+                Log.i(TAG, error.message)
+                onRequestResultListener.onFailure(error)
+            }
+        })
+    }
+
 }

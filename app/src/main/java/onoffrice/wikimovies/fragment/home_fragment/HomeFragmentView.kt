@@ -22,7 +22,7 @@ import onoffrice.wikimovies.fragment.BaseFragment
 import onoffrice.wikimovies.fragment.MovieDetailFragment
 import onoffrice.wikimovies.model.Movie
 
-class HomeFragment : BaseFragment(), HomeFragmentContract.View {
+class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
 
     private var page                                     = 1
     private var layout           : AppBarLayout?         = null
@@ -40,24 +40,29 @@ class HomeFragment : BaseFragment(), HomeFragmentContract.View {
 
     private val TAG = "HomeFragmentView"
 
-
     /**
      * Implementing interface to handle the click on the movie
      */
     private val movieClickListener = object: MovieInterface{ override fun onMovieSelected(movie: Movie?) { openDetailMovieFragment(movie) } }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
         if (rootView == null){
             rootView = inflater.inflate(R.layout.fragment_home, container, false)
 
+            // Get's the views
             setUpViews(rootView!!)
-            recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
 
+            //Set's the adapter
+            setAdapter()
+
+            //Links the view to the presenter
+            homeFragmentPresenter.bindTo(this)
+
+            //Make's the request by the presenter
             homeFragmentPresenter.requestDataFromServer()
 
-            setupToolbar(rootView!!)
+            setInfiniteScroll()
         }
 
         return rootView
@@ -75,21 +80,27 @@ class HomeFragment : BaseFragment(), HomeFragmentContract.View {
 
         listMovies.addAll(movieArrayList)
         setGridLayout(recyclerList)
+
         setBannerBar(listMovies)
+
         adapter?.notifyDataSetChanged()
-        setInfiniteScroll()
+
     }
 
-    override fun onResponseFailure(throwable: Throwable) {
+    override fun onResponseError(throwable: Throwable) {
         Log.e(TAG, throwable.message)
         Toast.makeText(context,"Erro na chamada de dados", Toast.LENGTH_LONG).show()
     }
 
-     override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         homeFragmentPresenter.destroy()
     }
 
+
+    private fun setAdapter() {
+        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+    }
 
     /**
      * Convert's the movie in a Json,
@@ -118,8 +129,7 @@ class HomeFragment : BaseFragment(), HomeFragmentContract.View {
         recyclerList      = view.findViewById(R.id.lista)
         bottomNavigation  = view.findViewById(R.id.bottomNavigation)
 
-        homeFragmentPresenter.bindTo(this)
-
+        setupToolbar(rootView!!)
     }
 
     private fun setBannerBar(movies: ArrayList<Movie>) {
