@@ -1,5 +1,4 @@
-package onoffrice.wikimovies.fragment
-
+package onoffrice.wikimovies.fragment.home_fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -13,32 +12,34 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
+import onoffrice.wikimovies.fragment.BaseFragment
+import onoffrice.wikimovies.fragment.MovieDetailFragment
 import onoffrice.wikimovies.model.Movie
-import onoffrice.wikimovies.model.Result
-import onoffrice.wikimovies.request.RequestMovies
-import retrofit2.Call
-import retrofit2.Response
 
-
-
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment(), HomeFragmentContract.View {
 
     private var page                                     = 1
     private var layout           : AppBarLayout?         = null
-    private var isLoading                                = true
+    private var isLoading                                = false
     private var movieBanner      : ImageView?            = null
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
     private var bottomNavigation : BottomNavigationView? = null
     private var movieBannerTittle: TextView?             = null
 
-    private var gson             : Gson?            = Gson()
-    private var listMovies       : ArrayList<Movie> = ArrayList()
+    private var gson = Gson()
+    private var adapter: MoviesAdapter?      = null
+    private var listMovies: ArrayList<Movie> = ArrayList()
+    private var homeFragmentPresenter        = HomeFragmentPresenter()
+
+    private val TAG = "HomeFragmentView"
+
 
     /**
      * Implementing interface to handle the click on the movie
@@ -52,14 +53,43 @@ class HomeFragment : BaseFragment() {
             rootView = inflater.inflate(R.layout.fragment_home, container, false)
 
             setUpViews(rootView!!)
-            requestMovies()
-            setInfiniteScroll()
-            setupToolbar(rootView!!,"Popular")
-            setAdapter()
+            recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+
+            homeFragmentPresenter.requestDataFromServer()
+
+            setupToolbar(rootView!!)
         }
 
         return rootView
     }
+
+    override fun showProgress() {
+        progressBar?.visibility  = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        progressBar?.visibility  = View.INVISIBLE
+    }
+
+    override fun setDataToRecyclerView(movieArrayList: List<Movie>) {
+
+        listMovies.addAll(movieArrayList)
+        setGridLayout(recyclerList)
+        setBannerBar(listMovies)
+        adapter?.notifyDataSetChanged()
+        setInfiniteScroll()
+    }
+
+    override fun onResponseFailure(throwable: Throwable) {
+        Log.e(TAG, throwable.message)
+        Toast.makeText(context,"Erro na chamada de dados", Toast.LENGTH_LONG).show()
+    }
+
+     override fun onDestroy() {
+        super.onDestroy()
+        homeFragmentPresenter.destroy()
+    }
+
 
     /**
      * Convert's the movie in a Json,
@@ -72,7 +102,7 @@ class HomeFragment : BaseFragment() {
         // Transform the movie into an Json to save in shared preferences
         var movieJson = gson?.toJson(movie)
 
-        editor?.putString("movieJson",movieJson)
+        editor?.putString("movieJson", movieJson)
         editor?.commit()
 
         openFragment(MovieDetailFragment())
@@ -86,44 +116,10 @@ class HomeFragment : BaseFragment() {
         progressBar       = view.findViewById(R.id.progressBar)
         movieBanner       = view.findViewById(R.id.movieBanner)
         recyclerList      = view.findViewById(R.id.lista)
-        //movieBannerTittle = view.findViewById(R.id.banner_movie_tittle)
         bottomNavigation  = view.findViewById(R.id.bottomNavigation)
 
-        progressBar?.visibility  = View.VISIBLE
+        homeFragmentPresenter.bindTo(this)
 
-    }
-
-    private fun setAdapter() {
-        //Set's the adapter
-        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
-        setGridLayout(recyclerList)
-    }
-
-    /**
-     * Return a movie list from the Discover, passing page as a param for the request
-     * Also its done a recursive function
-     */
-    private fun requestMovies(page:Int = 1){
-        activity?.let {
-            RequestMovies(it).getPopularsMovies(page).enqueue(object : retrofit2.Callback<Result>{
-
-                override fun onResponse(call: Call<Result>, response: Response<Result>?) {
-
-                    progressBar?.visibility = View.GONE
-                    layout?.visibility      = View.VISIBLE
-
-                    response?.body()?.movies?.let { movies -> if (page == 1){ setBannerBar(movies) }
-
-                        listMovies.addAll(movies)
-                        recyclerList?.adapter?.notifyDataSetChanged()
-                        isLoading = false
-                    }
-                }
-                override fun onFailure(call: Call<Result>, t: Throwable) {
-                    Log.i("Error: ", t.message)
-                }
-            })
-        }
     }
 
     private fun setBannerBar(movies: ArrayList<Movie>) {
@@ -145,7 +141,8 @@ class HomeFragment : BaseFragment() {
                 if (!recyclerView.canScrollVertically(1 ) && !isLoading){
                     isLoading = true
                     page++
-                    requestMovies(page)
+                    homeFragmentPresenter.getMoreData(page)
+                    isLoading = false
                 }
             }
         })
