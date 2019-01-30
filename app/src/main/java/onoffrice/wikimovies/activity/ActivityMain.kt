@@ -5,9 +5,9 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.fragment.CategoryFragment
 import onoffrice.wikimovies.fragment.FavoriteFragment
 import onoffrice.wikimovies.fragment.SearchFragment
+import onoffrice.wikimovies.fragment.category_fragment.CategoryFragmentView
 import onoffrice.wikimovies.fragment.home_fragment.HomeFragmentView
 
 class ActivityMain : AppCompatActivity() {
@@ -39,7 +39,7 @@ class ActivityMain : AppCompatActivity() {
 
                 R.id.action_search    -> openFragment(SearchFragment())
 
-                R.id.action_category  -> openFragment(CategoryFragment())
+                R.id.action_category  -> openFragment(CategoryFragmentView())
 
                 R.id.action_favorites -> openFragment(FavoriteFragment())
             }

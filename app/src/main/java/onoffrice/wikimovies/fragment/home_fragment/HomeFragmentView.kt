@@ -76,27 +76,43 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
         progressBar?.visibility  = View.INVISIBLE
     }
 
+    /**
+     * Set's the data on the list
+     */
     override fun setDataToRecyclerView(movieArrayList: List<Movie>) {
 
         listMovies.addAll(movieArrayList)
         setGridLayout(recyclerList)
 
-        setBannerBar(listMovies)
-
         adapter?.notifyDataSetChanged()
 
+        checkFirstPage()
     }
 
+    /**
+     * Check's if it is the first page to set the bannerBar
+     */
+    private fun checkFirstPage() {
+        if (page == 1) {
+            setBannerBar(listMovies)
+        }
+    }
+
+    /**
+     * Handle's the error from the request
+     */
     override fun onResponseError(throwable: Throwable) {
         Log.e(TAG, throwable.message)
-        Toast.makeText(context,"Erro na chamada de dados", Toast.LENGTH_LONG).show()
+        Toast.makeText(context,"Unexpected error, please try again", Toast.LENGTH_LONG).show()
     }
 
+    /**
+     * Destroy's the link between the presenter and the view
+     */
     override fun onDestroy() {
         super.onDestroy()
         homeFragmentPresenter.destroy()
     }
-
 
     private fun setAdapter() {
         recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
@@ -132,6 +148,9 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
         setupToolbar(rootView!!)
     }
 
+    /**
+     * Set's the banner bar, an image of the top ranked movie on the list
+     */
     private fun setBannerBar(movies: ArrayList<Movie>) {
         Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
         movieBannerTittle?.text = movies[0].title

@@ -1,5 +1,4 @@
-package onoffrice.wikimovies.fragment
-
+package onoffrice.wikimovies.fragment.category_fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -11,15 +10,18 @@ import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.CategoryAdapter
 import onoffrice.wikimovies.adapter.CategoryInterface
+import onoffrice.wikimovies.fragment.BaseFragment
+import onoffrice.wikimovies.fragment.CategoryMovieListFragment
 import onoffrice.wikimovies.model.Genre
-import java.util.*
+import kotlin.collections.ArrayList
 
-class CategoryFragment : BaseFragment() {
+class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
 
     private var gson           : Gson? = Gson()
     private var genres         : Array<Genre>?     = null
     private var categoryList   : ListView?         = null
     private var genresArrayList: ArrayList<Genre>? = null
+    private val presenter = CategoryFragmentPresenter()
 
 
     private val genreClickListener = object: CategoryInterface {override fun onCategorySelected(genre: Genre?) {openCategoryList(genre)} }
@@ -28,44 +30,24 @@ class CategoryFragment : BaseFragment() {
 
        var view = inflater.inflate(R.layout.fragment_category, container, false)
 
-        populateGenres()
+        presenter.bindTo(this)
+
         setUpViews(view)
+
+        presenter.getGenres()
+
 
         return view
     }
 
-    private fun populateGenres() {
+    override fun setGenres(genres: Array<Genre>) {
 
-        genres = arrayOf(
-
-                Genre(18    , "Action"),
-                Genre(12    , "Adventure"),
-                Genre(16    , "Animation"),
-                Genre(35    , "Comedy"),
-                Genre(80    , "Crime"),
-                Genre(99    , "Documentary"),
-                Genre(10751 , "Family"),
-                Genre(14    , "Fantasy"),
-                Genre(36    , "History"),
-                Genre(27    , "Horror"),
-                Genre(10402 , "Music"),
-                Genre(9648  , "Mystery"),
-                Genre(10749 , "Romance"),
-                Genre(878   , "Science Fiction"),
-                Genre(10770 , "TV Movie"),
-                Genre(53    , "Thriller"),
-                Genre(10752 , "War"),
-                Genre(37    , "Western")
-        )
+        genresArrayList  = genres.toCollection(ArrayList())
     }
-
 
     private fun setUpViews(view: View) {
 
         categoryList          = view.findViewById(R.id.listView)
-
-        //Convert's the array in arrayList
-        genresArrayList       = genres?.toCollection(ArrayList())
         categoryList?.adapter = CategoryAdapter(context,genresArrayList,genreClickListener)
 
     }
@@ -84,4 +66,5 @@ class CategoryFragment : BaseFragment() {
 
         openFragment(CategoryMovieListFragment())
     }
+
 }

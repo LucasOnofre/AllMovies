@@ -4,8 +4,8 @@ import onoffrice.wikimovies.model.Movie
 
 class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContract.Model.OnRequestResultListener{
 
-    private var model = HomeFragmentModel()
     private var view: HomeFragmentView? = null
+    private var model = HomeFragmentModel()
 
     private val TAG = "HomeFragmentPresenter"
 
@@ -20,7 +20,7 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
     override fun requestDataFromServer() {
 
         if (view != null){ view?.showProgress() }
-        
+
         model.requestMovies(1, this)
     }
 
@@ -32,9 +32,8 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
     override fun onSucess(movieArrayList: List<Movie>) {
 
         view?.setDataToRecyclerView(movieArrayList)
-        if (view != null){
-            view?.hideProgress()
-        }
+
+        if (view != null){ view?.hideProgress() }
     }
 
     override fun onFailure(error: Throwable) {
