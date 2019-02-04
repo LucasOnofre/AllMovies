@@ -32,7 +32,7 @@ class MovieDetailFragment : BaseFragment() {
     private var editor              :SharedPreferences.Editor? = null
     private var btnGoOut            :UserButton?               = null
     private var movieName           :TextView?                 = null
-    private var isLoading                                      = true
+    private var isLoading                                      = false
     private var progressBar         :ProgressBar?              = null
     private var progressTxt         :TextView?                 = null
     private var btnFavorite         :UserButton?               = null

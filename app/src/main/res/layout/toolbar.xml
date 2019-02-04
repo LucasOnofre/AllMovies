@@ -8,7 +8,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#00000000"
         android:elevation="4dp"
-        app:contentInsetStart="0dp"
+
         app:layout_collapseMode="pin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

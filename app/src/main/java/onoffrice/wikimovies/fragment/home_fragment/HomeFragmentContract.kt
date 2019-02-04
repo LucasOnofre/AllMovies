@@ -8,7 +8,7 @@ interface HomeFragmentContract {
 
          interface OnRequestResultListener {
 
-            fun onSucess(movieArrayList: List<Movie>)
+            fun onSucess(movieArrayList: ArrayList<Movie>)
             fun onFailure(error: Throwable)
         }
 
@@ -20,8 +20,8 @@ interface HomeFragmentContract {
 
         fun showProgress()
         fun hideProgress()
-        fun setDataToRecyclerView(movieArrayList: List<Movie>)
-        fun onResponseError(throwable: Throwable)
+        fun setDataToRecyclerView(movieArrayList: ArrayList<Movie>)
+        fun onResponseError(error: Throwable)
 
     }
 

@@ -1,4 +1,4 @@
-package onoffrice.wikimovies.fragment
+package onoffrice.wikimovies.fragment.favorite_fragment
 
 
 import android.content.Context
@@ -18,23 +18,23 @@ import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
 import onoffrice.wikimovies.extension.parseJson
+import onoffrice.wikimovies.fragment.BaseFragment
+import onoffrice.wikimovies.fragment.MovieDetailFragment
 import onoffrice.wikimovies.model.Movie
 
 class FavoriteFragment : BaseFragment() {
 
-    private var layout           : AppBarLayout?         = null
-    private var emptyMessage     : TextView?             = null
-    private var isLoading                                = true
-    private var progressBar      : ProgressBar?          = null
-    private var recyclerList     : RecyclerView?         = null
-    private var bottomNavigation : BottomNavigationView? = null
+    private var layout           : AppBarLayout?              = null
+    private var isLoading                                     = true
+    private var preferences      : SharedPreferences?         = null
+    private var progressBar      : ProgressBar?               = null
+    private var recyclerList     : RecyclerView?              = null
+    private var emptyMessage     : TextView?                  = null
+    private var bottomNavigation : BottomNavigationView?      = null
+    private var editor           : SharedPreferences.Editor?  = null
 
-    private var preferences : SharedPreferences?        = null
-    private var editor      : SharedPreferences.Editor? = null
-
-    private var gson        : Gson? = Gson()
-    private var listMovies  : ArrayList<Movie> = ArrayList()
-
+    private var gson       : Gson?            = Gson()
+    private var listMovies : ArrayList<Movie> = ArrayList()
 
 
     /**

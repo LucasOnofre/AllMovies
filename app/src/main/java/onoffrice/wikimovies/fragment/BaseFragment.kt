@@ -3,6 +3,7 @@ package onoffrice.wikimovies.fragment
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.android.synthetic.main.toolbar.view.*
 import onoffrice.wikimovies.R
 
 open class BaseFragment : Fragment() {
@@ -22,10 +24,16 @@ open class BaseFragment : Fragment() {
         return container
     }
 
-    protected fun setupToolbar(container: View, title: String? = ""){
+    protected fun setupToolbar(view: View, title: String? = ""){
 
-        var toolbar:Toolbar?       = container.findViewById(R.id.toolbar)
-        var titleSection:TextView? = container.findViewById(R.id.title_section)
+        var toolbar:Toolbar?       = view.findViewById(R.id.toolbar)
+        var titleSection:TextView? = view.findViewById(R.id.title_section)
+
+        if (title == " "){
+
+            titleSection?.let { titleSection?.text = title }
+            return
+        }
 
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)
@@ -34,13 +42,16 @@ open class BaseFragment : Fragment() {
     }
 
     protected fun setToolbarGoBackArrow(view: View, title:String) {
-        val toolbar       = view.findViewById<Toolbar>(R.id.toolbar)
-        var titleSection:TextView? = view.findViewById(R.id.title_section)
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+
+        var collapsingToolbar:CollapsingToolbarLayout? = view.findViewById(R.id.collapsing_toolbar)
+
+
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)
-            (activity as AppCompatActivity).setSupportActionBar(it)
 
-            titleSection?.text = title
+            collapsingToolbar?.title =  title
+            it.title = title
             it.setNavigationIcon(R.drawable.ic_arrow_back)
             it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
         }

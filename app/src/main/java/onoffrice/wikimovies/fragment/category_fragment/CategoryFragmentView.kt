@@ -11,30 +11,33 @@ import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.CategoryAdapter
 import onoffrice.wikimovies.adapter.CategoryInterface
 import onoffrice.wikimovies.fragment.BaseFragment
-import onoffrice.wikimovies.fragment.CategoryMovieListFragment
+import onoffrice.wikimovies.fragment.category_movie_list_fragment.CategoryMovieListFragmentView
 import onoffrice.wikimovies.model.Genre
 import kotlin.collections.ArrayList
 
 class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
 
-    private var gson           : Gson? = Gson()
-    private var genres         : Array<Genre>?     = null
     private var categoryList   : ListView?         = null
-    private var genresArrayList: ArrayList<Genre>? = null
-    private val presenter = CategoryFragmentPresenter()
+
+    private var gson           : Gson?             = Gson()
+    private val presenter                          = CategoryFragmentPresenter()
+    private var genresArrayList: ArrayList<Genre>? = ArrayList()
 
 
-    private val genreClickListener = object: CategoryInterface {override fun onCategorySelected(genre: Genre?) {openCategoryList(genre)} }
+    private val genreClickListener = object: CategoryInterface {
+        override fun onCategorySelected(genre: Genre?) {
+            openCategoryList(genre)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
        var view = inflater.inflate(R.layout.fragment_category, container, false)
 
         presenter.bindTo(this)
+        presenter.getGenres()
 
         setUpViews(view)
-
-        presenter.getGenres()
 
 
         return view
@@ -64,7 +67,6 @@ class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
         editor?.putString("categoryChosen",genreJson )
         editor?.commit()
 
-        openFragment(CategoryMovieListFragment())
+        openFragment(CategoryMovieListFragmentView())
     }
-
 }

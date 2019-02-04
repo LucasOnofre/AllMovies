@@ -11,13 +11,12 @@ import java.util.*
 class RequestMovies{
 
     private val service:Service
+    private val API_KEY  = "037b83eda5aad6b5c90898ea8ea94da3"
+    private val params   = HashMap<String,Any?>()
 
     init {
         this.service = RetrofitClient.instance().create(Service::class.java)
     }
-
-    private val API_KEY  = "037b83eda5aad6b5c90898ea8ea94da3"
-    private val params = HashMap<String,Any?>()
 
     /**
      * Return a movie list of Popular movies

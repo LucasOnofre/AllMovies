@@ -5,7 +5,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.fragment.FavoriteFragment
+import onoffrice.wikimovies.fragment.favorite_fragment.FavoriteFragment
 import onoffrice.wikimovies.fragment.SearchFragment
 import onoffrice.wikimovies.fragment.category_fragment.CategoryFragmentView
 import onoffrice.wikimovies.fragment.home_fragment.HomeFragmentView

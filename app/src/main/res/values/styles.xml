@@ -28,4 +28,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="collapsed_title_style" parent="android:Theme.Holo">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>

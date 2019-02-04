@@ -7,10 +7,12 @@
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
-    <include
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        app:layout_constraintBottom_toTopOf="@+id/category_list"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_collapseMode="pin"
+        app:titleTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -1,4 +1,4 @@
-package onoffrice.wikimovies.fragment
+package onoffrice.wikimovies.fragment.category_movie_list_fragment
 
 
 import android.content.Context
@@ -9,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
 import onoffrice.wikimovies.extension.parseJson
+import onoffrice.wikimovies.fragment.BaseFragment
+import onoffrice.wikimovies.fragment.MovieDetailFragment
 import onoffrice.wikimovies.model.Genre
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.Result
@@ -24,24 +27,28 @@ import retrofit2.Response
 
 
 
-class CategoryMovieListFragment : BaseFragment() {
+class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentContract.View{
 
     private var page                                     = 1
-    private var isLoading                                = true
+    private var genre            :Genre?                 = null
+    private var adapter          : MoviesAdapter?        = null
+    private var isLoading                                = false
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
+
     private var gson             : Gson?                 = Gson()
     private var listMovies       : ArrayList<Movie>      = ArrayList()
-
-
-    private var genre:Genre? = null
+    private var presenter        : CategoryMovieListFragmentPresenter = CategoryMovieListFragmentPresenter()
 
 
     /**
      * Implementing interface to handle the click on the movie
      */
-    private val movieClickListener = object: MovieInterface{ override fun onMovieSelected(movie: Movie?) { openDetailMovieFragment(movie) } }
-
+    private val movieClickListener = object: MovieInterface{
+        override fun onMovieSelected(movie: Movie?) {
+            openDetailMovieFragment(movie)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
@@ -49,11 +56,17 @@ class CategoryMovieListFragment : BaseFragment() {
             rootView = inflater.inflate(R.layout.fragment_category_movie_list, container, false)
 
             setUpViews(rootView!!)
+
             getSelectedGenre()
+
+            presenter.bindTo(this)
+            presenter.requestMoviesModel(genre?.id!!)
+
             setToolbarGoBackArrow(rootView!!,genre?.name.toString())
-            requestMovies()
-            setInfiniteScroll()
+
             setAdapter()
+
+            setInfiniteScroll()
         }
 
         return rootView
@@ -68,9 +81,7 @@ class CategoryMovieListFragment : BaseFragment() {
 
         genre = context?.parseJson<Genre>(genreSelected)
         //gson?.fromJson(genreSelected, Genre::class.java)?.let { genre = it }
-
     }
-
 
     /**
      * Convert's the movie in a Json,
@@ -94,43 +105,20 @@ class CategoryMovieListFragment : BaseFragment() {
      */
     private fun setUpViews(view: View) {
 
-        progressBar       = view.findViewById(R.id.progressBar)
-        recyclerList      = view.findViewById(R.id.category_list)
-        progressBar?.visibility  = View.VISIBLE
+        progressBar  = view.findViewById(R.id.progressBar)
+        recyclerList = view.findViewById(R.id.category_list)
+
 
     }
 
     private fun setAdapter() {
         //Set's the adapter
-        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
-        setGridLayout(recyclerList)
-    }
-
-    /**
-     * Return a movie list of the selected genre
-     * Also a recursive function
-     */
-    private fun requestMovies(page:Int = 1){
-        activity?.let {
-            RequestMovies().getGenresMovieList(page,genre?.id).enqueue(object : retrofit2.Callback<Result>{
-
-                override fun onResponse(call: Call<Result>, response: Response<Result>?) {
-
-                    progressBar?.visibility = View.GONE
+        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        recyclerList?.adapter = adapter
 
 
-                    response?.body()?.movies?.let { movies ->
 
-                        listMovies.addAll(movies)
-                        recyclerList?.adapter?.notifyDataSetChanged()
-                        isLoading = false
-                    }
-                }
-                override fun onFailure(call: Call<Result>, t: Throwable) {
-                    Log.i("Error: ", t.message)
-                }
-            })
-        }
+
     }
 
     /**
@@ -143,12 +131,40 @@ class CategoryMovieListFragment : BaseFragment() {
                 super.onScrollStateChanged(recyclerView, newState)
 
                 //direction = 1 = list ends
-                if (!recyclerView.canScrollVertically(1 ) && !isLoading){
+                if (!recyclerView.canScrollVertically(1) && !isLoading){
                     isLoading = true
                     page++
-                    requestMovies(page)
+                    presenter.requestMoreMovies(page,genre?.id!!)
+                    isLoading = false
                 }
             }
         })
+    }
+    override fun showProgress() {
+
+        progressBar?.visibility  = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+
+        progressBar?.visibility  = View.GONE
+
+    }
+
+    override fun setDataToList(movies: ArrayList<Movie>) {
+
+        listMovies.addAll(movies)
+        setGridLayout(recyclerList)
+        adapter?.notifyDataSetChanged()
+
+    }
+
+    override fun onResponseError(error: Throwable) {
+        Toast.makeText(context, error.toString(),Toast.LENGTH_LONG).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 }

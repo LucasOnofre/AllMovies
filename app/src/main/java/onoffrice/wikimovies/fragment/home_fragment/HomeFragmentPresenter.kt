@@ -29,7 +29,7 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
         model.requestMovies(page, this)
     }
 
-    override fun onSucess(movieArrayList: List<Movie>) {
+    override fun onSucess(movieArrayList: ArrayList<Movie>) {
 
         view?.setDataToRecyclerView(movieArrayList)
 

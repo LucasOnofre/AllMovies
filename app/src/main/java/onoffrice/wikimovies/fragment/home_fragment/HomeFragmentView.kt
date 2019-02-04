@@ -26,15 +26,17 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
 
     private var page                                     = 1
     private var layout           : AppBarLayout?         = null
+    private var adapter          : MoviesAdapter?        = null
     private var isLoading                                = false
     private var movieBanner      : ImageView?            = null
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
     private var bottomNavigation : BottomNavigationView? = null
     private var movieBannerTittle: TextView?             = null
+    private var appBarLayout     : AppBarLayout?         = null
 
-    private var gson = Gson()
-    private var adapter: MoviesAdapter?      = null
+    //  Initializations
+    private var gson                         = Gson()
     private var listMovies: ArrayList<Movie> = ArrayList()
     private var homeFragmentPresenter        = HomeFragmentPresenter()
 
@@ -43,7 +45,11 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     /**
      * Implementing interface to handle the click on the movie
      */
-    private val movieClickListener = object: MovieInterface{ override fun onMovieSelected(movie: Movie?) { openDetailMovieFragment(movie) } }
+    private val movieClickListener = object: MovieInterface{
+        override fun onMovieSelected(movie: Movie?) {
+            openDetailMovieFragment(movie)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
@@ -53,14 +59,18 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
             // Get's the views
             setUpViews(rootView!!)
 
-            //Set's the adapter
-            setAdapter()
+            // Check's the scroll
+            listenerScrollForToolbar()
+
 
             //Links the view to the presenter
             homeFragmentPresenter.bindTo(this)
 
             //Make's the request by the presenter
             homeFragmentPresenter.requestDataFromServer()
+
+            //Set's the adapter
+            setAdapter()
 
             setInfiniteScroll()
         }
@@ -73,13 +83,13 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     }
 
     override fun hideProgress() {
-        progressBar?.visibility  = View.INVISIBLE
+        progressBar?.visibility  = View.GONE
     }
 
     /**
      * Set's the data on the list
      */
-    override fun setDataToRecyclerView(movieArrayList: List<Movie>) {
+    override fun setDataToRecyclerView(movieArrayList: ArrayList<Movie>) {
 
         listMovies.addAll(movieArrayList)
         setGridLayout(recyclerList)
@@ -115,7 +125,8 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     }
 
     private fun setAdapter() {
-        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        recyclerList?.adapter = adapter
     }
 
     /**
@@ -143,9 +154,36 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
         progressBar       = view.findViewById(R.id.progressBar)
         movieBanner       = view.findViewById(R.id.movieBanner)
         recyclerList      = view.findViewById(R.id.lista)
+        appBarLayout      = view.findViewById(R.id.appBarLayout)
         bottomNavigation  = view.findViewById(R.id.bottomNavigation)
 
-        setupToolbar(rootView!!)
+    }
+
+    /**
+     * Check's the scroll to hide or show the toolbar title
+     */
+    private fun listenerScrollForToolbar() {
+        appBarLayout?.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
+            private var scrollRange = -1
+            private var isShow = false
+
+            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.totalScrollRange
+                }
+
+
+                if (scrollRange + verticalOffset == 0) {
+                    setupToolbar(rootView!!, "Popular")
+                    isShow = true
+
+                } else if (isShow) {
+                    setupToolbar(rootView!!, " ")
+                    isShow = false
+                }
+            }
+        })
     }
 
     /**
