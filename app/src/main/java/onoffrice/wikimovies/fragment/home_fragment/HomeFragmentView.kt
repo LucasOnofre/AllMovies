@@ -19,7 +19,7 @@ import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.fragment.BaseFragment
-import onoffrice.wikimovies.fragment.MovieDetailFragment
+import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
 
 class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
@@ -143,7 +143,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
         editor?.putString("movieJson", movieJson)
         editor?.commit()
 
-        openFragment(MovieDetailFragment())
+        openFragment(MovieDetailFragmentView())
     }
 
     /**

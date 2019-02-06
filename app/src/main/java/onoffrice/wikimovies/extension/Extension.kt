@@ -70,9 +70,9 @@ fun SharedPreferences.getPreferenceKey(key:String): String? {
 /**
  * Convert's the object param to Json
  */
-inline fun<reified T> Context.parseJson(json:String?):T?{
+inline fun<reified T> String.parseJson():T?{
     try{
-        return Gson().fromJson(json, T::class.java)
+        return Gson().fromJson(this, T::class.java)
     }
     catch (exception:Exception){
         exception.stackTrace
@@ -95,9 +95,9 @@ inline fun<reified T> Context.parseJson(json:String?):T?{
 /**
  * Animate the ProgressBar
  */
-fun ProgressBar.circleAnimate(to:Int){
+fun ProgressBar.circleAnimate(rate:Int){
     this?.postDelayed({
-        val animation = ObjectAnimator.ofInt(this, "progress", to)
+        val animation = ObjectAnimator.ofInt(this, "progress",rate*(100/10))
         animation.duration = 500
         animation.interpolator = LinearInterpolator()
         animation.start()

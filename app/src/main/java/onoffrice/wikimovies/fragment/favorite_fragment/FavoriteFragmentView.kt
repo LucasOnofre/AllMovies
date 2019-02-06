@@ -19,7 +19,7 @@ import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
 import onoffrice.wikimovies.extension.parseJson
 import onoffrice.wikimovies.fragment.BaseFragment
-import onoffrice.wikimovies.fragment.MovieDetailFragment
+import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
 
 class FavoriteFragment : BaseFragment() {
@@ -79,7 +79,7 @@ class FavoriteFragment : BaseFragment() {
         editor?.putString("movieJson", movieJson)
         editor?.commit()
 
-        openFragment(MovieDetailFragment())
+        openFragment(MovieDetailFragmentView())
     }
 
     /**
@@ -109,7 +109,7 @@ class FavoriteFragment : BaseFragment() {
     private fun getFavorites() {
 
         val json = preferences?.getPreferenceKey("favoriteMovieList")
-        context?.parseJson<Array<Movie>>(json)?.let {
+        json?.parseJson<Array<Movie>>()?.let {
             listMovies = it.toCollection(ArrayList())
             progressBar?.visibility = View.GONE
             isLoading = false

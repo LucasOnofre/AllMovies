@@ -4,7 +4,6 @@ package onoffrice.wikimovies.fragment.category_movie_list_fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,14 +16,9 @@ import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
 import onoffrice.wikimovies.extension.parseJson
 import onoffrice.wikimovies.fragment.BaseFragment
-import onoffrice.wikimovies.fragment.MovieDetailFragment
+import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Genre
 import onoffrice.wikimovies.model.Movie
-import onoffrice.wikimovies.model.Result
-import onoffrice.wikimovies.request.RequestMovies
-import retrofit2.Call
-import retrofit2.Response
-
 
 
 class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentContract.View{
@@ -79,7 +73,7 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
         val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
         var genreSelected = (preferences?.getPreferenceKey("categoryChosen"))
 
-        genre = context?.parseJson<Genre>(genreSelected)
+        genre = genreSelected?.parseJson<Genre>()
         //gson?.fromJson(genreSelected, Genre::class.java)?.let { genre = it }
     }
 
@@ -97,7 +91,7 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
         editor?.putString("movieJson",movieJson)
         editor?.commit()
 
-        openFragment(MovieDetailFragment())
+        openFragment(MovieDetailFragmentView())
     }
 
     /**
@@ -115,9 +109,6 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
         //Set's the adapter
         adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
         recyclerList?.adapter = adapter
-
-
-
 
     }
 

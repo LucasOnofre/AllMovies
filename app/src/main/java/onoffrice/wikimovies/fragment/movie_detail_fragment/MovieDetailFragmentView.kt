@@ -1,9 +1,11 @@
-package onoffrice.wikimovies.fragment
+package onoffrice.wikimovies.fragment.movie_detail_fragment
 
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_movie_detail.*
 import onoffrice.wikimovies.R
@@ -19,20 +22,17 @@ import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.custom.UserButton
 import onoffrice.wikimovies.extension.*
+import onoffrice.wikimovies.fragment.BaseFragment
 import onoffrice.wikimovies.model.Movie
-import onoffrice.wikimovies.model.Result
-import onoffrice.wikimovies.request.RequestMovies
-import retrofit2.Call
-import retrofit2.Response
 
 
-class MovieDetailFragment : BaseFragment() {
+class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View {
 
     private var page                                           = 1
     private var editor              :SharedPreferences.Editor? = null
+    private var toolbar             :CollapsingToolbarLayout?  = null
     private var btnGoOut            :UserButton?               = null
     private var movieName           :TextView?                 = null
-    private var isLoading                                      = false
     private var progressBar         :ProgressBar?              = null
     private var progressTxt         :TextView?                 = null
     private var btnFavorite         :UserButton?               = null
@@ -42,11 +42,15 @@ class MovieDetailFragment : BaseFragment() {
     private var movieDescript       :TextView?                 = null
     private var movieReleaseDate    :TextView?                 = null
 
-    private var gson                :Gson?                     = Gson()
-    private var movie               :Movie                     = Movie()
-    private var listMovies          :ArrayList<Movie>          = ArrayList()
-    private var favoriteMovieList   :ArrayList<Movie>          = ArrayList()
+    //Boolean
+    private var isLoading                                      = false
 
+    //Initializations
+    private var gson                :Gson?                        = Gson()
+    private var movie               :Movie                        = Movie()
+    private var presenter           :MovieDetailFragmentPresenter = MovieDetailFragmentPresenter()
+    private var listMovies          :ArrayList<Movie>             = ArrayList()
+    private var favoriteMovieList   :ArrayList<Movie>             = ArrayList()
 
     /**
      * Implementing interface to handle the click on the movie
@@ -57,24 +61,51 @@ class MovieDetailFragment : BaseFragment() {
 
         var view = inflater.inflate(R.layout.fragment_movie_detail, container, false)
 
-        preferences             = context?.getPreferences()
-        editor                  = context?.getPreferencesEditor()
+        preferences = context?.getPreferences()
+        editor      = context?.getPreferencesEditor()
 
         getSelectedMovie()
         setUpViews(view)
         setToolbarGoBackArrow(view, movie.title.toString())
         setAdapter()
         setInfiniteScroll()
-        requestSimilarMovies(movieId = movie.id)
+
+        presenter.bindTo(this)
+        presenter.requestSimilarMovies(movieId = movie.id!!)
 
         return view
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
+
+    }
+
+    override fun updateFavoriteList(movies: ArrayList<Movie>) {
+
+        listMovies.addAll(movies)
+
+        if (!listMovies.isEmpty())
+            recyclerList?.adapter?.notifyDataSetChanged()
+
+        else
+            hideSimilarMoviesLayout()
+    }
+
+    override fun onResponseError(error: Throwable) {
+
+        Toast.makeText(context,error.toString(),Toast.LENGTH_LONG).show()
+        Log.i("Request: ", error.message)
+    }
+
 
     override fun onResume() {
         super.onResume()
 
         val json = preferences?.getPreferenceKey("favoriteMovieList")
-        context?.parseJson<Array<Movie>>(json)?.let {
+        json?.parseJson<Array<Movie>>()?.let {
             favoriteMovieList = it.toCollection(ArrayList())
             getFavorites()
         }
@@ -107,9 +138,7 @@ class MovieDetailFragment : BaseFragment() {
         val movieJson = preferences?.getPreferenceKey("movieJson")
 
         //Transform the json into a object '(movie)'
-        gson?.fromJson(movieJson, Movie::class.java)?.let {
-            movie = it
-        }
+        gson?.fromJson(movieJson, Movie::class.java)?.let { movie = it }
     }
 
     /**
@@ -124,6 +153,7 @@ class MovieDetailFragment : BaseFragment() {
         progressBar         = view.findViewById(R.id.circle_progress)
         progressTxt         = view.findViewById(R.id.progress_nota)
         recyclerList        = view.findViewById(R.id.lista)
+        toolbar             = view.findViewById(R.id.collapsing_toolbar)
 
         btnFavorite = view.findViewById(R.id.favorite_btn)
         btnGoOut    = view.findViewById(R.id.go_out_btn)
@@ -147,7 +177,6 @@ class MovieDetailFragment : BaseFragment() {
 
         else
             unFavoriteMovie(movie)
-
     }
 
     private fun unFavoriteMovie(movie:Movie) {
@@ -155,12 +184,10 @@ class MovieDetailFragment : BaseFragment() {
         btnFavorite?.imageParameter?.setImageResource(R.drawable.ic_favorite_border)
         btnFavorite?.textParameter?.text = "Favorite"
 
-        movie?.isFavorite = false
 
         if (isFavorite()){
-            val index = favoriteMovieList.indexOfFirst { it.id == movie.id }
-            if(index != -1)
-                favoriteMovieList.removeAt(index)
+
+            presenter.unFavoriteMovie(favoriteMovieList,movie)
         }
     }
 
@@ -169,9 +196,12 @@ class MovieDetailFragment : BaseFragment() {
         btnFavorite?.imageParameter?.setImageResource(R.drawable.ic_favorite)
         btnFavorite?.textParameter?.text = "Favorited"
 
-        movie.isFavorite = true
 
-        if (!isFavorite()){ favoriteMovieList.add(movie) }
+        if (!isFavorite()){
+
+            favoriteMovieList = presenter.favoriteMovie(favoriteMovieList,movie)
+
+        }
     }
 
     /**
@@ -179,13 +209,8 @@ class MovieDetailFragment : BaseFragment() {
      */
     private fun isFavorite(): Boolean {
 
-        for (movieinList in favoriteMovieList) {
-            if (movieinList.id == movie.id) {
-                return true
-                break
-            }
-        }
-        return false
+        return presenter.isFavorite(favoriteMovieList, movie)
+
     }
 
     /**
@@ -199,25 +224,12 @@ class MovieDetailFragment : BaseFragment() {
         editor?.putString("favoriteMovieList", favoritedList)
         editor?.commit()
     }
-//
-//    private fun configureToolbar(view: View, title:String) {
-//        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-//        setupToolbar(view)
-//        toolbar.let {
-//            (activity as AppCompatActivity).setSupportActionBar(it)
-//            it.title = title
-//            it.setNavigationIcon(R.drawable.ic_arrow_back)
-//            it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
-//        }
-//    }
 
     /**
      * Convert's the movie in a Json,
      * save on shared preferences and also open de Movie Detail Fragment
      */
     private fun openDetailMovieFragment(movie:Movie?){
-
-        editor = context?.getPreferencesEditor()
 
         // Transform the movie into an Json to save in shared preferences
         var movieJson = gson?.toJson(movie)
@@ -226,7 +238,7 @@ class MovieDetailFragment : BaseFragment() {
         editor?.commit()
 
         //Open's the given fragment
-        openFragment(MovieDetailFragment())
+        openFragment(MovieDetailFragmentView())
     }
 
     /**
@@ -235,9 +247,9 @@ class MovieDetailFragment : BaseFragment() {
 
     private fun setInfo(movie: Movie?) {
 
-        val date         = movie?.releaseDate?.formatDateToYear()
-        val urlImageBanner= this.resources.getString(R.string.base_url_images) + movie?.backdropPath
+        val date            = movie?.releaseDate?.formatDateToYear()
         val movieRate       = movie?.voteAverage?.toInt()
+        val urlImageBanner  = this.resources.getString(R.string.base_url_images) + movie?.backdropPath
 
         //Load's the image using Picasso passing the local as parameter
         urlImageBanner.loadPicasso(movieBanner)
@@ -247,7 +259,7 @@ class MovieDetailFragment : BaseFragment() {
         movieDescript?.text     = movie?.overview
         movieReleaseDate?.text  = date
 
-        movieRate?.let { progressBar?.circleAnimate((it * 100)/10) }
+        movieRate?.let { progressBar?.circleAnimate(it)}
 
     }
 
@@ -264,37 +276,14 @@ class MovieDetailFragment : BaseFragment() {
         setGridLayout(recyclerList)
     }
 
-    /**
-     * Return a movie list from the Discover, passing page as a param for the request
-     * Also its done a recursive function
-     */
-    private fun requestSimilarMovies(page:Int = 1,movieId:Int?){
-
-        activity?.let {
-            RequestMovies().getSimilarMovies(page, movieId).enqueue(object : retrofit2.Callback<Result> {
-
-                override fun onResponse(call: Call<Result>, response: Response<Result>?) {
-
-                    response?.body()?.movies?.let { movies -> listMovies.addAll(movies)
-                        if (!listMovies.isEmpty())
-                            recyclerList?.adapter?.notifyDataSetChanged()
-                        else
-                            hideSimilarMoviesLayout()
-                    }
-                }
-                override fun onFailure(call: Call<Result>, error: Throwable) {
-                    Log.i("Error: ", error.message)
-                }
-            })
-        }
-    }
-
     private fun hideSimilarMoviesLayout() {
 
-        divider3.visibility      = View.GONE
-        divider4.visibility      = View.GONE
-        semelhantes.visibility   = View.GONE
-        recyclerList?.visibility = View.GONE
+        val params            = toolbar?.layoutParams as AppBarLayout.LayoutParams
+        params.scrollFlags    = 0
+        toolbar?.layoutParams = params
+
+        layout_similar_movies.visibility = View.GONE
+
     }
 
     /**
@@ -310,7 +299,7 @@ class MovieDetailFragment : BaseFragment() {
                 if (!recyclerView.canScrollVertically(1 ) && !isLoading){
                     isLoading = true
                     page++
-                    requestSimilarMovies(page,movie.id!!)
+                    presenter.requestMoreSimilarMovies(page,movie.id!!)
                 }
             }
         })
