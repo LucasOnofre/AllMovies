@@ -9,6 +9,7 @@ import onoffrice.wikimovies.fragment.favorite_fragment.FavoriteFragment
 import onoffrice.wikimovies.fragment.search_fragment.SearchFragment
 import onoffrice.wikimovies.fragment.category_fragment.CategoryFragmentView
 import onoffrice.wikimovies.fragment.home_fragment.HomeFragmentView
+import onoffrice.wikimovies.fragment.upcoming_fragment.UpcomingFragment
 
 class ActivityMain : AppCompatActivity() {
 
@@ -38,6 +39,8 @@ class ActivityMain : AppCompatActivity() {
                 R.id.action_home      -> openFragment(HomeFragmentView())
 
                 R.id.action_search    -> openFragment(SearchFragment())
+
+                R.id.action_upcoming  -> openFragment(UpcomingFragment())
 
                 R.id.action_category  -> openFragment(CategoryFragmentView())
 

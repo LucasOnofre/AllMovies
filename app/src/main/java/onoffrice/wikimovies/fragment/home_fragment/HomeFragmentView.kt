@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
-import onoffrice.wikimovies.fragment.BaseFragment
+import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
 
@@ -61,7 +61,6 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
 
             // Check's the scroll
             listenerScrollForToolbar()
-
 
             //Links the view to the presenter
             homeFragmentPresenter.bindTo(this)

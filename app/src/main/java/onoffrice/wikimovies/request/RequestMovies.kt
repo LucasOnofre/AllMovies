@@ -59,7 +59,7 @@ class RequestMovies{
      * Return the result of the query
      */
 
-    fun getSearchedMovie(page: Int, query:Int?):Call<Result>{
+    fun getSearchedMovie(page: Int, query:String?):Call<Result>{
         val endpoint = "search/movie"
 
         params.put("api_key",API_KEY)
@@ -76,10 +76,8 @@ class RequestMovies{
         @GET
         fun getGenresMovieList(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
 
-
         @GET
         fun getSimilarMovies(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
-
 
         fun getSearchedMovie(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
     }

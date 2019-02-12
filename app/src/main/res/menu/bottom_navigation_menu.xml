@@ -12,6 +12,11 @@
         android:title="Search"/>
 
     <item
+        android:id="@+id/action_upcoming"
+        android:icon="@drawable/ic_upcoming"
+        android:title="Upcoming"/>
+
+    <item
         android:id="@+id/action_favorites"
         android:icon="@drawable/ic_favorite"
         android:title="Favorites"/>

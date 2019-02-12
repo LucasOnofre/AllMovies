@@ -18,6 +18,7 @@
     <string name="base_url_images">https://image.tmdb.org/t/p/w500</string>
     <string name="url_movie">movie/</string>
     <string name="url_search_query">search/movie</string>
+    <string name="search_query_hint">Searh for a movie</string>
 
     <!-- All Categorys -->
     <string-array name="category_array">

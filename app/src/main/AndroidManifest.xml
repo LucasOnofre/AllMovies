@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- <activity android:name=".activity.ActivityPopulars" /> -->
+
         <activity
             android:name=".activity.ActivityBase"
             android:label="@string/title_activity_base"

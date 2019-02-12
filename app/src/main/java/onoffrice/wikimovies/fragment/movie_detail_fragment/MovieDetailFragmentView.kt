@@ -22,7 +22,7 @@ import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.custom.UserButton
 import onoffrice.wikimovies.extension.*
-import onoffrice.wikimovies.fragment.BaseFragment
+import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.model.Movie
 
 
