@@ -23,7 +23,7 @@ interface SearchFragmentContract{
     }
     interface Presenter{
 
-        fun bindTo()
+        fun bindTo(view: SearchFragmentView)
         fun destroy()
         fun requestData(query:String)
         fun getMoreData(page: Int,query:String)

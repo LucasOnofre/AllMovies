@@ -34,7 +34,7 @@
 
     <style name="search_view_style" parent="Widget.AppCompat.Light.SearchView" >
 
-        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColorHint">@color/light_gray</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textColor">@color/white</item>
 

@@ -8,7 +8,6 @@ import retrofit2.Response
 class SearchFragmentModel:SearchFragmentContract.Model {
     override fun requestMovies(page: Int,query: String, onFinishedListener: SearchFragmentContract.Model.ResponseResult) {
 
-
         RequestMovies().getSearchedMovie(page,query).enqueue(object : retrofit2.Callback<Result> {
 
             override fun onResponse(call: Call<Result>, response: Response<Result>?) {

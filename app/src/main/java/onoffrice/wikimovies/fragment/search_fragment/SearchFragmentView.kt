@@ -1,7 +1,5 @@
 package onoffrice.wikimovies.fragment.search_fragment
 
-
-import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +14,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.fragment_search.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
@@ -24,18 +23,21 @@ import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentVi
 import onoffrice.wikimovies.model.Movie
 
 
-class SearchFragment : BaseFragment(), SearchFragmentContract.View {
+class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
 
     private var page                                         = 1
+    private var query            : String?                   = null
     private var adapter          : MoviesAdapter?            = null
     private var isLoading                                    = false
     private var progressBar      : ProgressBar?              = null
     private var recyclerList     : RecyclerView?             = null
-    private var gson             : Gson?                     = Gson()
-    private var listMovies       : ArrayList<Movie>          = ArrayList()
-    private val handler                                      = Handler()
     private var searchView       :android.widget.SearchView? = null
+    private var finalQuery       :String?                    = null
 
+
+    private var gson             : Gson?                     = Gson()
+    private val handler                                      = Handler()
+    private var listMovies       : ArrayList<Movie>          = ArrayList()
     private var presenter        : SearchFragmentPresenter   = SearchFragmentPresenter()
 
 
@@ -52,13 +54,26 @@ class SearchFragment : BaseFragment(), SearchFragmentContract.View {
 
         var view = inflater.inflate(onoffrice.wikimovies.R.layout.fragment_search, container, false)
 
-//        val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        //val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
         setUpViews(view)
         setupSearchView(searchView!!)
-        searchViewListener(searchView!!, handler)
+        setAdapter()
+
+        presenter.bindTo(this)
+
+        searchViewListener(searchView!!)
+
+        setInfiniteScroll()
 
         return view
+    }
+
+    private fun isSearched() {
+
+        if (listMovies.isEmpty()){
+            layout_search_message.visibility = View.VISIBLE
+        }
     }
 
     /**
@@ -68,14 +83,13 @@ class SearchFragment : BaseFragment(), SearchFragmentContract.View {
 
         searchView   = view.findViewById(R.id.searchView)
         recyclerList = view.findViewById(R.id.lista)
-
     }
 
     private fun setAdapter() {
         //Set's the adapter
         adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        setGridLayout(recyclerList)
         recyclerList?.adapter = adapter
-
     }
 
     private fun setInfiniteScroll() {
@@ -88,29 +102,45 @@ class SearchFragment : BaseFragment(), SearchFragmentContract.View {
                 if (!recyclerView.canScrollVertically(1) && !isLoading){
                     isLoading = true
                     page++
-                    //presenter.re(page,genre?.id!!)
+                    presenter.getMoreData(page,query!!)
                     isLoading = false
                 }
             }
         })
     }
 
-    private fun searchViewListener(searchView: android.widget.SearchView, handle: Handler) {
+    private fun searchViewListener(searchView: android.widget.SearchView) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener, android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+
 
                 return true
             }
 
-            override fun onQueryTextChange(newQuery: String?): Boolean {
+            override fun onQueryTextChange(newQuery: String): Boolean {
 
-                handle.postDelayed({
-                    Toast.makeText(context, newQuery, Toast.LENGTH_LONG).show()
-                }, 1500)
+                isSearched()
+
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({filterQuery(newQuery)}, 400)
 
                 return true
             }
         })
+    }
+
+    private fun filterQuery(newQuery: String) {
+
+        if (!listMovies.isEmpty()){
+            listMovies.clear()
+            adapter?.notifyDataSetChanged()
+        }
+
+
+        if (!newQuery.isEmpty()){
+            presenter.requestData(newQuery)
+        }
     }
 
     private fun setupSearchView(searchView: android.widget.SearchView) {
@@ -137,17 +167,27 @@ class SearchFragment : BaseFragment(), SearchFragmentContract.View {
         openFragment(MovieDetailFragmentView())
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.destroy()
-    }
 
     override fun updateList(movies: ArrayList<Movie>) {
 
+
+        listMovies.addAll(movies)
+
+        adapter?.notifyDataSetChanged()
+
+        isSearched()
     }
 
     override fun onResponseError(error: Throwable) {
 
         Toast.makeText(context, error.toString(),Toast.LENGTH_LONG).show()
+    }
+
+    /**
+     * Destroy's the link between the presenter and the view
+     */
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 }

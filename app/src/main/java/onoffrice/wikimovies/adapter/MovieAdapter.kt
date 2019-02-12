@@ -44,7 +44,7 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      * Makes the bind for every item in the view
      */
     override fun onBindViewHolder(holder: ViewHolderItem, position: Int) {
-        val movie = movies[position]
+        val movie    = movies[position]
         val urlImage = contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
 
         // Load's the image using picasso and open in an ImageView parameter
@@ -85,7 +85,6 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
                     Toast.makeText(contextActivity, "Favoritado", Toast.LENGTH_SHORT).show()
                     true
                 }
-
 
                 else -> {
                     false

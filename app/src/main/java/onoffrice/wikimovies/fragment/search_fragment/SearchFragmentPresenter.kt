@@ -1,19 +1,40 @@
 package onoffrice.wikimovies.fragment.search_fragment
 
-class SearchFragmentPresenter:SearchFragmentContract.Presenter{
-    override fun bindTo() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+import onoffrice.wikimovies.model.Movie
+
+class SearchFragmentPresenter:SearchFragmentContract.Presenter, SearchFragmentContract.Model.ResponseResult{
+
+    private var view: SearchFragmentView? = null
+    private var model = SearchFragmentModel()
+
+    override fun bindTo(view: SearchFragmentView) {
+
+        this.view = view
     }
 
     override fun destroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        view = null
     }
 
     override fun requestData(query: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        model.requestMovies(1,query,this)
     }
 
     override fun getMoreData(page: Int, query: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        model.requestMovies(page,query,this)
+    }
+
+    override fun onSucess(movies: ArrayList<Movie>) {
+
+        view?.updateList(movies)
+
+    }
+
+    override fun onFailure(error: Throwable) {
+
+        view?.onResponseError(error)
+
     }
 }
