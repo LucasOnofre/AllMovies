@@ -18,15 +18,18 @@ import android.widget.Toast
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_movie_detail.*
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.adapter.MovieInterface
+import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.custom.UserButton
 import onoffrice.wikimovies.extension.*
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.model.Movie
+import onoffrice.wikimovies.model.MovieVideoInfo
 
 
 class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View {
+
+
 
     private var page                                           = 1
     private var editor              :SharedPreferences.Editor? = null
@@ -41,6 +44,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
     private var recyclerList        :RecyclerView?             = null
     private var movieDescript       :TextView?                 = null
     private var movieReleaseDate    :TextView?                 = null
+
 
     //Boolean
     private var isLoading                                      = false
@@ -71,6 +75,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         setInfiniteScroll()
 
         presenter.bindTo(this)
+        presenter.requestVideosFromMovie(movie.id!!)
         presenter.requestSimilarMovies(movieId = movie.id!!)
 
         return view
@@ -80,6 +85,16 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
+
+    }
+
+    override fun updateMovieVideoPath(videoInfo: MovieVideoInfo) {
+
+        movie.trailerVideo = videoInfo.key
+
+    }
+
+    override fun onResponseErrorTrailer(error: Throwable) {
 
     }
 
@@ -167,7 +182,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
     private fun openBrowser() {
 
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com/#q=${movie.title} movie ${movie.releaseDate?.formatDateToYear()}")))
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=${movie.trailerVideo}")))
     }
 
     private fun getIsFavorite() {

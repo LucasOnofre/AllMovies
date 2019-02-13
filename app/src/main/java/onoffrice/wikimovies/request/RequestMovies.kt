@@ -1,6 +1,8 @@
 package onoffrice.wikimovies.request
 
 import android.util.Log
+import onoffrice.wikimovies.model.MovieVideoInfo
+import onoffrice.wikimovies.model.MovieVideoInfoList
 import onoffrice.wikimovies.model.Result
 import retrofit2.Call
 import retrofit2.http.GET
@@ -65,8 +67,16 @@ class RequestMovies{
         params.put("api_key",API_KEY)
         params.put("page",page)
         params.put("query",query)
-        return service.getSimilarMovies(endpoint,params)
+        return service.getSearchedMovie(endpoint,params)
     }
+
+    fun getVideosFromMovie(movieId: Int):Call<MovieVideoInfoList>{
+        val endpoint = "movie/$movieId/videos"
+
+        params.put("api_key",API_KEY)
+        return service.getVideosFromMovie(endpoint,params)
+    }
+
 
     private interface Service {
 
@@ -79,7 +89,15 @@ class RequestMovies{
         @GET
         fun getSimilarMovies(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
 
+        @GET
         fun getSearchedMovie(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
+
+        @GET
+        fun getVideosFromMovie(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<MovieVideoInfoList>
+
+
+
+
     }
 
 }

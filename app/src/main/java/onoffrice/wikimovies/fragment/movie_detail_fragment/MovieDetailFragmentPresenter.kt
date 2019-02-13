@@ -2,8 +2,13 @@
 package onoffrice.wikimovies.fragment.movie_detail_fragment
 
 import onoffrice.wikimovies.model.Movie
+import onoffrice.wikimovies.model.MovieVideoInfo
 
-class MovieDetailFragmentPresenter: MovieDetailFragmentContract.Presenter,MovieDetailFragmentContract.Model.RequestResult{
+class MovieDetailFragmentPresenter:
+        MovieDetailFragmentContract.Presenter,
+        MovieDetailFragmentContract.Model.RequestResult,
+        MovieDetailFragmentContract.Model.ResultTrailers
+{
 
     private var view: MovieDetailFragmentView? = null
     private val model:MovieDetailFragmentModel = MovieDetailFragmentModel()
@@ -63,10 +68,27 @@ class MovieDetailFragmentPresenter: MovieDetailFragmentContract.Presenter,MovieD
         val movieSelected = moviesFavoriteList.indexOfFirst { it.id == movie.id }
 
         if(movieSelected != -1)
-            movie?.isFavorite = false
+            movie.isFavorite = false
 
         moviesFavoriteList.removeAt(movieSelected)
 
         return  moviesFavoriteList
+    }
+
+    override fun requestVideosFromMovie(movieId: Int) {
+
+        model.requestVideosFromMovie(movieId,this)
+
+    }
+
+    override fun onSucessTrailers(videoInfo: ArrayList<MovieVideoInfo>) {
+
+        view?.updateMovieVideoPath(videoInfo[0])
+    }
+
+    override fun onErrorTrailers(error: Throwable) {
+
+        view?.onResponseErrorTrailer(error)
+
     }
 }

@@ -9,7 +9,7 @@ import android.view.ViewGroup
 
 import onoffrice.wikimovies.R
 
-class UpcomingFragment : Fragment() {
+class UpcomingFragmentView : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 

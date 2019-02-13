@@ -41,6 +41,8 @@ class Movie{
 
     var isFavorite:Boolean = false
 
+    var trailerVideo:String? = null
+
 }
 
 class ResultGenre {

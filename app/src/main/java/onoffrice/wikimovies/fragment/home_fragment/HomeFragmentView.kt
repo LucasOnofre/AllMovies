@@ -16,7 +16,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.adapter.MovieInterface
+import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
@@ -91,7 +91,6 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     override fun setDataToRecyclerView(movieArrayList: ArrayList<Movie>) {
 
         listMovies.addAll(movieArrayList)
-        setGridLayout(recyclerList)
 
         adapter?.notifyDataSetChanged()
 
@@ -126,6 +125,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     private fun setAdapter() {
         adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
         recyclerList?.adapter = adapter
+        setGridLayout(recyclerList)
     }
 
     /**
@@ -171,7 +171,6 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
                 if (scrollRange == -1) {
                     scrollRange = appBarLayout.totalScrollRange
                 }
-
 
                 if (scrollRange + verticalOffset == 0) {
                     setupToolbar(rootView!!, "Popular")

@@ -14,14 +14,10 @@ import onoffrice.wikimovies.R
 import onoffrice.wikimovies.extension.getScreenSize
 import onoffrice.wikimovies.extension.loadPicasso
 import onoffrice.wikimovies.model.Movie
-
-interface MovieInterface{
-    fun onMovieSelected(movie:Movie?)
-}
+import onoffrice.wikimovies.model.MovieInterface
 
 
-
-class MoviesAdapter (private val contextActivity: Activity, private val movies:ArrayList<Movie>, private val listener:MovieInterface) : RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>() {
+class MoviesAdapter (private val contextActivity: Activity, private val movies:ArrayList<Movie>, private val listener: MovieInterface) : RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>() {
 
     /**
      * Return a movie list from the Discover

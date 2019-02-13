@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.fragment.category_fragment.CategoryFragmentView
-import onoffrice.wikimovies.fragment.favorite_fragment.FavoriteFragment
+import onoffrice.wikimovies.fragment.favorite_fragment.FavoriteFragmentView
 import onoffrice.wikimovies.fragment.home_fragment.HomeFragmentView
 import onoffrice.wikimovies.fragment.search_fragment.SearchFragmentView
-import onoffrice.wikimovies.fragment.upcoming_fragment.UpcomingFragment
+import onoffrice.wikimovies.fragment.upcoming_fragment.UpcomingFragmentView
 
 class ActivityMain : AppCompatActivity() {
 
@@ -26,6 +26,7 @@ class ActivityMain : AppCompatActivity() {
 
     private fun setUpViews() {
         bottomNavigation  = findViewById(R.id.bottomNavigation)
+
     }
 
     /**
@@ -40,11 +41,11 @@ class ActivityMain : AppCompatActivity() {
 
                 R.id.action_search    -> openFragment(SearchFragmentView())
 
-                R.id.action_upcoming  -> openFragment(UpcomingFragment())
+                R.id.action_upcoming  -> openFragment(UpcomingFragmentView())
 
                 R.id.action_category  -> openFragment(CategoryFragmentView())
 
-                R.id.action_favorites -> openFragment(FavoriteFragment())
+                R.id.action_favorites -> openFragment(FavoriteFragmentView())
             }
             true
         }

@@ -16,7 +16,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_search.*
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.adapter.MovieInterface
+import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
@@ -29,11 +29,8 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
     private var query            : String?                   = null
     private var adapter          : MoviesAdapter?            = null
     private var isLoading                                    = false
-    private var progressBar      : ProgressBar?              = null
     private var recyclerList     : RecyclerView?             = null
     private var searchView       :android.widget.SearchView? = null
-    private var finalQuery       :String?                    = null
-
 
     private var gson             : Gson?                     = Gson()
     private val handler                                      = Handler()
@@ -54,7 +51,6 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
 
         var view = inflater.inflate(onoffrice.wikimovies.R.layout.fragment_search, container, false)
 
-        //val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
         setUpViews(view)
         setupSearchView(searchView!!)
@@ -69,13 +65,6 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
         return view
     }
 
-    private fun isSearched() {
-
-        if (listMovies.isEmpty()){
-            layout_search_message.visibility = View.VISIBLE
-        }
-    }
-
     /**
      * Set's the views and the progress bar
      */
@@ -83,6 +72,7 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
 
         searchView   = view.findViewById(R.id.searchView)
         recyclerList = view.findViewById(R.id.lista)
+
     }
 
     private fun setAdapter() {
@@ -114,16 +104,14 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
 
             override fun onQueryTextSubmit(query: String): Boolean {
 
-
+                searchView.clearFocus()
                 return true
             }
 
             override fun onQueryTextChange(newQuery: String): Boolean {
 
-                isSearched()
-
                 handler.removeCallbacksAndMessages(null)
-                handler.postDelayed({filterQuery(newQuery)}, 400)
+                handler.postDelayed({filterQuery(newQuery)}, 250)
 
                 return true
             }
@@ -132,15 +120,30 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
 
     private fun filterQuery(newQuery: String) {
 
+        query = newQuery
+
         if (!listMovies.isEmpty()){
             listMovies.clear()
             adapter?.notifyDataSetChanged()
         }
 
-
         if (!newQuery.isEmpty()){
+
+            showList()
             presenter.requestData(newQuery)
-        }
+
+        }else
+            hideList()
+    }
+
+    private fun hideList() {
+        layout_search_list.visibility    = View.GONE
+        layout_search_message.visibility = View.VISIBLE
+    }
+
+    private fun showList() {
+        layout_search_list.visibility    = View.VISIBLE
+        layout_search_message.visibility = View.GONE
     }
 
     private fun setupSearchView(searchView: android.widget.SearchView) {
@@ -155,7 +158,7 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
      * save on shared preferences and also open de Movie Detail Fragment
      */
     private fun openDetailMovieFragment(movie:Movie?){
-        val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
+        val preferences= context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
         val editor = preferences?.edit()
 
         // Transform the movie into an Json to save in shared preferences
@@ -170,12 +173,9 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
 
     override fun updateList(movies: ArrayList<Movie>) {
 
-
         listMovies.addAll(movies)
-
         adapter?.notifyDataSetChanged()
 
-        isSearched()
     }
 
     override fun onResponseError(error: Throwable) {

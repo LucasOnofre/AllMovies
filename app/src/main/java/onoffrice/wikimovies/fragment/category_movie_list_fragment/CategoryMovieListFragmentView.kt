@@ -11,7 +11,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.adapter.MovieInterface
+import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
 import onoffrice.wikimovies.extension.parseJson
