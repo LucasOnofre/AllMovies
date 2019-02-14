@@ -131,12 +131,12 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    app:image="@drawable/ic_play_circle"
+                    app:image="@drawable/ic_go_out"
                     app:layout_constraintBottom_toBottomOf="@+id/favorite_btn"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/favorite_btn"
                     app:layout_constraintTop_toTopOf="@+id/favorite_btn"
-                    app:text="Trailer" />
+                    app:text="See Online" />
 
 
             </android.support.constraint.ConstraintLayout>

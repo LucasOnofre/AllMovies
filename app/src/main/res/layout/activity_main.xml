@@ -1,35 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.constraint.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--&lt;!&ndash;Wrapper da Toolbar&ndash;&gt;-->
+    <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:id="@+id/appBarLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+        <!--android:visibility="gone"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent">-->
+
+        <!--&lt;!&ndash;Collapsing Toolbar - Permite expandir e retrair a mesma&ndash;&gt;-->
+        <!--<android.support.design.widget.CollapsingToolbarLayout-->
+            <!--android:id="@+id/collapsing_toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--app:contentScrim="@color/colorPrimary"-->
+            <!--app:expandedTitleMarginEnd="64dp"-->
+            <!--app:expandedTitleMarginStart="48dp"-->
+            <!--app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
+
+            <!--&lt;!&ndash;Wrapper&ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/wrapper"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical"-->
+                <!--app:layout_collapseMode="parallax"-->
+                <!--app:layout_collapseParallaxMultiplier="0.9">-->
+
+                <!--<android.support.constraint.ConstraintLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="350dp">-->
+
+                    <!--&lt;!&ndash;Imagem do filme&ndash;&gt;-->
+                    <!--<ImageView-->
+                        <!--android:id="@+id/movieBanner"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:scaleType="centerCrop"-->
+                        <!--app:layout_collapseMode="parallax"-->
+                        <!--app:layout_collapseParallaxMultiplier="1.0" />-->
+
+                    <!--&lt;!&ndash;Gradiente da imagem&ndash;&gt;-->
+                    <!--<View-->
+                        <!--android:id="@+id/img_gradient"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent" />-->
+                    <!--&lt;!&ndash;android:background="@drawable/gradient_background" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;nome do filme&ndash;&gt;-->
+                    <!--<TextView-->
+                        <!--android:id="@+id/banner_movie_tittle"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginStart="16dp"-->
+                        <!--android:layout_marginTop="8dp"-->
+                        <!--android:layout_marginEnd="16dp"-->
+                        <!--android:ellipsize="end"-->
+                        <!--android:maxLines="3"-->
+                        <!--android:paddingBottom="10dp"-->
+                        <!--android:textColor="#FFFFFFFF"-->
+                        <!--android:textSize="32sp"-->
+                        <!--android:textStyle="bold"-->
+                        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                        <!--app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--app:layout_constraintStart_toStartOf="parent" />-->
+
+                <!--</android.support.constraint.ConstraintLayout>-->
+
+            <!--</LinearLayout>-->
+
+            <!--&lt;!&ndash;Toolbar&ndash;&gt;-->
+            <!--<include layout="@layout/toolbar" />-->
+
+        <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+    <!--</android.support.design.widget.AppBarLayout>-->
+
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/bottomNavigation"
-            style="@style/BottomNavigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:elevation="4dp"
-            app:hideOnScroll="true"
-            app:itemBackground="@color/colorPrimary"
-            app:itemIconTint="@drawable/bottom_item_tint"
-            app:itemTextColor="@drawable/bottom_item_tint"
-            app:labelVisibilityMode="labeled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:menu="@menu/bottom_navigation_menu" />
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        style="@style/BottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:elevation="4dp"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_navigation_menu"
+        app:itemIconTint="@drawable/bottom_item_tint"
+        app:itemTextColor="@drawable/bottom_item_tint"
+        app:itemBackground="@color/colorPrimary" />
+
+
 
 </android.support.constraint.ConstraintLayout>

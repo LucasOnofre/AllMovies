@@ -2,7 +2,6 @@ package onoffrice.wikimovies.fragment.movie_detail_fragment
 
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.MovieVideoInfo
-import onoffrice.wikimovies.model.MovieVideoInfoList
 
 interface MovieDetailFragmentContract {
 

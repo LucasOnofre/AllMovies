@@ -18,12 +18,12 @@ import android.widget.Toast
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_movie_detail.*
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.custom.UserButton
 import onoffrice.wikimovies.extension.*
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.model.Movie
+import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.model.MovieVideoInfo
 
 

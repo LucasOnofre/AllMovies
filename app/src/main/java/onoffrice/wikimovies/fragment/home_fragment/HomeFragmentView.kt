@@ -16,11 +16,11 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
+import onoffrice.wikimovies.model.MovieInterface
 
 class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
 
@@ -45,7 +45,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     /**
      * Implementing interface to handle the click on the movie
      */
-    private val movieClickListener = object: MovieInterface{
+    private val movieClickListener = object: MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
             openDetailMovieFragment(movie)
         }

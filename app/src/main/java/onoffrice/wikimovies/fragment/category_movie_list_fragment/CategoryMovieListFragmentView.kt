@@ -11,7 +11,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
 import onoffrice.wikimovies.extension.parseJson
@@ -19,6 +18,7 @@ import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Genre
 import onoffrice.wikimovies.model.Movie
+import onoffrice.wikimovies.model.MovieInterface
 
 
 class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentContract.View{
@@ -37,7 +37,7 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
     /**
      * Implementing interface to handle the click on the movie
      */
-    private val movieClickListener = object: MovieInterface{
+    private val movieClickListener = object: MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
             openDetailMovieFragment(movie)
         }

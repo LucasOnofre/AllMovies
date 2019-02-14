@@ -14,13 +14,13 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
 import onoffrice.wikimovies.extension.parseJson
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
+import onoffrice.wikimovies.model.MovieInterface
 
 class FavoriteFragmentView : BaseFragment() {
 

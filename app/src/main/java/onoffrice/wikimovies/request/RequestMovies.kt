@@ -1,7 +1,6 @@
 package onoffrice.wikimovies.request
 
 import android.util.Log
-import onoffrice.wikimovies.model.MovieVideoInfo
 import onoffrice.wikimovies.model.MovieVideoInfoList
 import onoffrice.wikimovies.model.Result
 import retrofit2.Call
@@ -94,9 +93,6 @@ class RequestMovies{
 
         @GET
         fun getVideosFromMovie(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<MovieVideoInfoList>
-
-
-
 
     }
 

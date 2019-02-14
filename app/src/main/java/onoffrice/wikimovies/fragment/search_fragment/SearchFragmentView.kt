@@ -11,16 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_search.*
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.model.MovieInterface
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
+import onoffrice.wikimovies.model.MovieInterface
 
 
 class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
