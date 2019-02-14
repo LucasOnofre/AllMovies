@@ -76,6 +76,14 @@ class RequestMovies{
         return service.getVideosFromMovie(endpoint,params)
     }
 
+    fun getUpcoming(page: Int):Call<Result>{
+        val endpoint = "movie/upcoming"
+        params.put("api_key",API_KEY)
+        params.put("page",page)
+        Log.i("Request",endpoint + params)
+
+        return service.getUpcoming(endpoint,params)
+    }
 
     private interface Service {
 
@@ -93,6 +101,9 @@ class RequestMovies{
 
         @GET
         fun getVideosFromMovie(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<MovieVideoInfoList>
+
+        @GET
+        fun getUpcoming(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
 
     }
 
