@@ -10,4 +10,7 @@ class MovieVideoInfo {
     @SerializedName("site")
     var site: String? = null
 
+    @SerializedName("type")
+    var type: String? = null
+
 }

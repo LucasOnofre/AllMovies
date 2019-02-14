@@ -108,6 +108,7 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
         //Set's the adapter
         adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
         recyclerList?.adapter = adapter
+        setGridLayout(recyclerList)
 
     }
 
@@ -144,7 +145,6 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
     override fun setDataToList(movies: ArrayList<Movie>) {
 
         listMovies.addAll(movies)
-        setGridLayout(recyclerList)
         adapter?.notifyDataSetChanged()
 
     }

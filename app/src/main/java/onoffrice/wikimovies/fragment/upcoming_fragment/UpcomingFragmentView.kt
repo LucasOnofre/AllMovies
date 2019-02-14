@@ -35,6 +35,7 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
     private var bottomNavigation : BottomNavigationView? = null
     private var movieBannerTittle: TextView?             = null
     private var appBarLayout     : AppBarLayout?         = null
+    private var movieBannerSelected:Movie?               = null
 
     //  Initializations
     private var gson                         = Gson()
@@ -104,6 +105,7 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
     private fun checkFirstPage() {
         if (page == 1) {
             setBannerBar(listMovies)
+            movieBanner?.setOnClickListener { openDetailMovieFragment(movieBannerSelected) }
         }
     }
 
@@ -191,6 +193,7 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
     private fun setBannerBar(movies: ArrayList<Movie>) {
         Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
         movieBannerTittle?.text = movies[0].title
+        movieBannerSelected     = movies[0]
         movies.removeAt(0)
     }
 

@@ -38,10 +38,6 @@ class CategoryMovieListFragmentPresenter:CategoryMovieListFragmentContract.Prese
     }
 
     override fun requestMoreMovies(page: Int,genreId:Int) {
-        if (view != null){
-
-            view?.showProgress()
-        }
 
         model.requestMovies(page,genreId,this)
 

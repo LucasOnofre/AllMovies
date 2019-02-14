@@ -9,11 +9,10 @@ import android.widget.ListView
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.CategoryAdapter
-import onoffrice.wikimovies.adapter.CategoryInterface
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.category_movie_list_fragment.CategoryMovieListFragmentView
+import onoffrice.wikimovies.model.CategoryInterface
 import onoffrice.wikimovies.model.Genre
-import kotlin.collections.ArrayList
 
 class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
 

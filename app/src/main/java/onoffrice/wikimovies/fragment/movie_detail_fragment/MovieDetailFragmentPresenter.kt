@@ -83,7 +83,23 @@ class MovieDetailFragmentPresenter:
 
     override fun onSucessTrailers(videoInfo: ArrayList<MovieVideoInfo>) {
 
-        view?.updateMovieVideoPath(videoInfo[0])
+        checkIsTrailer(videoInfo)
+    }
+
+    private fun checkIsTrailer(videoInfo: ArrayList<MovieVideoInfo>) {
+
+        var isTrailer = false
+
+        for (video in videoInfo) {
+            if (video.type == "Trailer") {
+                view?.updateMovieVideoPath(video)
+                isTrailer = true
+                break
+            }
+        }
+
+        if (!isTrailer)
+            view?.updateMovieVideoPath(videoInfo[0])
     }
 
     override fun onErrorTrailers(error: Throwable) {

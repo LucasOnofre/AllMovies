@@ -38,6 +38,8 @@ class UpcomingFragmentPresenter:
 
     override fun requestDataFromServer() {
 
+        if (view != null){ view?.showProgress() }
+
         model.requestMovies(1,this)
     }
 

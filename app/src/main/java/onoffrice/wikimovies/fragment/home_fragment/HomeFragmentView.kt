@@ -32,8 +32,8 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
     private var bottomNavigation : BottomNavigationView? = null
-    private var movieBannerTittle: TextView?             = null
     private var appBarLayout     : AppBarLayout?         = null
+    private var movieBannerSelected:Movie?               = null
 
     //  Initializations
     private var gson                         = Gson()
@@ -48,6 +48,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     private val movieClickListener = object: MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
             openDetailMovieFragment(movie)
+
         }
     }
 
@@ -55,6 +56,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
 
         if (rootView == null){
             rootView = inflater.inflate(R.layout.fragment_home, container, false)
+
 
             // Get's the views
             setUpViews(rootView!!)
@@ -103,6 +105,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     private fun checkFirstPage() {
         if (page == 1) {
             setBannerBar(listMovies)
+            movieBanner?.setOnClickListener { openDetailMovieFragment(movieBannerSelected) }
         }
     }
 
@@ -189,7 +192,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
      */
     private fun setBannerBar(movies: ArrayList<Movie>) {
         Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
-        movieBannerTittle?.text = movies[0].title
+        movieBannerSelected = movies[0]
         movies.removeAt(0)
     }
 

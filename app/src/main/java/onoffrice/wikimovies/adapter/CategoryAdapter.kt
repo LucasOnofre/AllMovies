@@ -1,22 +1,23 @@
 package onoffrice.wikimovies.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.view.LayoutInflater
 import android.widget.TextView
-import android.widget.Toast
 import onoffrice.wikimovies.R
+import onoffrice.wikimovies.model.CategoryInterface
 import onoffrice.wikimovies.model.Genre
-import java.util.ArrayList
-
-interface CategoryInterface{
-    fun onCategorySelected(genre: Genre?)
-}
+import java.util.*
 
 
-class CategoryAdapter(private var context: Context?, private var categoryList: ArrayList<Genre>? = null, private var listener:CategoryInterface): BaseAdapter() {
+class CategoryAdapter(
+        private var context: Context?,
+        private var categoryList: ArrayList<Genre>? = null,
+        private var listener: CategoryInterface): BaseAdapter()
+{
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         var view = convertView
         if (view == null) {
@@ -24,13 +25,13 @@ class CategoryAdapter(private var context: Context?, private var categoryList: A
             view = LayoutInflater.from(context).inflate(R.layout.category_list, parent, false)
         }
 
-        val genreItem = this.getItem(position) as Genre
+        val genreItem = this.getItem(position)
 
-        val propTxt = view?.findViewById(R.id.category_item) as TextView
-        propTxt.text = genreItem.name
+        val genreTitle = view?.findViewById(R.id.category_item) as TextView
+        genreTitle.text        = genreItem?.name
 
-
-        view?.setOnClickListener {listener.onCategorySelected(genreItem)}
+        //Listener of the Genre list itens
+        view.setOnClickListener {listener.onCategorySelected(genreItem)}
 
         return view
     }
