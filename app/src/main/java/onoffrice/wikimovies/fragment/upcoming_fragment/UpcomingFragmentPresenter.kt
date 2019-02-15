@@ -6,20 +6,27 @@ class UpcomingFragmentPresenter:
         UpcomingFragmentContract.Presenter,
         UpcomingFragmentContract.Model.OnRequestResultListener{
 
-    private val TAG = "UpcomingFragmentPresenter"
-
     var view:   UpcomingFragmentView? = null
     val model = UpcomingFragmentModel()
 
+    /**
+     * Make's the connection with the view
+     */
     override fun bindTo(view: UpcomingFragmentView) {
         this.view = view
     }
 
+    /**
+     * Destroy's the connection with the view
+     */
     override fun destroy() {
 
         view = null
     }
 
+    /**
+     * Send's the data result of the request to the view
+     */
     override fun onSucess(movieArrayList: ArrayList<Movie>) {
 
         view?.setDataToRecyclerView(movieArrayList)
@@ -27,6 +34,9 @@ class UpcomingFragmentPresenter:
         if (view != null){ view?.hideProgress() }
     }
 
+    /**
+     * Send's the result error to the view
+     */
     override fun onFailure(error: Throwable) {
 
         view?.onResponseError(error)
@@ -36,14 +46,20 @@ class UpcomingFragmentPresenter:
         }
     }
 
-    override fun requestDataFromServer() {
+    /**
+     * Call's the method on the model to do the request
+     */
+    override fun requestData() {
 
         if (view != null){ view?.showProgress() }
 
         model.requestMovies(1,this)
     }
 
-    override fun getMoreData(page: Int) {
+    /**
+     * Call's the method on the model to do the request passing page as param
+     */
+    override fun requestMoreData(page: Int) {
 
         model.requestMovies(page,this)
     }

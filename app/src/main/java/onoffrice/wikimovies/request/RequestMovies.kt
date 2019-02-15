@@ -15,6 +15,10 @@ class RequestMovies{
     private val API_KEY  = "037b83eda5aad6b5c90898ea8ea94da3"
     private val params   = HashMap<String,Any?>()
 
+    /**
+     * Consturctor of the service
+     */
+
     init {
         this.service = RetrofitClient.instance().create(Service::class.java)
     }
@@ -57,7 +61,7 @@ class RequestMovies{
     }
 
     /**
-     * Return the result of the query
+     * Return the list movie result of the query
      */
 
     fun getSearchedMovie(page: Int, query:String?):Call<Result>{
@@ -69,6 +73,10 @@ class RequestMovies{
         return service.getSearchedMovie(endpoint,params)
     }
 
+    /**
+     * Get's the video list of the selected movie
+     */
+
     fun getVideosFromMovie(movieId: Int):Call<MovieVideoInfoList>{
         val endpoint = "movie/$movieId/videos"
 
@@ -76,6 +84,9 @@ class RequestMovies{
         return service.getVideosFromMovie(endpoint,params)
     }
 
+    /**
+     * Get's the upcoming movie list
+     */
     fun getUpcoming(page: Int):Call<Result>{
         val endpoint = "movie/upcoming"
         params.put("api_key",API_KEY)
@@ -84,6 +95,10 @@ class RequestMovies{
 
         return service.getUpcoming(endpoint,params)
     }
+
+    /**
+     * Interface of the HTTP requests
+     */
 
     private interface Service {
 

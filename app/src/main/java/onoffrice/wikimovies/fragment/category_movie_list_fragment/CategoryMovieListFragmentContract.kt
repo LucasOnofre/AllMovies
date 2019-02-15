@@ -7,20 +7,18 @@ interface CategoryMovieListFragmentContract{
     interface Model{
 
         interface OnRequestResultListener{
-
             fun onSucess(movieArrayList: ArrayList<Movie>)
             fun onFailure(error:Throwable)
         }
+
         fun requestMovies(
-                page:Int
+                 page:Int
                 ,genreId:Int
                 ,onRequestListener:CategoryMovieListFragmentContract.Model.OnRequestResultListener
         )
-
     }
 
     interface View{
-
         fun showProgress()
         fun hideProgress()
         fun setDataToList(movies:ArrayList<Movie>)
@@ -28,7 +26,6 @@ interface CategoryMovieListFragmentContract{
     }
 
     interface Presenter{
-
         fun bindTo(view: CategoryMovieListFragmentView)
         fun destroy()
         fun requestMoviesModel(genreId:Int)

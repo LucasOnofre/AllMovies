@@ -3,8 +3,10 @@ package onoffrice.wikimovies.fragment.category_movie_list_fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -19,6 +21,7 @@ import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentVi
 import onoffrice.wikimovies.model.Genre
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.MovieInterface
+import onoffrice.wikimovies.model.MovieLongClickInterface
 
 
 class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentContract.View{
@@ -43,6 +46,54 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
         }
     }
 
+    private val movieLongClicListener = object : MovieLongClickInterface {
+        override fun onMovieLongClickSelected(movie: Movie?) {
+
+            val dropDownMenu = PopupMenu(context!!,view!!)
+
+            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
+
+            setMenuItemForLongClick(movie!!, dropDownMenu)
+
+            dropDownMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+
+                    R.id.unFavorite -> {
+                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    R.id.favorite -> {
+                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    else -> {
+                        false
+                    }
+                }
+            }
+
+            dropDownMenu.show()
+
+        }
+        /**
+         * Get's the menu item and shows only the right one according to the movie favorite status
+         */
+        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+
+            var menuItem: MenuItem? = if (movie.isFavorite) {
+                dropDownMenu.menu.findItem(R.id.favorite)
+
+            } else {
+                dropDownMenu.menu.findItem(R.id.unFavorite)
+            }
+            menuItem?.isVisible = false
+            menuItem?.isEnabled = false
+        }
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
         if (rootView == null){
@@ -61,7 +112,6 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
 
             setInfiniteScroll()
         }
-
         return rootView
     }
 
@@ -73,7 +123,6 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
         var genreSelected = (preferences?.getPreferenceKey("categoryChosen"))
 
         genre = genreSelected?.parseJson<Genre>()
-        //gson?.fromJson(genreSelected, Genre::class.java)?.let { genre = it }
     }
 
     /**
@@ -101,15 +150,13 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
         progressBar  = view.findViewById(R.id.progressBar)
         recyclerList = view.findViewById(R.id.category_list)
 
-
     }
 
     private fun setAdapter() {
         //Set's the adapter
-        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener,movieLongClicListener) }
         recyclerList?.adapter = adapter
         setGridLayout(recyclerList)
-
     }
 
     /**
@@ -131,28 +178,41 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
             }
         })
     }
-    override fun showProgress() {
 
+    /**
+     * Show's the progress bar
+     */
+    override fun showProgress() {
         progressBar?.visibility  = View.VISIBLE
     }
 
+    /**
+     * Hide's the progress bar
+     */
     override fun hideProgress() {
-
         progressBar?.visibility  = View.GONE
 
     }
 
+    /**
+     * Update's the list with the request result
+     */
     override fun setDataToList(movies: ArrayList<Movie>) {
-
         listMovies.addAll(movies)
         adapter?.notifyDataSetChanged()
 
     }
 
+    /**
+     * Show's an error if the response is troubleled
+     */
     override fun onResponseError(error: Throwable) {
         Toast.makeText(context, error.toString(),Toast.LENGTH_LONG).show()
     }
 
+    /**
+     * Destroy's the connection with the presenter
+     */
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()

@@ -21,10 +21,13 @@ class HomeFragmentModel: HomeFragmentContract.Model {
             override fun onResponse(call: Call<Result>, response: Response<Result>?) {
                 val movies = response?.body()?.movies
                 onRequestResultListener.onSucess(movies!!)
+                Log.i(TAG,"Request: ${call.request().url()}")
+
             }
 
             override fun onFailure(call: Call<Result>, error: Throwable) {
                 Log.i(TAG, error.message)
+                Log.i(TAG,"Request: ${call.request().url()}")
                 onRequestResultListener.onFailure(error)
             }
         })

@@ -16,13 +16,17 @@ import onoffrice.wikimovies.model.Genre
 
 class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
 
-    private var categoryList   : ListView?         = null
+    private var categoryList : ListView? = null
 
-    private var gson           : Gson?             = Gson()
-    private val presenter                          = CategoryFragmentPresenter()
-    private var genresArrayList: ArrayList<Genre>? = ArrayList()
+    //Initialiozations
+    private var gson           : Gson?                      = Gson()
+    private val presenter      : CategoryFragmentPresenter  = CategoryFragmentPresenter()
+    private var genresArrayList: ArrayList<Genre>?          = ArrayList()
 
 
+    /**
+     * Implementation of the genre Interface, that get's the genre selected
+     */
     private val genreClickListener = object: CategoryInterface {
         override fun onCategorySelected(genre: Genre?) {
             openCategoryList(genre)
@@ -42,14 +46,20 @@ class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
         return view
     }
 
-    override fun setGenres(genres: Array<Genre>) {
+    /**
+     * Convert's the genre array into an arrayList
+     */
+    override fun setGenres(genres: ArrayList<Genre>) {
 
-        genresArrayList  = genres.toCollection(ArrayList())
+        genresArrayList  = genres
     }
 
+    /**
+     * Convert's the genre in a Json and save on shared preferences
+     */
     private fun setUpViews(view: View) {
 
-        categoryList          = view.findViewById(R.id.listView)
+        categoryList          = view.findViewById(R.id.category_list)
         categoryList?.adapter = CategoryAdapter(context,genresArrayList,genreClickListener)
 
     }
@@ -59,7 +69,7 @@ class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
      */
     private fun openCategoryList(genre:Genre?){
         val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-        val editor = preferences?.edit()
+        val editor  = preferences?.edit()
 
         var genreJson = gson?.toJson(genre)
 

@@ -4,14 +4,15 @@ import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
@@ -21,24 +22,25 @@ import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.MovieInterface
+import onoffrice.wikimovies.model.MovieLongClickInterface
 
 class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
 
-    private var page                                     = 1
-    private var layout           : AppBarLayout?         = null
-    private var adapter          : MoviesAdapter?        = null
-    private var isLoading                                = false
-    private var movieBanner      : ImageView?            = null
-    private var progressBar      : ProgressBar?          = null
-    private var recyclerList     : RecyclerView?         = null
-    private var bottomNavigation : BottomNavigationView? = null
-    private var appBarLayout     : AppBarLayout?         = null
-    private var movieBannerSelected:Movie?               = null
+    private var page                                        = 1
+    private var layout              : AppBarLayout?         = null
+    private var adapter             : MoviesAdapter?        = null
+    private var isLoading           : Boolean               = false
+    private var movieBanner         : ImageView?            = null
+    private var progressBar         : ProgressBar?          = null
+    private var recyclerList        : RecyclerView?         = null
+    private var bottomNavigation    : BottomNavigationView? = null
+    private var appBarLayout        : AppBarLayout?         = null
+    private var movieBannerSelected : Movie?                = null
 
     //  Initializations
-    private var gson                         = Gson()
-    private var listMovies: ArrayList<Movie> = ArrayList()
-    private var homeFragmentPresenter        = HomeFragmentPresenter()
+    private var gson                 : Gson                  = Gson()
+    private var listMovies           : ArrayList<Movie>      = ArrayList()
+    private var homeFragmentPresenter: HomeFragmentPresenter = HomeFragmentPresenter()
 
     private val TAG = "HomeFragmentView"
 
@@ -52,11 +54,59 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
         }
     }
 
+    private val movieLongClicListener = object :MovieLongClickInterface{
+        override fun onMovieLongClickSelected(movie: Movie?) {
+
+                val dropDownMenu = PopupMenu(context!!,view!!)
+
+                dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
+
+                setMenuItemForLongClick(movie!!, dropDownMenu)
+
+                dropDownMenu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+
+                        R.id.unFavorite -> {
+                            Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
+                            true
+                        }
+
+                        R.id.favorite -> {
+                            Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
+                            true
+                        }
+
+                        else -> {
+                            false
+                        }
+                    }
+                }
+
+                dropDownMenu.show()
+
+        }
+        /**
+         * Get's the menu item and shows only the right one according to the movie favorite status
+         */
+        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+
+            var menuItem: MenuItem? = if (movie.isFavorite) {
+                dropDownMenu.menu.findItem(R.id.favorite)
+
+            } else {
+                dropDownMenu.menu.findItem(R.id.unFavorite)
+            }
+            menuItem?.isVisible = false
+            menuItem?.isEnabled = false
+        }
+
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
         if (rootView == null){
             rootView = inflater.inflate(R.layout.fragment_home, container, false)
-
 
             // Get's the views
             setUpViews(rootView!!)
@@ -93,7 +143,6 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     override fun setDataToRecyclerView(movieArrayList: ArrayList<Movie>) {
 
         listMovies.addAll(movieArrayList)
-
         adapter?.notifyDataSetChanged()
 
         checkFirstPage()
@@ -126,7 +175,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     }
 
     private fun setAdapter() {
-        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener,movieLongClicListener) }
         recyclerList?.adapter = adapter
         setGridLayout(recyclerList)
     }

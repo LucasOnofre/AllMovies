@@ -20,7 +20,6 @@ interface MovieDetailFragmentContract {
         }
 
         fun requestSimilarMovies(page:Int = 1,movieId:Int?,requestResult: RequestResult)
-
         fun requestVideosFromMovie(movieId: Int,resultTrailers: ResultTrailers)
     }
 

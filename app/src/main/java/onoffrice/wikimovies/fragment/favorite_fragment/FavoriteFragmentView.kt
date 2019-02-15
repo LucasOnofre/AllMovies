@@ -6,12 +6,15 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
@@ -21,6 +24,7 @@ import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.MovieInterface
+import onoffrice.wikimovies.model.MovieLongClickInterface
 
 class FavoriteFragmentView : BaseFragment() {
 
@@ -44,6 +48,54 @@ class FavoriteFragmentView : BaseFragment() {
         override fun onMovieSelected(movie: Movie?) {
             openDetailMovieFragment(movie)
         }
+    }
+
+    private val movieLongClicListener = object : MovieLongClickInterface {
+        override fun onMovieLongClickSelected(movie: Movie?) {
+
+            val dropDownMenu = PopupMenu(context!!,view!!)
+
+            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
+
+            setMenuItemForLongClick(movie!!, dropDownMenu)
+
+            dropDownMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+
+                    R.id.unFavorite -> {
+                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    R.id.favorite -> {
+                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    else -> {
+                        false
+                    }
+                }
+            }
+
+            dropDownMenu.show()
+
+        }
+        /**
+         * Get's the menu item and shows only the right one according to the movie favorite status
+         */
+        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+
+            var menuItem: MenuItem? = if (movie.isFavorite) {
+                dropDownMenu.menu.findItem(R.id.favorite)
+
+            } else {
+                dropDownMenu.menu.findItem(R.id.unFavorite)
+            }
+            menuItem?.isVisible = false
+            menuItem?.isEnabled = false
+        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
@@ -99,7 +151,7 @@ class FavoriteFragmentView : BaseFragment() {
 
     private fun setAdapter() {
         //Set's the adapter
-        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener,movieLongClicListener) }
         setGridLayout(recyclerList)
     }
 

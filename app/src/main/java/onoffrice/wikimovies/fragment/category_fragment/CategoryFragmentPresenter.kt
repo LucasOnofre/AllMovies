@@ -7,7 +7,6 @@ class CategoryFragmentPresenter: CategoryFragmentContract.Presenter, CategoryFra
     private var view: CategoryFragmentView? = null
     private var model = CategoryFragmentModel()
 
-    private val TAG = "CategoryFragmentPresenter"
 
     override fun bindTo(view: CategoryFragmentView) {
         this.view = view
@@ -17,14 +16,20 @@ class CategoryFragmentPresenter: CategoryFragmentContract.Presenter, CategoryFra
         this.view = null
     }
 
+    /**
+     * Call the method on the model that make's the request
+     */
     override fun getGenres() {
 
         model.populateGenres(this)
     }
 
-    override fun populatedListData(genres: Array<Genre>) {
+    /**
+     * Bring's the result of the request to the view
+     */
+    override fun populateListData(genres: Array<Genre>) {
 
-        view?.setGenres(genres)
+        view?.setGenres(genres.toCollection(ArrayList()))
     }
 
 }

@@ -15,7 +15,7 @@
     <item
         android:id="@+id/action_upcoming"
         android:icon="@drawable/ic_upcoming"
-        android:title="Upcoming"/>
+        android:title="Soon"/>
 
     <item
         android:id="@+id/action_favorites"

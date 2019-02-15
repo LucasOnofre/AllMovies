@@ -23,6 +23,9 @@ open class BaseFragment : Fragment() {
         return container
     }
 
+    /**
+     * Set's the default toolbar her title
+     */
     protected fun setupToolbar(view: View, title: String? = ""){
 
         var toolbar:Toolbar?       = view.findViewById(R.id.toolbar)
@@ -40,11 +43,13 @@ open class BaseFragment : Fragment() {
         }
     }
 
+    /**
+     * Set's the toolbar of the fragments
+     */
     protected fun setToolbarGoBackArrow(view: View, title:String) {
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
 
         var collapsingToolbar:CollapsingToolbarLayout? = view.findViewById(R.id.collapsing_toolbar)
-
 
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)
@@ -58,7 +63,6 @@ open class BaseFragment : Fragment() {
 
 
     protected fun openFragment(fragment:Fragment){
-
         fragmentManager?.beginTransaction()?.replace(R.id.container, fragment)?.addToBackStack(null)?.commit()
     }
 
@@ -73,7 +77,6 @@ open class BaseFragment : Fragment() {
     protected fun setGridLayout(recyclerList:RecyclerView?) {
 
         var manager: GridLayoutManager?
-
         val orientation = resources.configuration.orientation
 
         manager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {

@@ -26,7 +26,7 @@ interface SearchFragmentContract{
         fun bindTo(view: SearchFragmentView)
         fun destroy()
         fun requestData(query:String)
-        fun getMoreData(page: Int,query:String)
+        fun requestMoreData(page: Int,query:String)
 
 
     }

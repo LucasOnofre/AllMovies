@@ -7,16 +7,23 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
     private var view: HomeFragmentView? = null
     private var model = HomeFragmentModel()
 
-    private val TAG = "HomeFragmentPresenter"
-
+    /**
+     * Make's the connection with the view
+     */
     override fun bindTo(view:HomeFragmentView){
         this.view = view
     }
 
+    /**
+     * Destroy's the connection with the view
+     */
     override fun destroy(){
         this.view = null
     }
 
+    /**
+     * Call's the method on model
+     */
     override fun requestDataFromServer() {
 
         if (view != null){ view?.showProgress() }
@@ -24,11 +31,17 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
         model.requestMovies(1, this)
     }
 
+    /**
+     * Call's the method on model passing page as param
+     */
     override fun getMoreData(page: Int) {
 
         model.requestMovies(page, this)
     }
 
+    /**
+     * Send's the data of the result to the view
+     */
     override fun onSucess(movieArrayList: ArrayList<Movie>) {
 
         view?.setDataToRecyclerView(movieArrayList)
@@ -36,6 +49,9 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
         if (view != null){ view?.hideProgress() }
     }
 
+    /**
+     * Send's the error result to the view
+     */
     override fun onFailure(error: Throwable) {
         view?.onResponseError(error)
 

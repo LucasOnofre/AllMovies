@@ -6,9 +6,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -24,6 +26,7 @@ import onoffrice.wikimovies.extension.*
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.MovieInterface
+import onoffrice.wikimovies.model.MovieLongClickInterface
 import onoffrice.wikimovies.model.MovieVideoInfo
 
 
@@ -35,6 +38,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
     private var editor              :SharedPreferences.Editor? = null
     private var toolbar             :CollapsingToolbarLayout?  = null
     private var btnGoOut            :UserButton?               = null
+    private var isLoading           :Boolean                   = false
     private var movieName           :TextView?                 = null
     private var progressBar         :ProgressBar?              = null
     private var progressTxt         :TextView?                 = null
@@ -46,9 +50,6 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
     private var movieReleaseDate    :TextView?                 = null
 
 
-    //Boolean
-    private var isLoading                                      = false
-
     //Initializations
     private var gson                :Gson?                        = Gson()
     private var movie               :Movie                        = Movie()
@@ -59,7 +60,59 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
     /**
      * Implementing interface to handle the click on the movie
      */
-    private val movieClickListener = object: MovieInterface { override fun onMovieSelected(movie: Movie?) { openDetailMovieFragment(movie) } }
+    private val movieClickListener = object: MovieInterface {
+        override fun onMovieSelected(movie: Movie?) {
+            openDetailMovieFragment(movie)
+        }
+    }
+
+    private val movieLongClicListener = object : MovieLongClickInterface {
+        override fun onMovieLongClickSelected(movie: Movie?) {
+
+            val dropDownMenu = PopupMenu(context!!,view!!)
+
+            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
+
+            setMenuItemForLongClick(movie!!, dropDownMenu)
+
+            dropDownMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+
+                    R.id.unFavorite -> {
+                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    R.id.favorite -> {
+                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    else -> {
+                        false
+                    }
+                }
+            }
+
+            dropDownMenu.show()
+
+        }
+        /**
+         * Get's the menu item and shows only the right one according to the movie favorite status
+         */
+        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+
+            var menuItem: MenuItem? = if (movie.isFavorite) {
+                dropDownMenu.menu.findItem(R.id.favorite)
+
+            } else {
+                dropDownMenu.menu.findItem(R.id.unFavorite)
+            }
+            menuItem?.isVisible = false
+            menuItem?.isEnabled = false
+        }
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
@@ -81,13 +134,17 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         return view
     }
 
-
+    /**
+     * Destroy the connection with the presenter
+     */
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
 
     }
-
+    /**
+     * Update the movie Trailer with the result of the request
+     */
     override fun updateMovieVideoPath(videoInfo: MovieVideoInfo) {
 
         movie.trailerVideo = videoInfo.key
@@ -96,7 +153,9 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
     override fun onResponseErrorTrailer(error: Throwable) {
 
+        Toast.makeText(context,error.toString(),Toast.LENGTH_LONG).show()
     }
+
 
     override fun updateFavoriteList(movies: ArrayList<Movie>) {
 
@@ -115,7 +174,9 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         Log.i("Request: ", error.message)
     }
 
-
+    /**
+     * Get's the favorite's list on the Sharef Preferences
+     */
     override fun onResume() {
         super.onResume()
 
@@ -126,11 +187,16 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         }
     }
 
+    /**
+     * Save's the favorite movie list
+     */
     override fun onPause() {
         super.onPause()
         saveFavoriteMovies(favoriteMovieList)
     }
-
+    /**
+     * Implementing interface to handle the click on the movie
+     */
     private fun getFavorites() {
         if (!favoriteMovieList.isEmpty()) {
 
@@ -162,7 +228,6 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
     private fun setUpViews(view: View) {
 
         movieBanner         = view.findViewById(R.id.movieBanner)
-        //movieName         = view.findViewById(R.id.movie_text)
         movieDescript       = view.findViewById(R.id.movieDescript)
         movieReleaseDate    = view.findViewById(R.id.movie_release_date)
         progressBar         = view.findViewById(R.id.circle_progress)
@@ -174,17 +239,20 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         btnGoOut    = view.findViewById(R.id.go_out_btn)
 
         btnFavorite?.setOnClickListener { getIsFavorite() }
-        btnGoOut?.setOnClickListener    { openBrowser() }
+        btnGoOut?.setOnClickListener    { openTrailer() }
 
         setInfo(movie)
 
     }
 
-    private fun openBrowser() {
+    private fun openTrailer() {
 
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=${movie.trailerVideo}")))
     }
 
+    /**
+     * Check if it's favorite
+     */
     private fun getIsFavorite() {
 
         if (!movie.isFavorite)
@@ -201,7 +269,6 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
 
         if (isFavorite()){
-
             presenter.unFavoriteMovie(favoriteMovieList,movie)
         }
     }
@@ -285,7 +352,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
     private fun setAdapter() {
 
-        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener,movieLongClicListener) }
 
         //Set's the orientation of the list to Grid
         setGridLayout(recyclerList)

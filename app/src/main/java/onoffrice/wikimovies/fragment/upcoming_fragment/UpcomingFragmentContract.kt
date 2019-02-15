@@ -29,8 +29,8 @@ interface UpcomingFragmentContract {
 
         fun bindTo(view: UpcomingFragmentView)
         fun destroy()
-        fun requestDataFromServer()
-        fun getMoreData(page: Int)
+        fun requestData()
+        fun requestMoreData(page: Int)
     }
 
 }

@@ -4,9 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -20,6 +22,7 @@ import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.MovieInterface
+import onoffrice.wikimovies.model.MovieLongClickInterface
 
 
 class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
@@ -44,6 +47,54 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
         override fun onMovieSelected(movie: Movie?) {
             openDetailMovieFragment(movie)
         }
+    }
+
+    private val movieLongClicListener = object : MovieLongClickInterface {
+        override fun onMovieLongClickSelected(movie: Movie?) {
+
+            val dropDownMenu = PopupMenu(context!!,view!!)
+
+            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
+
+            setMenuItemForLongClick(movie!!, dropDownMenu)
+
+            dropDownMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+
+                    R.id.unFavorite -> {
+                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    R.id.favorite -> {
+                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    else -> {
+                        false
+                    }
+                }
+            }
+
+            dropDownMenu.show()
+
+        }
+        /**
+         * Get's the menu item and shows only the right one according to the movie favorite status
+         */
+        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+
+            var menuItem: MenuItem? = if (movie.isFavorite) {
+                dropDownMenu.menu.findItem(R.id.favorite)
+
+            } else {
+                dropDownMenu.menu.findItem(R.id.unFavorite)
+            }
+            menuItem?.isVisible = false
+            menuItem?.isEnabled = false
+        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -76,7 +127,7 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
 
     private fun setAdapter() {
         //Set's the adapter
-        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener) }
+        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener,movieLongClicListener) }
         setGridLayout(recyclerList)
         recyclerList?.adapter = adapter
     }
@@ -91,7 +142,7 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
                 if (!recyclerView.canScrollVertically(1) && !isLoading){
                     isLoading = true
                     page++
-                    presenter.getMoreData(page,query!!)
+                    presenter.requestMoreData(page,query!!)
                     isLoading = false
                 }
             }
@@ -169,13 +220,16 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
         openFragment(MovieDetailFragmentView())
     }
 
-
+    /**
+     * Update's the list with data of the presenter
+     */
     override fun updateList(movies: ArrayList<Movie>) {
 
         listMovies.addAll(movies)
         adapter?.notifyDataSetChanged()
 
     }
+
 
     override fun onResponseError(error: Throwable) {
 
