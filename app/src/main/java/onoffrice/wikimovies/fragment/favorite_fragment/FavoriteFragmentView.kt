@@ -28,14 +28,14 @@ import onoffrice.wikimovies.model.MovieLongClickInterface
 
 class FavoriteFragmentView : BaseFragment() {
 
+    private var editor           : SharedPreferences.Editor?  = null
     private var layout           : AppBarLayout?              = null
-    private var isLoading                                     = true
+    private var isLoading        : Boolean                    = true
     private var preferences      : SharedPreferences?         = null
     private var progressBar      : ProgressBar?               = null
     private var recyclerList     : RecyclerView?              = null
     private var emptyMessage     : TextView?                  = null
     private var bottomNavigation : BottomNavigationView?      = null
-    private var editor           : SharedPreferences.Editor?  = null
 
     private var gson       : Gson?            = Gson()
     private var listMovies : ArrayList<Movie> = ArrayList()
@@ -51,15 +51,16 @@ class FavoriteFragmentView : BaseFragment() {
     }
 
     private val movieLongClicListener = object : MovieLongClickInterface {
-        override fun onMovieLongClickSelected(movie: Movie?) {
+        override fun onMovieLongClickSelected(view:View, movie: Movie?) {
 
-            val dropDownMenu = PopupMenu(context!!,view!!)
+            val dropDownMenu = PopupMenu(context!!,view)
 
             dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
 
             setMenuItemForLongClick(movie!!, dropDownMenu)
 
             dropDownMenu.setOnMenuItemClickListener { item ->
+
                 when (item.itemId) {
 
                     R.id.unFavorite -> {
@@ -79,7 +80,6 @@ class FavoriteFragmentView : BaseFragment() {
             }
 
             dropDownMenu.show()
-
         }
         /**
          * Get's the menu item and shows only the right one according to the movie favorite status

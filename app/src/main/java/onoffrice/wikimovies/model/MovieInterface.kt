@@ -1,5 +1,7 @@
 package onoffrice.wikimovies.model
 
+import android.view.View
+
 /**
  * Interface to get the click on the movie
  */
@@ -7,5 +9,5 @@ interface MovieInterface{
     fun onMovieSelected(movie:Movie?)
 }
 interface MovieLongClickInterface{
-    fun onMovieLongClickSelected(movie:Movie?)
+    fun onMovieLongClickSelected(view: View, movie:Movie?)
 }

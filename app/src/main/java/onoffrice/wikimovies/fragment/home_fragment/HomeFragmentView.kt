@@ -55,9 +55,9 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     }
 
     private val movieLongClicListener = object :MovieLongClickInterface{
-        override fun onMovieLongClickSelected(movie: Movie?) {
+        override fun onMovieLongClickSelected(view: View ,movie: Movie?) {
 
-                val dropDownMenu = PopupMenu(context!!,view!!)
+                val dropDownMenu = PopupMenu(context!!,view)
 
                 dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
 

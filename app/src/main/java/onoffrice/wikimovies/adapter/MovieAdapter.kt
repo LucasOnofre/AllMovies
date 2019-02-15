@@ -63,7 +63,7 @@ class MoviesAdapter (
 
         //Listener that when clicked show's a dropDown menu
         holder.itemView.setOnLongClickListener {
-            listenerLongClickInterface.onMovieLongClickSelected(movie)
+            listenerLongClickInterface.onMovieLongClickSelected(it,movie)
             true
         }
     }
