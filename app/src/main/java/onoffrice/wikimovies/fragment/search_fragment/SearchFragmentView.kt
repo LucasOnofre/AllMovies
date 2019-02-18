@@ -1,20 +1,16 @@
 package onoffrice.wikimovies.fragment.search_fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_search.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
@@ -34,7 +30,7 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
     private var recyclerList     : RecyclerView?             = null
     private var searchView       :android.widget.SearchView? = null
 
-    private var gson             : Gson?                     = Gson()
+    //  Initializations
     private val handler                                      = Handler()
     private var listMovies       : ArrayList<Movie>          = ArrayList()
     private var presenter        : SearchFragmentPresenter   = SearchFragmentPresenter()
@@ -45,56 +41,17 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
      */
     private val movieClickListener = object: MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
-            openDetailMovieFragment(movie)
+            openPopulatedFragment(movie,"movieJson",MovieDetailFragmentView())
         }
     }
 
+    /**
+     * Implementing interface to handle the Long click on the movie
+     */
     private val movieLongClicListener = object : MovieLongClickInterface {
-        override fun onMovieLongClickSelected(movie: Movie?) {
-
-            val dropDownMenu = PopupMenu(context!!,view!!)
-
-            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
-
-            setMenuItemForLongClick(movie!!, dropDownMenu)
-
-            dropDownMenu.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-
-                    R.id.unFavorite -> {
-                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    R.id.favorite -> {
-                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    else -> {
-                        false
-                    }
-                }
-            }
-
-            dropDownMenu.show()
-
+        override fun onMovieLongClickSelected(view: View, movie: Movie?) {
+            openDropMenu(view, movie)
         }
-        /**
-         * Get's the menu item and shows only the right one according to the movie favorite status
-         */
-        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
-
-            var menuItem: MenuItem? = if (movie.isFavorite) {
-                dropDownMenu.menu.findItem(R.id.favorite)
-
-            } else {
-                dropDownMenu.menu.findItem(R.id.unFavorite)
-            }
-            menuItem?.isVisible = false
-            menuItem?.isEnabled = false
-        }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -203,22 +160,6 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
         searchPlate.imeOptions = EditorInfo.IME_ACTION_SEARCH
     }
 
-    /**
-     * Convert's the movie in a Json,
-     * save on shared preferences and also open de Movie Detail Fragment
-     */
-    private fun openDetailMovieFragment(movie:Movie?){
-        val preferences= context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-        val editor = preferences?.edit()
-
-        // Transform the movie into an Json to save in shared preferences
-        var movieJson = gson?.toJson(movie)
-
-        editor?.putString("movieJson",movieJson)
-        editor?.commit()
-
-        openFragment(MovieDetailFragmentView())
-    }
 
     /**
      * Update's the list with data of the presenter

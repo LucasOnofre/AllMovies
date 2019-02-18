@@ -1,6 +1,10 @@
 
 package onoffrice.wikimovies.fragment.movie_detail_fragment
 
+import android.content.SharedPreferences
+import onoffrice.wikimovies.extension.favoriteMovie
+import onoffrice.wikimovies.extension.getFavorites
+import onoffrice.wikimovies.extension.unFavoriteMovie
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.MovieVideoInfo
 
@@ -18,7 +22,6 @@ class MovieDetailFragmentPresenter:
      * Make's the connection with the view
      */
     override fun bindTo(view: MovieDetailFragmentView) {
-
         this.view = view
     }
 
@@ -61,6 +64,14 @@ class MovieDetailFragmentPresenter:
         view?.onResponseError(error)
     }
 
+
+    override fun getFavorites(pref: SharedPreferences?): ArrayList<Movie>? {
+
+        return pref?.getFavorites()
+
+    }
+
+
     /**
      * Check if the movie is favorited
      */
@@ -69,7 +80,7 @@ class MovieDetailFragmentPresenter:
         for (movieinList in favoriteMovieList) {
             if (movieinList.id == movie.id) {
                 return true
-                break
+
             }
         }
         return false
@@ -80,25 +91,15 @@ class MovieDetailFragmentPresenter:
      */
     override fun favoriteMovie(moviesFavoriteList: ArrayList<Movie>, movie: Movie): ArrayList<Movie>  {
 
-        moviesFavoriteList.add(movie)
-        movie.isFavorite = true
-
-        return  moviesFavoriteList
+        return movie.favoriteMovie(moviesFavoriteList)
     }
 
     /**
      * Unfavorite the movie
      */
-    override fun unFavoriteMovie(moviesFavoriteList: ArrayList<Movie>, movie: Movie): ArrayList<Movie>  {
+    override fun unFavoriteMovie(moviesFavoriteList: ArrayList<Movie>, movie: Movie): ArrayList<Movie> {
 
-        val movieSelected = moviesFavoriteList.indexOfFirst { it.id == movie.id }
-
-        if(movieSelected != -1)
-            movie.isFavorite = false
-
-        moviesFavoriteList.removeAt(movieSelected)
-
-        return  moviesFavoriteList
+       return movie.unFavoriteMovie(moviesFavoriteList)
     }
 
     /**
@@ -107,11 +108,10 @@ class MovieDetailFragmentPresenter:
     override fun requestVideosFromMovie(movieId: Int) {
 
         model.requestVideosFromMovie(movieId,this)
-
     }
 
     /**
-     *
+     * Check's if it's a trailer
      */
     override fun onSucessTrailers(videoInfo: ArrayList<MovieVideoInfo>) {
 

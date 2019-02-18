@@ -12,9 +12,11 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import onoffrice.wikimovies.model.Movie
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Open any activity just passing the destiny, in case, 'T'
@@ -102,4 +104,58 @@ fun ProgressBar.circleAnimate(rate:Int){
         animation.interpolator = LinearInterpolator()
         animation.start()
     }, 100)
+}
+
+/**
+ * Favorite the movie
+ */
+fun Movie.favoriteMovie(moviesFavoriteList: ArrayList<Movie>): ArrayList<Movie> {
+
+    moviesFavoriteList.add(this)
+    this.isFavorite = true
+
+
+    return moviesFavoriteList
+}
+
+/**
+ * Unfavorite the movie
+ */
+fun Movie.unFavoriteMovie(moviesFavoriteList: ArrayList<Movie>): ArrayList<Movie> {
+
+    val movieSelected = moviesFavoriteList.indexOfFirst { it.id == this.id }
+
+    if(movieSelected != -1)
+        this.isFavorite = false
+
+    moviesFavoriteList.removeAt(movieSelected)
+
+    return  moviesFavoriteList
+}
+
+/**
+ * Save's the list of favorite movies in the shared preferences
+ */
+fun ArrayList<Movie>.saveFavoriteMovies(context:Context) {
+
+    val gson = Gson()
+    val editor = context.getPreferencesEditor()
+
+    // Transform the movie into an Json to save in shared preferences
+    var favoritedList = gson.toJson(this)
+
+    editor?.putString("favoriteMovieList", favoritedList)
+    editor?.commit()
+}
+
+fun SharedPreferences.getFavorites():ArrayList<Movie>{
+
+    var favoriteMovies:ArrayList<Movie> = ArrayList()
+    val json = this.getPreferenceKey("favoriteMovieList")
+
+    json?.parseJson<Array<Movie>>()?.let {
+         favoriteMovies =  it.toCollection(ArrayList())
+    }
+
+    return favoriteMovies
 }

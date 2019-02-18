@@ -1,24 +1,20 @@
 package onoffrice.wikimovies.fragment.favorite_fragment
 
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
-import com.google.gson.Gson
+import kotlinx.android.synthetic.main.fragment_favorite.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
+import onoffrice.wikimovies.extension.getPreferences
 import onoffrice.wikimovies.extension.parseJson
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
@@ -28,16 +24,15 @@ import onoffrice.wikimovies.model.MovieLongClickInterface
 
 class FavoriteFragmentView : BaseFragment() {
 
-    private var editor           : SharedPreferences.Editor?  = null
     private var layout           : AppBarLayout?              = null
     private var isLoading        : Boolean                    = true
-    private var preferences      : SharedPreferences?         = null
     private var progressBar      : ProgressBar?               = null
     private var recyclerList     : RecyclerView?              = null
     private var emptyMessage     : TextView?                  = null
     private var bottomNavigation : BottomNavigationView?      = null
+    private var adapter: MoviesAdapter? = null
 
-    private var gson       : Gson?            = Gson()
+    //  Initializations
     private var listMovies : ArrayList<Movie> = ArrayList()
 
 
@@ -46,56 +41,18 @@ class FavoriteFragmentView : BaseFragment() {
      */
     private val movieClickListener = object : MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
-            openDetailMovieFragment(movie)
+            openPopulatedFragment(movie,"movieJson",MovieDetailFragmentView())
         }
     }
 
+    /**
+     * Implementing interface to handle the Long click on the movie
+     */
     private val movieLongClicListener = object : MovieLongClickInterface {
-        override fun onMovieLongClickSelected(view:View, movie: Movie?) {
+        override fun onMovieLongClickSelected(view: View, movie: Movie?) {
+            openDropMenu(view, movie)
 
-            val dropDownMenu = PopupMenu(context!!,view)
-
-            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
-
-            setMenuItemForLongClick(movie!!, dropDownMenu)
-
-            dropDownMenu.setOnMenuItemClickListener { item ->
-
-                when (item.itemId) {
-
-                    R.id.unFavorite -> {
-                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    R.id.favorite -> {
-                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    else -> {
-                        false
-                    }
-                }
-            }
-
-            dropDownMenu.show()
         }
-        /**
-         * Get's the menu item and shows only the right one according to the movie favorite status
-         */
-        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
-
-            var menuItem: MenuItem? = if (movie.isFavorite) {
-                dropDownMenu.menu.findItem(R.id.favorite)
-
-            } else {
-                dropDownMenu.menu.findItem(R.id.unFavorite)
-            }
-            menuItem?.isVisible = false
-            menuItem?.isEnabled = false
-        }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
@@ -103,35 +60,12 @@ class FavoriteFragmentView : BaseFragment() {
         var view = inflater.inflate(R.layout.fragment_favorite, container, false)
 
         setUpViews(view)
-        getPreferecences()
         setupToolbar(view,"Favorites")
         getFavorites()
+        checkList()
         setAdapter()
 
         return view
-    }
-
-
-    private fun getPreferecences() {
-
-        preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-        editor      = preferences?.edit()
-    }
-
-    /**
-     * Convert's the movie in a Json,
-     * save on shared preferences and also open de Movie Detail Fragment
-     */
-    private fun openDetailMovieFragment(movie: Movie?) {
-
-
-        // Transform the movie into an Json to save in shared preferences
-        var movieJson = gson?.toJson(movie)
-
-        editor?.putString("movieJson", movieJson)
-        editor?.commit()
-
-        openFragment(MovieDetailFragmentView())
     }
 
     /**
@@ -149,9 +83,15 @@ class FavoriteFragmentView : BaseFragment() {
 
     }
 
+
+
     private fun setAdapter() {
         //Set's the adapter
-        recyclerList?.adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener,movieLongClicListener) }
+
+        adapter = activity?.let { MoviesAdapter(it, listMovies, movieClickListener,movieLongClicListener) }
+
+        recyclerList?.adapter = adapter
+
         setGridLayout(recyclerList)
     }
 
@@ -160,21 +100,27 @@ class FavoriteFragmentView : BaseFragment() {
      */
     private fun getFavorites() {
 
-        val json = preferences?.getPreferenceKey("favoriteMovieList")
+        val json = context?.getPreferences()?.getPreferenceKey("favoriteMovieList")
         json?.parseJson<Array<Movie>>()?.let {
             listMovies = it.toCollection(ArrayList())
+
             progressBar?.visibility = View.GONE
             isLoading = false
 
-            if (!listMovies.isEmpty()) {
-                recyclerList?.adapter?.notifyDataSetChanged()
+
+        }
+    }
+
+    private fun checkList(){
+
+         if (!listMovies.isEmpty()) {
+            recyclerList?.adapter?.notifyDataSetChanged()
 
 
-            }else{
-                recyclerList?.visibility  = View.GONE
-                emptyMessage?.visibility  = View.VISIBLE
+        } else {
+            recyclerList?.visibility = View.GONE
+            emptyMessage?.visibility = View.VISIBLE
 
-            }
         }
     }
 }

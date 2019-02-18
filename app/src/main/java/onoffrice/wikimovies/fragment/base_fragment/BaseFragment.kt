@@ -7,13 +7,19 @@ import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import com.google.gson.Gson
 import onoffrice.wikimovies.R
+import onoffrice.wikimovies.extension.*
+import onoffrice.wikimovies.model.Movie
 
 open class BaseFragment : Fragment() {
 
@@ -87,4 +93,83 @@ open class BaseFragment : Fragment() {
 
         recyclerList?.layoutManager = manager
     }
+
+    /**
+     * Open's an fragment received by params, and saves as a String Json the object
+     * that is also a param
+     */
+    inline fun<reified T> openPopulatedFragment(obj:T ,keyEditor:String,fragment:Fragment){
+        var gson = Gson()
+        var editor = context?.getPreferencesEditor()
+
+        // Transform the object in a Json to save in shared preferences as a String
+        var json = gson.toJson(obj)
+
+        editor?.putString(keyEditor,json)
+        editor?.commit()
+
+        //Open's the given fragment
+        openFragment(fragment)
+    }
+
+    fun openDropMenu(view:View, movie: Movie?){
+
+        val dropDownMenu = PopupMenu(context!!,view)
+        var favoriteList:ArrayList<Movie>
+
+        context?.getPreferences()?.getFavorites().let {
+            favoriteList = it!!
+        }
+
+        dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
+
+        checkFavorite(movie, favoriteList)
+
+        setMenuItemForLongClick(movie!!, dropDownMenu)
+
+        dropDownMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+
+                R.id.unFavorite -> {
+                    Toast.makeText(context, "Unfavorited", Toast.LENGTH_SHORT).show()
+                    movie?.unFavoriteMovie(favoriteList)
+                    favoriteList.saveFavoriteMovies(context!!)
+                    true
+                }
+
+                R.id.favorite -> {
+                    movie?.favoriteMovie(favoriteList)
+                    Toast.makeText(context, "Favorited", Toast.LENGTH_SHORT).show()
+                    favoriteList.saveFavoriteMovies(context!!)
+
+                    true
+                }
+
+                else -> {
+                    false
+                }
+            }
+        }
+        dropDownMenu.show()
+    }
+
+    private fun checkFavorite(movie: Movie?, favoriteList: ArrayList<Movie>) {
+
+        for (movieItem in favoriteList) {
+            if (movieItem.id == movie?.id){
+                movie?.isFavorite = true
+            }
+        }
+    }
 }
+    fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+
+        var menuItem: MenuItem? = if (movie.isFavorite) {
+            dropDownMenu.menu.findItem(R.id.favorite)
+
+        } else {
+            dropDownMenu.menu.findItem(R.id.unFavorite)
+        }
+        menuItem?.isVisible = false
+        menuItem?.isEnabled = false
+    }

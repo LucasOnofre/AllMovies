@@ -1,22 +1,18 @@
 package onoffrice.wikimovies.fragment.upcoming_fragment
 
 
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
@@ -35,13 +31,12 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
     private var movieBanner         : ImageView?            = null
     private var progressBar         : ProgressBar?          = null
     private var recyclerList        : RecyclerView?         = null
+    private var appBarLayout        : AppBarLayout?         = null
     private var bottomNavigation    : BottomNavigationView? = null
     private var movieBannerTittle   : TextView?             = null
-    private var appBarLayout        : AppBarLayout?         = null
-    private var movieBannerSelected :Movie?                 = null
+    private var movieBannerSelected : Movie?                = null
 
     //  Initializations
-    private var gson                     : Gson                      = Gson()
     private var listMovies               : ArrayList<Movie>          = ArrayList()
     private var upcomingFragmentPresenter: UpcomingFragmentPresenter = UpcomingFragmentPresenter()
 
@@ -52,56 +47,17 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
      */
     private val movieClickListener = object: MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
-            openDetailMovieFragment(movie)
+            openPopulatedFragment(movie,"movieJson",MovieDetailFragmentView())
         }
     }
 
+    /**
+     * Implementing interface to handle the Long click on the movie
+     */
     private val movieLongClicListener = object : MovieLongClickInterface {
-        override fun onMovieLongClickSelected(movie: Movie?) {
-
-            val dropDownMenu = PopupMenu(context!!,view!!)
-
-            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
-
-            setMenuItemForLongClick(movie!!, dropDownMenu)
-
-            dropDownMenu.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-
-                    R.id.unFavorite -> {
-                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    R.id.favorite -> {
-                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    else -> {
-                        false
-                    }
-                }
-            }
-
-            dropDownMenu.show()
-
+        override fun onMovieLongClickSelected(view: View, movie: Movie?) {
+            openDropMenu(view, movie)
         }
-        /**
-         * Get's the menu item and shows only the right one according to the movie favorite status
-         */
-        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
-
-            var menuItem: MenuItem? = if (movie.isFavorite) {
-                dropDownMenu.menu.findItem(R.id.favorite)
-
-            } else {
-                dropDownMenu.menu.findItem(R.id.unFavorite)
-            }
-            menuItem?.isVisible = false
-            menuItem?.isEnabled = false
-        }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -156,7 +112,9 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
     private fun checkFirstPage() {
         if (page == 1) {
             setBannerBar(listMovies)
-            movieBanner?.setOnClickListener { openDetailMovieFragment(movieBannerSelected) }
+            movieBanner?.setOnClickListener {
+                openPopulatedFragment(movieBannerSelected,"movieJson",MovieDetailFragmentView())
+            }
         }
     }
 
@@ -182,22 +140,6 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
         setGridLayout(recyclerList)
     }
 
-    /**
-     * Convert's the movie in a Json,
-     * save on shared preferences and also open de Movie Detail Fragment
-     */
-    private fun openDetailMovieFragment(movie: Movie?){
-        val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-        val editor = preferences?.edit()
-
-        // Transform the movie into an Json to save in shared preferences
-        var movieJson = gson?.toJson(movie)
-
-        editor?.putString("movieJson", movieJson)
-        editor?.commit()
-
-        openFragment(MovieDetailFragmentView())
-    }
 
     /**
      * Set's the views and the progress bar

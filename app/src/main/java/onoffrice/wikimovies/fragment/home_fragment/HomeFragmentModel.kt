@@ -32,5 +32,4 @@ class HomeFragmentModel: HomeFragmentContract.Model {
             }
         })
     }
-
 }

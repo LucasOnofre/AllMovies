@@ -1,20 +1,17 @@
 package onoffrice.wikimovies.fragment.category_movie_list_fragment
 
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
+import onoffrice.wikimovies.extension.getPreferences
 import onoffrice.wikimovies.extension.parseJson
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
@@ -32,7 +29,7 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
     private var isLoading                                = false
     private var progressBar      : ProgressBar?          = null
     private var recyclerList     : RecyclerView?         = null
-    private var gson             : Gson?                 = Gson()
+
     private var listMovies       : ArrayList<Movie>      = ArrayList()
     private var presenter        : CategoryMovieListFragmentPresenter = CategoryMovieListFragmentPresenter()
 
@@ -42,56 +39,17 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
      */
     private val movieClickListener = object: MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
-            openDetailMovieFragment(movie)
+            openPopulatedFragment(movie,"movieJson",MovieDetailFragmentView())
         }
     }
 
+    /**
+     * Implementing interface to handle the Long click on the movie
+     */
     private val movieLongClicListener = object : MovieLongClickInterface {
-        override fun onMovieLongClickSelected(view:View, movie: Movie?) {
-
-            val dropDownMenu = PopupMenu(context!!,view)
-
-            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
-
-            setMenuItemForLongClick(movie!!, dropDownMenu)
-
-            dropDownMenu.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-
-                    R.id.unFavorite -> {
-                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    R.id.favorite -> {
-                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    else -> {
-                        false
-                    }
-                }
-            }
-
-            dropDownMenu.show()
-
+        override fun onMovieLongClickSelected(view: View, movie: Movie?) {
+            openDropMenu(view, movie)
         }
-        /**
-         * Get's the menu item and shows only the right one according to the movie favorite status
-         */
-        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
-
-            var menuItem: MenuItem? = if (movie.isFavorite) {
-                dropDownMenu.menu.findItem(R.id.favorite)
-
-            } else {
-                dropDownMenu.menu.findItem(R.id.unFavorite)
-            }
-            menuItem?.isVisible = false
-            menuItem?.isEnabled = false
-        }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -119,27 +77,10 @@ class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentC
      * Get's the genre Selected saved on preferences
      */
     private fun  getSelectedGenre(){
-        val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-        var genreSelected = (preferences?.getPreferenceKey("categoryChosen"))
+
+        var genreSelected = (context?.getPreferences()?.getPreferenceKey("categoryChosen"))
 
         genre = genreSelected?.parseJson<Genre>()
-    }
-
-    /**
-     * Convert's the movie in a Json,
-     * save on shared preferences and also open de Movie Detail Fragment
-     */
-    private fun openDetailMovieFragment(movie:Movie?){
-        val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-        val editor = preferences?.edit()
-
-        // Transform the movie into an Json to save in shared preferences
-        var movieJson = gson?.toJson(movie)
-
-        editor?.putString("movieJson",movieJson)
-        editor?.commit()
-
-        openFragment(MovieDetailFragmentView())
     }
 
     /**

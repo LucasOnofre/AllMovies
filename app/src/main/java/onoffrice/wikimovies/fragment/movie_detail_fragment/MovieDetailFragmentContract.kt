@@ -1,5 +1,6 @@
 package onoffrice.wikimovies.fragment.movie_detail_fragment
 
+import android.content.SharedPreferences
 import onoffrice.wikimovies.model.Movie
 import onoffrice.wikimovies.model.MovieVideoInfo
 
@@ -42,6 +43,7 @@ interface MovieDetailFragmentContract {
             fun isFavorite(moviesFavoriteList: ArrayList<Movie>, movie: Movie): Boolean
             fun favoriteMovie(moviesFavoriteList: ArrayList<Movie>, movie: Movie): ArrayList<Movie>
             fun unFavoriteMovie(moviesFavoriteList: ArrayList<Movie>, movie: Movie): ArrayList<Movie>
+            fun getFavorites(editor: SharedPreferences?): ArrayList<Movie>?
 
         }
 }

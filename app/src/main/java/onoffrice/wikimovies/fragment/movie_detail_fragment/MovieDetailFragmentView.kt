@@ -6,11 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -31,8 +29,6 @@ import onoffrice.wikimovies.model.MovieVideoInfo
 
 
 class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View {
-
-
 
     private var page                                           = 1
     private var editor              :SharedPreferences.Editor? = null
@@ -62,56 +58,17 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
      */
     private val movieClickListener = object: MovieInterface {
         override fun onMovieSelected(movie: Movie?) {
-            openDetailMovieFragment(movie)
+            openPopulatedFragment(movie,"movieJson",MovieDetailFragmentView())
         }
     }
 
+    /**
+     * Implementing interface to handle the Long click on the movie
+     */
     private val movieLongClicListener = object : MovieLongClickInterface {
-        override fun onMovieLongClickSelected(movie: Movie?) {
-
-            val dropDownMenu = PopupMenu(context!!,view!!)
-
-            dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
-
-            setMenuItemForLongClick(movie!!, dropDownMenu)
-
-            dropDownMenu.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-
-                    R.id.unFavorite -> {
-                        Toast.makeText(context, "Deletado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    R.id.favorite -> {
-                        Toast.makeText(context, "Favoritado", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
-                    else -> {
-                        false
-                    }
-                }
-            }
-
-            dropDownMenu.show()
-
+        override fun onMovieLongClickSelected(view: View, movie: Movie?) {
+            openDropMenu(view, movie)
         }
-        /**
-         * Get's the menu item and shows only the right one according to the movie favorite status
-         */
-        fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
-
-            var menuItem: MenuItem? = if (movie.isFavorite) {
-                dropDownMenu.menu.findItem(R.id.favorite)
-
-            } else {
-                dropDownMenu.menu.findItem(R.id.unFavorite)
-            }
-            menuItem?.isVisible = false
-            menuItem?.isEnabled = false
-        }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -134,6 +91,26 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         return view
     }
 
+
+    /**
+     * Get's the favorite's list on the Shared Preferences
+     */
+    override fun onResume() {
+        super.onResume()
+
+        getFavorites()
+        checkSelectedMovie()
+    }
+
+    private fun checkSelectedMovie() {
+        for (movieOnList in favoriteMovieList) {
+            if (movieOnList.id == movie?.id && movieOnList.isFavorite) {
+                favoriteMovie(movie)
+                break
+            }
+        }
+    }
+
     /**
      * Destroy the connection with the presenter
      */
@@ -142,6 +119,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         presenter.destroy()
 
     }
+
     /**
      * Update the movie Trailer with the result of the request
      */
@@ -151,11 +129,11 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
     }
 
+
     override fun onResponseErrorTrailer(error: Throwable) {
 
         Toast.makeText(context,error.toString(),Toast.LENGTH_LONG).show()
     }
-
 
     override fun updateFavoriteList(movies: ArrayList<Movie>) {
 
@@ -174,17 +152,15 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         Log.i("Request: ", error.message)
     }
 
-    /**
-     * Get's the favorite's list on the Sharef Preferences
-     */
-    override fun onResume() {
-        super.onResume()
 
-        val json = preferences?.getPreferenceKey("favoriteMovieList")
-        json?.parseJson<Array<Movie>>()?.let {
-            favoriteMovieList = it.toCollection(ArrayList())
-            getFavorites()
-        }
+    private fun getFavorites(){
+
+   presenter.getFavorites(context?.getPreferences()).let {
+
+       favoriteMovieList = it!!
+
+
+   }
     }
 
     /**
@@ -192,23 +168,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
      */
     override fun onPause() {
         super.onPause()
-        saveFavoriteMovies(favoriteMovieList)
-    }
-    /**
-     * Implementing interface to handle the click on the movie
-     */
-    private fun getFavorites() {
-        if (!favoriteMovieList.isEmpty()) {
-
-            for (movieOnList in favoriteMovieList){
-                if (movieOnList.id == movie?.id){
-                    if (movieOnList.isFavorite){
-                        favoriteMovie(movie)
-                        break
-                    }
-                }
-            }
-        }
+        favoriteMovieList?.saveFavoriteMovies(context!!)
     }
 
     /**
@@ -293,34 +253,6 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
         return presenter.isFavorite(favoriteMovieList, movie)
 
-    }
-
-    /**
-     * Save's the list of favorite movies in the shared preferences
-     */
-    private fun saveFavoriteMovies(favoriteMovieList: ArrayList<Movie>) {
-
-        // Transform the movie into an Json to save in shared preferences
-        var favoritedList = gson?.toJson(favoriteMovieList)
-
-        editor?.putString("favoriteMovieList", favoritedList)
-        editor?.commit()
-    }
-
-    /**
-     * Convert's the movie in a Json,
-     * save on shared preferences and also open de Movie Detail Fragment
-     */
-    private fun openDetailMovieFragment(movie:Movie?){
-
-        // Transform the movie into an Json to save in shared preferences
-        var movieJson = gson?.toJson(movie)
-
-        editor?.putString("movieJson",movieJson)
-        editor?.commit()
-
-        //Open's the given fragment
-        openFragment(MovieDetailFragmentView())
     }
 
     /**

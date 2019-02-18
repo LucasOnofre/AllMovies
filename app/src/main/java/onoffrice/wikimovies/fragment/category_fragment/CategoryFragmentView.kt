@@ -1,12 +1,10 @@
 package onoffrice.wikimovies.fragment.category_fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.CategoryAdapter
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
@@ -19,7 +17,7 @@ class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
     private var categoryList : ListView? = null
 
     //Initialiozations
-    private var gson           : Gson?                      = Gson()
+
     private val presenter      : CategoryFragmentPresenter  = CategoryFragmentPresenter()
     private var genresArrayList: ArrayList<Genre>?          = ArrayList()
 
@@ -29,7 +27,7 @@ class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
      */
     private val genreClickListener = object: CategoryInterface {
         override fun onCategorySelected(genre: Genre?) {
-            openCategoryList(genre)
+            openPopulatedFragment(genre,"categoryChosen",CategoryMovieListFragmentView())
         }
     }
 
@@ -41,7 +39,6 @@ class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
         presenter.getGenres()
 
         setUpViews(view)
-
 
         return view
     }
@@ -62,20 +59,5 @@ class CategoryFragmentView : BaseFragment(), CategoryFragmentContract.View {
         categoryList          = view.findViewById(R.id.category_list)
         categoryList?.adapter = CategoryAdapter(context,genresArrayList,genreClickListener)
 
-    }
-
-    /**
-     * Convert's the genre in a Json and save on shared preferences
-     */
-    private fun openCategoryList(genre:Genre?){
-        val preferences = context?.getSharedPreferences("WikiMoviesPref", Context.MODE_PRIVATE)
-        val editor  = preferences?.edit()
-
-        var genreJson = gson?.toJson(genre)
-
-        editor?.putString("categoryChosen",genreJson )
-        editor?.commit()
-
-        openFragment(CategoryMovieListFragmentView())
     }
 }
