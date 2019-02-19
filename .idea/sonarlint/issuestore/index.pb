@@ -43,3 +43,5 @@ Yapp/src/main/java/onoffrice/wikimovies/fragment/upcoming_fragment/UpcomingFragm
 0app/src/main/res/menu/favorite_fragment_menu.xml,d\4\d45155964c3bbdf0e5e2a060e7004a498f52df08
 •
 eapp/src/main/java/onoffrice/wikimovies/fragment/movie_detail_fragment/MovieDetailFragmentPresenter.kt,b\9\b9acf2f6cc643b528fe64546ac1cb061a172b4a9
+e
+5app/src/main/java/onoffrice/wikimovies/model/Movie.kt,3\d\3d43664aed6836e1392576ef3d821ccaeef571e5

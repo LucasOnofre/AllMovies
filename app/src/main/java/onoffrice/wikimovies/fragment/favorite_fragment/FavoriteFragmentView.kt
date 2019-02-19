@@ -2,6 +2,7 @@ package onoffrice.wikimovies.fragment.favorite_fragment
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.RecyclerView
@@ -10,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import kotlinx.android.synthetic.main.fragment_favorite.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
@@ -25,12 +25,12 @@ import onoffrice.wikimovies.model.MovieLongClickInterface
 class FavoriteFragmentView : BaseFragment() {
 
     private var layout           : AppBarLayout?              = null
+    private var adapter          : MoviesAdapter?             = null
     private var isLoading        : Boolean                    = true
     private var progressBar      : ProgressBar?               = null
     private var recyclerList     : RecyclerView?              = null
     private var emptyMessage     : TextView?                  = null
     private var bottomNavigation : BottomNavigationView?      = null
-    private var adapter: MoviesAdapter? = null
 
     //  Initializations
     private var listMovies : ArrayList<Movie> = ArrayList()
@@ -51,8 +51,17 @@ class FavoriteFragmentView : BaseFragment() {
     private val movieLongClicListener = object : MovieLongClickInterface {
         override fun onMovieLongClickSelected(view: View, movie: Movie?) {
             openDropMenu(view, movie)
-
+            var handler = Handler()
+            handler.postDelayed(
+                    {getFavorites();
+                        updateList()
+                    },2000)
         }
+    }
+
+    private fun updateList() {
+
+        adapter?.notifyDataSetChanged()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{

@@ -104,7 +104,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
     private fun checkSelectedMovie() {
         for (movieOnList in favoriteMovieList) {
-            if (movieOnList.id == movie?.id && movieOnList.isFavorite) {
+            if (movieOnList.id == movie.id && movieOnList.isFavorite) {
                 favoriteMovie(movie)
                 break
             }
@@ -158,8 +158,6 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
    presenter.getFavorites(context?.getPreferences()).let {
 
        favoriteMovieList = it!!
-
-
    }
     }
 
@@ -239,11 +237,15 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         btnFavorite?.textParameter?.text = "Favorited"
 
 
+
         if (!isFavorite()){
 
-            favoriteMovieList = presenter.favoriteMovie(favoriteMovieList,movie)
-
+            presenter.favoriteMovie(favoriteMovieList,movie)
+            favoriteMovieList.saveFavoriteMovies(context!!)
+            getFavorites()
         }
+        else
+            movie.isFavorite = true
     }
 
     /**

@@ -54,7 +54,6 @@ class MovieDetailFragmentPresenter:
     override fun onSucess(movies: ArrayList<Movie>) {
 
         view?.updateFavoriteList(movies)
-
     }
 
     /**
@@ -68,9 +67,7 @@ class MovieDetailFragmentPresenter:
     override fun getFavorites(pref: SharedPreferences?): ArrayList<Movie>? {
 
         return pref?.getFavorites()
-
     }
-
 
     /**
      * Check if the movie is favorited
