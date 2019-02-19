@@ -80,7 +80,6 @@ class MovieDetailFragmentPresenter:
         for (movieinList in favoriteMovieList) {
             if (movieinList.id == movie.id) {
                 return true
-
             }
         }
         return false

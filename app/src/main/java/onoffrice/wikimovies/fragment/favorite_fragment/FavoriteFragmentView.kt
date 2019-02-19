@@ -106,8 +106,6 @@ class FavoriteFragmentView : BaseFragment() {
 
             progressBar?.visibility = View.GONE
             isLoading = false
-
-
         }
     }
 

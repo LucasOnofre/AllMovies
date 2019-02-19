@@ -132,13 +132,13 @@ open class BaseFragment : Fragment() {
 
                 R.id.unFavorite -> {
                     Toast.makeText(context, "Unfavorited", Toast.LENGTH_SHORT).show()
-                    movie?.unFavoriteMovie(favoriteList)
+                    movie.unFavoriteMovie(favoriteList)
                     favoriteList.saveFavoriteMovies(context!!)
                     true
                 }
 
                 R.id.favorite -> {
-                    movie?.favoriteMovie(favoriteList)
+                    movie.favoriteMovie(favoriteList)
                     Toast.makeText(context, "Favorited", Toast.LENGTH_SHORT).show()
                     favoriteList.saveFavoriteMovies(context!!)
 
