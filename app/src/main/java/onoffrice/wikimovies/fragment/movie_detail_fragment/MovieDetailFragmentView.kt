@@ -236,8 +236,6 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         btnFavorite?.imageParameter?.setImageResource(R.drawable.ic_favorite)
         btnFavorite?.textParameter?.text = "Favorited"
 
-
-
         if (!isFavorite()){
 
             presenter.favoriteMovie(favoriteMovieList,movie)

@@ -91,10 +91,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
    private fun checkIsConnected(){
 
        if (isConnected!!){
-
-           refreshFragment()
            homeFragmentPresenter.requestDataFromServer()
-
        }
    }
 
@@ -235,11 +232,5 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
                 }
             }
         })
-    }
-
-    private fun refreshFragment() {
-
-        fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
-
     }
 }

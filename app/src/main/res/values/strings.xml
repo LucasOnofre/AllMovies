@@ -19,6 +19,19 @@
     <string name="url_movie">movie/</string>
     <string name="url_search_query">search/movie</string>
     <string name="search_query_hint">Searh for a movie</string>
+    <string name="example_string">Example</string>
+    <string name="dont_have_favorites_string">You don\'t have favorites...</string>
+    <string name="problem_string">Oops..There was a problem....</string>
+    <string name="refresh_page_string">Try to refresh the page, please</string>
+    <string name="rate_string">Rate</string>
+    <string name="rate_value_string">0,0</string>
+    <string name="favorite_string">Favorite</string>
+    <string name="overview_string">Overview</string>
+    <string name="year_string">Year:</string>
+    <string name="year_example">2019</string>
+    <string name="similar_movies_string">Similar movies</string>
+    <string name="discover_movies_string">Discover your movies</string>
+    <string name="discover_movies_subtitle_string">Find any movie you want, the way you want</string>
 
     <!-- All Categorys -->
     <string-array name="category_array">
