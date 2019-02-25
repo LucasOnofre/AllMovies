@@ -144,13 +144,24 @@ open class BaseFragment : Fragment() {
 
                     true
                 }
-
                 else -> {
                     false
                 }
             }
         }
         dropDownMenu.show()
+    }
+
+    private fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+
+        var menuItem: MenuItem? = if (movie.isFavorite) {
+            dropDownMenu.menu.findItem(R.id.favorite)
+
+        } else {
+            dropDownMenu.menu.findItem(R.id.unFavorite)
+        }
+        menuItem?.isVisible = false
+        menuItem?.isEnabled = false
     }
 
     private fun checkFavorite(movie: Movie?, favoriteList: ArrayList<Movie>) {
@@ -162,14 +173,3 @@ open class BaseFragment : Fragment() {
         }
     }
 }
-    fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
-
-        var menuItem: MenuItem? = if (movie.isFavorite) {
-            dropDownMenu.menu.findItem(R.id.favorite)
-
-        } else {
-            dropDownMenu.menu.findItem(R.id.unFavorite)
-        }
-        menuItem?.isVisible = false
-        menuItem?.isEnabled = false
-    }

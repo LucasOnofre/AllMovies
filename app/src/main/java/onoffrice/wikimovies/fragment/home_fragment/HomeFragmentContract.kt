@@ -22,6 +22,8 @@ interface HomeFragmentContract {
         fun hideProgress()
         fun setDataToRecyclerView(movieArrayList: ArrayList<Movie>)
         fun onResponseError(error: Throwable)
+        fun showErrorView()
+        fun hideErrorView()
 
     }
 
@@ -31,7 +33,6 @@ interface HomeFragmentContract {
         fun destroy()
         fun requestDataFromServer()
         fun getMoreData(page: Int)
+        fun checkNetworkConnection():Boolean
     }
-
-
 }

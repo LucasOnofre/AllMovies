@@ -1,6 +1,7 @@
 package onoffrice.wikimovies.fragment.home_fragment
 
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.RecyclerView
@@ -10,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Toast
 import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
@@ -25,7 +25,9 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     private var page                                        = 1
     private var layout              : AppBarLayout?         = null
     private var adapter             : MoviesAdapter?        = null
+    private var isConnected         : Boolean?              = null
     private var isLoading           : Boolean               = false
+    private var errorView           : ConstraintLayout?     = null
     private var movieBanner         : ImageView?            = null
     private var progressBar         : ProgressBar?          = null
     private var recyclerList        : RecyclerView?         = null
@@ -38,6 +40,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     private var homeFragmentPresenter: HomeFragmentPresenter = HomeFragmentPresenter()
 
     private val TAG = "HomeFragmentView"
+
 
     /**
      * Implementing interface to handle the click on the movie
@@ -61,7 +64,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
         if (rootView == null){
-            rootView = inflater.inflate(R.layout.fragment_home, container, false)
+            rootView = inflater.inflate(onoffrice.wikimovies.R.layout.fragment_home, container, false)
 
             // Get's the views
             setUpViews(rootView!!)
@@ -72,8 +75,9 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
             //Links the view to the presenter
             homeFragmentPresenter.bindTo(this)
 
-            //Make's the request by the presenter
-            homeFragmentPresenter.requestDataFromServer()
+            isConnected = homeFragmentPresenter.checkNetworkConnection()
+
+            checkIsConnected()
 
             //Set's the adapter
             setAdapter()
@@ -84,6 +88,16 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
         return rootView
     }
 
+   private fun checkIsConnected(){
+
+       if (isConnected!!){
+
+           refreshFragment()
+           homeFragmentPresenter.requestDataFromServer()
+
+       }
+   }
+
     override fun showProgress() {
         progressBar?.visibility  = View.VISIBLE
     }
@@ -91,6 +105,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     override fun hideProgress() {
         progressBar?.visibility  = View.GONE
     }
+
 
     /**
      * Set's the data on the list
@@ -116,11 +131,26 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
     }
 
     /**
-     * Handle's the error from the request
+     * Get's the response
      */
+
     override fun onResponseError(throwable: Throwable) {
         Log.e(TAG, throwable.message)
-        Toast.makeText(context,"Unexpected error, please try again", Toast.LENGTH_LONG).show()
+        showErrorView()
+    }
+
+    /**
+     * Show's an error view if the request is failure
+     */
+    override fun showErrorView() {
+
+        errorView?.visibility = View.VISIBLE
+    }
+
+    override fun hideErrorView(){
+
+        errorView?.visibility = View.GONE
+
     }
 
     /**
@@ -137,11 +167,13 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
         setGridLayout(recyclerList)
     }
 
+
     /**
      * Set's the views and the progress bar
      */
     private fun setUpViews(view: View) {
         layout            = view.findViewById(R.id.appBarLayout)
+        errorView         = view.findViewById(R.id.layout_error)
         progressBar       = view.findViewById(R.id.progressBar)
         movieBanner       = view.findViewById(R.id.movieBanner)
         recyclerList      = view.findViewById(R.id.lista)
@@ -180,7 +212,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
      * Set's the banner bar, an image of the top ranked movie on the list
      */
     private fun setBannerBar(movies: ArrayList<Movie>) {
-        Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
+        Picasso.get().load(resources.getString(onoffrice.wikimovies.R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
         movieBannerSelected = movies[0]
         movies.removeAt(0)
     }
@@ -203,5 +235,11 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
                 }
             }
         })
+    }
+
+    private fun refreshFragment() {
+
+        fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
+
     }
 }

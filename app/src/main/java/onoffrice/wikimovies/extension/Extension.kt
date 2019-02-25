@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.util.DisplayMetrics
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
@@ -158,4 +160,16 @@ fun SharedPreferences.getFavorites():ArrayList<Movie>{
     }
 
     return favoriteMovies
+}
+
+fun Context.checkConnection():Boolean{
+
+    var connectionManager =
+            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    var activeNetwork: NetworkInfo?
+            = connectionManager.activeNetworkInfo
+
+    return activeNetwork != null && activeNetwork.isConnected
+
 }

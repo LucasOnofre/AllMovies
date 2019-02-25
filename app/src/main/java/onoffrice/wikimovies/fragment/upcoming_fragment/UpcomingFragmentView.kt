@@ -2,6 +2,7 @@ package onoffrice.wikimovies.fragment.upcoming_fragment
 
 
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.RecyclerView
@@ -16,6 +17,7 @@ import android.widget.Toast
 import com.squareup.picasso.Picasso
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
+import onoffrice.wikimovies.extension.checkConnection
 import onoffrice.wikimovies.fragment.base_fragment.BaseFragment
 import onoffrice.wikimovies.fragment.movie_detail_fragment.MovieDetailFragmentView
 import onoffrice.wikimovies.model.Movie
@@ -27,6 +29,7 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
     private var page                                        = 1
     private var layout              : AppBarLayout?         = null
     private var adapter             : MoviesAdapter?        = null
+    private var errorView           : ConstraintLayout?     = null
     private var isLoading           : Boolean               = false
     private var movieBanner         : ImageView?            = null
     private var progressBar         : ProgressBar?          = null
@@ -74,6 +77,8 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
             //Links the view to the presenter
             upcomingFragmentPresenter.bindTo(this)
 
+            upcomingFragmentPresenter.checkNetworkConnection()
+
             //Make's the request by the presenter
             upcomingFragmentPresenter.requestData()
 
@@ -113,7 +118,7 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
         if (page == 1) {
             setBannerBar(listMovies)
             movieBanner?.setOnClickListener {
-                openPopulatedFragment(movieBannerSelected,"movieJson",MovieDetailFragmentView())
+                openPopulatedFragment(movieBannerSelected,"movieJson", MovieDetailFragmentView())
             }
         }
     }
@@ -123,7 +128,7 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
      */
     override fun onResponseError(throwable: Throwable) {
         Log.e(TAG, throwable.message)
-        Toast.makeText(context,"Unexpected error, please try again", Toast.LENGTH_LONG).show()
+        showErrorView()
     }
 
     /**
@@ -146,6 +151,7 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
      */
     private fun setUpViews(view: View) {
         layout            = view.findViewById(R.id.appBarLayout)
+        errorView         = view.findViewById(R.id.layout_error)
         progressBar       = view.findViewById(R.id.progressBar)
         movieBanner       = view.findViewById(R.id.movieBanner)
         recyclerList      = view.findViewById(R.id.lista)
@@ -208,5 +214,19 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
                 }
             }
         })
+    }
+
+    /**
+     * Show's an error view if the request is failure
+     */
+    override fun showErrorView() {
+
+        errorView?.visibility = View.VISIBLE
+    }
+
+    override fun hideErrorView(){
+
+        errorView?.visibility = View.GONE
+
     }
 }

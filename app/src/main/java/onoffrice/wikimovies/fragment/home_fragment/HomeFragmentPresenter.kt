@@ -1,5 +1,6 @@
 package onoffrice.wikimovies.fragment.home_fragment
 
+import onoffrice.wikimovies.extension.checkConnection
 import onoffrice.wikimovies.model.Movie
 
 class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContract.Model.OnRequestResultListener{
@@ -29,6 +30,7 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
         if (view != null){ view?.showProgress() }
 
         model.requestMovies(1, this)
+
     }
 
     /**
@@ -58,5 +60,20 @@ class HomeFragmentPresenter : HomeFragmentContract.Presenter, HomeFragmentContra
         if (view != null){
             view?.hideProgress()
         }
+    }
+
+    /**
+     * Check's the network connection
+     * */
+    override fun checkNetworkConnection():Boolean {
+
+        val isConnected = view?.context?.checkConnection()
+
+        if (isConnected != null && !isConnected){
+
+            view?.showErrorView()
+            return false
+        }
+        return true
     }
 }

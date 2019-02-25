@@ -22,6 +22,8 @@ interface UpcomingFragmentContract {
         fun hideProgress()
         fun setDataToRecyclerView(movieArrayList: ArrayList<Movie>)
         fun onResponseError(error: Throwable)
+        fun showErrorView()
+        fun hideErrorView()
 
     }
 
@@ -31,6 +33,6 @@ interface UpcomingFragmentContract {
         fun destroy()
         fun requestData()
         fun requestMoreData(page: Int)
+        fun checkNetworkConnection()
     }
-
 }

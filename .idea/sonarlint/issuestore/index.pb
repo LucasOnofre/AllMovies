@@ -45,3 +45,9 @@ Yapp/src/main/java/onoffrice/wikimovies/fragment/upcoming_fragment/UpcomingFragm
 eapp/src/main/java/onoffrice/wikimovies/fragment/movie_detail_fragment/MovieDetailFragmentPresenter.kt,b\9\b9acf2f6cc643b528fe64546ac1cb061a172b4a9
 e
 5app/src/main/java/onoffrice/wikimovies/model/Movie.kt,3\d\3d43664aed6836e1392576ef3d821ccaeef571e5
+Ö
+Uapp/src/main/java/onoffrice/wikimovies/fragment/home_fragment/HomeFragmentContract.kt,f\5\f50c2ccec348fe71dc815dcf7ffe91507e6b0ecd
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+ç
+]app/src/main/java/onoffrice/wikimovies/fragment/upcoming_fragment/UpcomingFragmentContract.kt,6\8\68b5d9ef24470094e04a2db3fc1fca2b776c5caa

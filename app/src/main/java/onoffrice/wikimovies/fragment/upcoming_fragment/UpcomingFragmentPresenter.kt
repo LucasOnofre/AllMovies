@@ -1,5 +1,6 @@
 package onoffrice.wikimovies.fragment.upcoming_fragment
 
+import onoffrice.wikimovies.extension.checkConnection
 import onoffrice.wikimovies.model.Movie
 
 class UpcomingFragmentPresenter:
@@ -64,4 +65,17 @@ class UpcomingFragmentPresenter:
         model.requestMovies(page,this)
     }
 
+    /**
+     * Check's the network connection
+     * */
+    override fun checkNetworkConnection() {
+
+        val isConnected = view?.context?.checkConnection()
+
+        if (isConnected != null && !isConnected){
+
+            view?.showErrorView()
+
+        }
+    }
 }
