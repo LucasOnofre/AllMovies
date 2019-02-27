@@ -57,8 +57,9 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
      * Implementing interface to handle the click on the movie
      */
     private val movieClickListener = object: MovieInterface {
-        override fun onMovieSelected(movie: Movie?) {
-            openPopulatedFragment(movie,"movieJson",MovieDetailFragmentView())
+        override fun onMovieSelected(movieSelected: Movie?) {
+
+            openPopulatedFragment(movieSelected,"movieJson",MovieDetailFragmentView())
         }
     }
 
@@ -91,7 +92,6 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         return view
     }
 
-
     /**
      * Get's the favorite's list on the Shared Preferences
      */
@@ -100,6 +100,13 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
         getFavorites()
         checkSelectedMovie()
+    }
+
+    private fun getFavorites(){
+
+        presenter.getFavorites(context?.getPreferences()).let {
+            favoriteMovieList = it!!
+        }
     }
 
     private fun checkSelectedMovie() {
@@ -120,6 +127,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
     }
 
+
     /**
      * Update the movie Trailer with the result of the request
      */
@@ -128,7 +136,6 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         movie.trailerVideo = videoInfo.key
 
     }
-
 
     override fun onResponseErrorTrailer(error: Throwable) {
 
@@ -146,19 +153,11 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
             hideSimilarMoviesLayout()
     }
 
+
     override fun onResponseError(error: Throwable) {
 
         Toast.makeText(context,error.toString(),Toast.LENGTH_LONG).show()
         Log.i("Request: ", error.message)
-    }
-
-
-    private fun getFavorites(){
-
-   presenter.getFavorites(context?.getPreferences()).let {
-
-       favoriteMovieList = it!!
-   }
     }
 
     /**
@@ -262,7 +261,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
     private fun setInfo(movie: Movie?) {
 
         val date            = movie?.releaseDate?.formatDateToYear()
-        val movieRate       = movie?.voteAverage?.toInt()
+        val movieRate         = movie?.voteAverage?.toInt()
         val urlImageBanner  = this.resources.getString(R.string.base_url_images) + movie?.backdropPath
 
         //Load's the image using Picasso passing the local as parameter
@@ -292,7 +291,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
     private fun hideSimilarMoviesLayout() {
 
-        val params            = toolbar?.layoutParams as AppBarLayout.LayoutParams
+        val params = toolbar?.layoutParams as AppBarLayout.LayoutParams
         params.scrollFlags    = 0
         toolbar?.layoutParams = params
 

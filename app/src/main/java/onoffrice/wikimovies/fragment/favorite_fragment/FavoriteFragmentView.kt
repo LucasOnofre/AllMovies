@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import onoffrice.wikimovies.R
 import onoffrice.wikimovies.adapter.MoviesAdapter
 import onoffrice.wikimovies.extension.getPreferenceKey
 import onoffrice.wikimovies.extension.getPreferences
@@ -87,11 +88,11 @@ class FavoriteFragmentView : BaseFragment() {
      */
     private fun setUpViews(view: View) {
 
-        layout            = view.findViewById(onoffrice.wikimovies.R.id.appBarLayout)
-        progressBar       = view.findViewById(onoffrice.wikimovies.R.id.progressBar)
-        recyclerList      = view.findViewById(onoffrice.wikimovies.R.id.listaFavoritos)
-        bottomNavigation  = view.findViewById(onoffrice.wikimovies.R.id.bottomNavigation)
-        emptyMessage      = view.findViewById(onoffrice.wikimovies.R.id.emptyFavMessage)
+        layout            = view.findViewById(R.id.appBarLayout)
+        progressBar       = view.findViewById(R.id.progressBar)
+        recyclerList      = view.findViewById(R.id.listaFavoritos)
+        bottomNavigation  = view.findViewById(R.id.bottomNavigation)
+        emptyMessage      = view.findViewById(R.id.emptyFavMessage)
 
         progressBar?.visibility = View.VISIBLE
 
@@ -115,15 +116,32 @@ class FavoriteFragmentView : BaseFragment() {
         val json = context?.getPreferences()?.getPreferenceKey("favoriteMovieList")
         json?.parseJson<Array<Movie>>()?.let {
 
+            checkData(it)
+        }
+    }
+
+    /**
+     * Show's the data and
+     */
+    private fun checkData(it: Array<Movie>) {
+        if (!it.isEmpty()) {
             var newList = it.toCollection(ArrayList())
 
-           checkListChanges(newList)
+            checkListChanges(newList)
 
             listMovies = newList
 
-            progressBar?.visibility = View.GONE
+            showProgress()
+
             isLoading = false
-        }
+
+        } else
+
+            hideFavoriteList()
+    }
+
+    private fun showProgress() {
+        progressBar?.visibility = View.GONE
     }
 
     /**
@@ -140,13 +158,21 @@ class FavoriteFragmentView : BaseFragment() {
     private fun checkList(){
 
          if (!listMovies.isEmpty()) {
-            recyclerList?.adapter?.notifyDataSetChanged()
+             updateFavoriteList()
 
 
         } else {
-            recyclerList?.visibility = View.GONE
-            emptyMessage?.visibility = View.VISIBLE
+             hideFavoriteList()
+         }
+    }
 
-        }
+    private fun hideFavoriteList() {
+        recyclerList?.visibility = View.GONE
+        emptyMessage?.visibility = View.VISIBLE
+        progressBar?.visibility  = View.GONE
+    }
+
+    private fun updateFavoriteList() {
+        recyclerList?.adapter?.notifyDataSetChanged()
     }
 }

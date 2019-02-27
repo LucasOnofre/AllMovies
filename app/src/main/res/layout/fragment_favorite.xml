@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -30,6 +28,7 @@
             android:layout_height="match_parent"
             android:background="#000000"
             android:backgroundTint="@color/colorPrimaryDark"
+            android:clipChildren="true"
             android:padding="5dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -46,7 +45,7 @@
             android:indeterminate="true"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/listaFavoritos"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/listaFavoritos" />
 
@@ -57,11 +56,10 @@
             android:indeterminate="true"
             android:text="@string/dont_have_favorites_string"
             android:textAllCaps="false"
-
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

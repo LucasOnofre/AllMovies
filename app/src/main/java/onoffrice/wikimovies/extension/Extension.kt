@@ -33,14 +33,14 @@ inline fun<reified T:Activity>Activity.startActivity(){
 * Exibe Toast message de Activities
 **/
 
-fun Activity.toast(message:String){
+fun Context.toast(message:String){
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
  fun String.formatDateToYear(): String? {
 
     try {
-        val date  = SimpleDateFormat("yyyy-MM-dd").parse(this)
+        val date   = SimpleDateFormat("yyyy-MM-dd").parse(this)
         val dateFormat   = SimpleDateFormat("yyyy", Locale("pt", "BR"))
 
         return dateFormat.format(date)
@@ -136,6 +136,19 @@ fun Movie.unFavoriteMovie(moviesFavoriteList: ArrayList<Movie>): ArrayList<Movie
 }
 
 /**
+ * Check's if the movie is favorited
+ * and if it's, change the value of isFavorite for true
+ */
+ fun ArrayList<Movie>.checkFavorite(movie: Movie?) {
+
+    for (movieItem in this) {
+        if (movieItem.id == movie?.id){
+            movie?.isFavorite = true
+        }
+    }
+}
+
+/**
  * Save's the list of favorite movies in the shared preferences
  */
 fun ArrayList<Movie>.saveFavoriteMovies(context:Context) {
@@ -162,6 +175,10 @@ fun SharedPreferences.getFavorites():ArrayList<Movie>{
     return favoriteMovies
 }
 
+
+/**
+ * Check's the network connection
+ */
 fun Context.checkConnection():Boolean{
 
     var connectionManager =

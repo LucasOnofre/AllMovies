@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.TextUtils.replace
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -19,6 +20,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.extension.*
+import onoffrice.wikimovies.fragment.home_fragment.HomeFragmentView
 import onoffrice.wikimovies.model.Movie
 
 open class BaseFragment : Fragment() {
@@ -39,13 +41,13 @@ open class BaseFragment : Fragment() {
 
         if (title == " "){
 
-            titleSection?.let { titleSection?.text = title }
+            titleSection?.let { titleSection.text = title }
             return
         }
 
         toolbar.let {
             (activity as AppCompatActivity).setSupportActionBar(it)
-            titleSection?.let { titleSection?.text = title }
+            titleSection?.let { titleSection.text = title }
         }
     }
 
@@ -63,7 +65,7 @@ open class BaseFragment : Fragment() {
             collapsingToolbar?.title =  title
             it.title = title
             it.setNavigationIcon(R.drawable.ic_arrow_back)
-            it.setNavigationOnClickListener { fragmentManager?.popBackStackImmediate() }
+            it.setNavigationOnClickListener { openFragment(HomeFragmentView()) }
         }
     }
 
@@ -71,7 +73,6 @@ open class BaseFragment : Fragment() {
     protected fun openFragment(fragment:Fragment){
         fragmentManager?.beginTransaction()?.replace(R.id.container, fragment)?.addToBackStack(null)?.commit()
     }
-
 
     protected fun exitFragment(fragment:Fragment){
         activity?.supportFragmentManager?.beginTransaction()?.remove(fragment)?.commit()
@@ -99,6 +100,8 @@ open class BaseFragment : Fragment() {
      * that is also a param
      */
     inline fun<reified T> openPopulatedFragment(obj:T ,keyEditor:String,fragment:Fragment){
+
+
         var gson = Gson()
         var editor = context?.getPreferencesEditor()
 
@@ -109,7 +112,10 @@ open class BaseFragment : Fragment() {
         editor?.commit()
 
         //Open's the given fragment
-        openFragment(fragment)
+        fragmentManager?.beginTransaction()
+                ?.setCustomAnimations(R.anim.enter_anim,R.anim.exit_anim)
+                ?.replace(R.id.container, fragment)
+                ?.addToBackStack(null)?.commit()
     }
 
     fun openDropMenu(view:View, movie: Movie?){
@@ -123,7 +129,7 @@ open class BaseFragment : Fragment() {
 
         dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
 
-        checkFavorite(movie, favoriteList)
+        favoriteList.checkFavorite(movie)
 
         setMenuItemForLongClick(movie!!, dropDownMenu)
 
@@ -162,14 +168,5 @@ open class BaseFragment : Fragment() {
         }
         menuItem?.isVisible = false
         menuItem?.isEnabled = false
-    }
-
-    private fun checkFavorite(movie: Movie?, favoriteList: ArrayList<Movie>) {
-
-        for (movieItem in favoriteList) {
-            if (movieItem.id == movie?.id){
-                movie?.isFavorite = true
-            }
-        }
     }
 }

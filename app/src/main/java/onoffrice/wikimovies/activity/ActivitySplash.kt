@@ -6,8 +6,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import kotlinx.android.synthetic.main.activity_splash.*
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.activity.ActivityBase
-import onoffrice.wikimovies.activity.ActivityMain
 import onoffrice.wikimovies.extension.startActivity
 
 class ActivitySplash : ActivityBase(){
@@ -21,7 +19,7 @@ class ActivitySplash : ActivityBase(){
 
     }
 
-    private fun setDelayForActivity() {
+     private fun setDelayForActivity() {
         val handle = Handler()
         handle.postDelayed({ startActivity<ActivityMain>()
             finish() }, 4000)

@@ -24,7 +24,7 @@ import onoffrice.wikimovies.model.MovieLongClickInterface
 class CategoryMovieListFragmentView : BaseFragment(), CategoryMovieListFragmentContract.View{
 
     private var page                                     = 1
-    private var genre            :Genre?                 = null
+    private var genre            : Genre?                 = null
     private var adapter          : MoviesAdapter?        = null
     private var isLoading                                = false
     private var progressBar      : ProgressBar?          = null
