@@ -26,7 +26,7 @@ class ActivitySplash : ActivityBase(){
     }
 
     private fun setLogoAnimation() {
-        val animation = AnimationUtils.loadAnimation(this, R.anim.logo_transition)
+        val animation = AnimationUtils.loadAnimation(this, R.anim.logo_in_transition)
         animation.repeatCount    = 1
         animation.duration       = 2000
         animation.fillAfter      = true

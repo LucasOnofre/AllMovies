@@ -65,7 +65,7 @@ open class BaseFragment : Fragment() {
             collapsingToolbar?.title =  title
             it.title = title
             it.setNavigationIcon(R.drawable.ic_arrow_back)
-            it.setNavigationOnClickListener { openFragment(HomeFragmentView()) }
+            it.setNavigationOnClickListener { fragmentManager?.popBackStack() }
         }
     }
 

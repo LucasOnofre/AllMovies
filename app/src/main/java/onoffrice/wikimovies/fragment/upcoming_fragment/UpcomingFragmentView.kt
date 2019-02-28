@@ -190,7 +190,7 @@ class UpcomingFragmentView : BaseFragment(),UpcomingFragmentContract.View {
      * Set's the banner bar, an image of the top ranked movie on the list
      */
     private fun setBannerBar(movies: ArrayList<Movie>) {
-        Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
+        Picasso.get().load(resources.getString(R.string.base_url_images) + movies[0].backdropPath).into(movieBanner)
         movieBannerTittle?.text = movies[0].title
         movieBannerSelected     = movies[0]
         movies.removeAt(0)

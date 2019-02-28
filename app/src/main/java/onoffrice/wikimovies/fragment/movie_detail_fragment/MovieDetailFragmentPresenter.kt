@@ -111,15 +111,18 @@ class MovieDetailFragmentPresenter:
      */
     override fun onSucessTrailers(videoInfo: ArrayList<MovieVideoInfo>) {
 
-        checkIsTrailer(videoInfo)
-    }
+        if ( videoInfo.size > 0)
+            checkIsTrailer(videoInfo)
+            //CHECAR CASO VENHA UMA LISTA DE VIDEOS VAZIOS...
 
+    }
     /**
      * Check if is a trailer in the list, amd send's an Video item
      */
     private fun checkIsTrailer(videoInfo: ArrayList<MovieVideoInfo>){
 
         var isTrailer = false
+
 
         for (video in videoInfo) {
             if (video.type == "Trailer") {

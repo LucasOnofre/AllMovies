@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -209,7 +211,7 @@ class HomeFragmentView : BaseFragment(), HomeFragmentContract.View {
      * Set's the banner bar, an image of the top ranked movie on the list
      */
     private fun setBannerBar(movies: ArrayList<Movie>) {
-        Picasso.get().load(resources.getString(onoffrice.wikimovies.R.string.base_url_images) + movies[0].posterPath).into(movieBanner)
+        Picasso.get().load(resources.getString(onoffrice.wikimovies.R.string.base_url_images) + movies[0].backdropPath).into(movieBanner)
         movieBannerSelected = movies[0]
         movies.removeAt(0)
     }

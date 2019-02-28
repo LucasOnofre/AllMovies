@@ -20,7 +20,7 @@
     <string name="url_search_query">search/movie</string>
     <string name="search_query_hint">Searh for a movie</string>
     <string name="example_string">Example</string>
-    <string name="dont_have_favorites_string">You don\'t have favorites...</string>
+    <string name="dont_have_favorites_string">You don\'t have favorites…</string>
     <string name="problem_string">Oops..There was a problem....</string>
     <string name="refresh_page_string">Try to refresh the page, please</string>
     <string name="rate_string">Rate</string>
@@ -32,6 +32,7 @@
     <string name="similar_movies_string">Similar movies</string>
     <string name="discover_movies_string">Discover your movies</string>
     <string name="discover_movies_subtitle_string">Find any movie you want, the way you want</string>
+    <string name="moviedb_recong_text">\"This product uses the TMDb API but is not endorsed or certified by TMDb.\"</string>
 
     <!-- All Categorys -->
     <string-array name="category_array">

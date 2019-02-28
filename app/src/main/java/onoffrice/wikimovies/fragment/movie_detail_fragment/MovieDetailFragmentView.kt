@@ -2,6 +2,7 @@ package onoffrice.wikimovies.fragment.movie_detail_fragment
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
@@ -196,10 +197,15 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
         btnGoOut    = view.findViewById(R.id.go_out_btn)
 
         btnFavorite?.setOnClickListener { getIsFavorite() }
-        btnGoOut?.setOnClickListener    { openTrailer() }
+        btnGoOut?.setOnClickListener    { checkTrailers() }
 
         setInfo(movie)
 
+    }
+
+    override fun checkTrailers() {
+
+        openTrailer()
     }
 
     private fun openTrailer() {
@@ -223,6 +229,7 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
         btnFavorite?.imageParameter?.setImageResource(R.drawable.ic_favorite_border)
         btnFavorite?.textParameter?.text = "Favorite"
+        btnFavorite?.textParameter?.setTextColor(Color.WHITE)
 
 
         if (isFavorite()){
@@ -234,6 +241,8 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
         btnFavorite?.imageParameter?.setImageResource(R.drawable.ic_favorite)
         btnFavorite?.textParameter?.text = "Favorited"
+        btnFavorite?.textParameter?.setTextColor(Color.RED)
+
 
         if (!isFavorite()){
 

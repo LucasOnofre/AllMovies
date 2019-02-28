@@ -30,6 +30,7 @@ interface MovieDetailFragmentContract {
             fun onResponseError(error: Throwable)
             fun updateMovieVideoPath(videoInfo:MovieVideoInfo)
             fun onResponseErrorTrailer(error: Throwable)
+            fun checkTrailers()
 
         }
 
