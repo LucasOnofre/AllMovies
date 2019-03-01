@@ -1,19 +1,16 @@
 package onoffrice.wikimovies.request
 
-import android.content.Context
-import onoffrice.wikimovies.R
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 
 object RetrofitClient{
 
     /**
      * Singleton to instanciate the Retrofit in all the application
      */
-    fun instance(context: Context): Retrofit {
+    fun instance(): Retrofit {
 
-        val baseURL     = context.resources.getString(R.string.base_url_movie_api)
+        val baseURL     = "https://api.themoviedb.org/3/"
         val retrofit     = Retrofit.Builder()
                                     .baseUrl(baseURL)
                                     .addConverterFactory(GsonConverterFactory.create())

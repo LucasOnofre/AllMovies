@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.view.animation.Animation
 import onoffrice.wikimovies.R
-import onoffrice.wikimovies.fragment.CategoryFragment
-import onoffrice.wikimovies.fragment.FavoriteFragment
-import onoffrice.wikimovies.fragment.HomeFragment
-import onoffrice.wikimovies.fragment.SearchFragment
+import onoffrice.wikimovies.fragment.category_fragment.CategoryFragmentView
+import onoffrice.wikimovies.fragment.favorite_fragment.FavoriteFragmentView
+import onoffrice.wikimovies.fragment.home_fragment.HomeFragmentView
+import onoffrice.wikimovies.fragment.search_fragment.SearchFragmentView
+import onoffrice.wikimovies.fragment.upcoming_fragment.UpcomingFragmentView
 
 class ActivityMain : AppCompatActivity() {
 
@@ -20,11 +22,12 @@ class ActivityMain : AppCompatActivity() {
 
         setUpViews()
         setBottomNavigation()
-        openFragment(HomeFragment())
+        openFragment(HomeFragmentView())
     }
 
     private fun setUpViews() {
         bottomNavigation  = findViewById(R.id.bottomNavigation)
+
     }
 
     /**
@@ -35,13 +38,15 @@ class ActivityMain : AppCompatActivity() {
 
             when (item.itemId) {
 
-                R.id.action_home      -> openFragment(HomeFragment())
+                R.id.action_home      -> openFragment(HomeFragmentView())
 
-                R.id.action_search    -> openFragment(SearchFragment())
+                R.id.action_search    -> openFragment(SearchFragmentView())
 
-                R.id.action_category  -> openFragment(CategoryFragment())
+                R.id.action_upcoming  -> openFragment(UpcomingFragmentView())
 
-                R.id.action_favorites -> openFragment(FavoriteFragment())
+                R.id.action_category  -> openFragment(CategoryFragmentView())
+
+                R.id.action_favorites -> openFragment(FavoriteFragmentView())
             }
             true
         }

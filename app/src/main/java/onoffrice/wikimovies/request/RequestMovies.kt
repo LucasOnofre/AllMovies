@@ -1,8 +1,7 @@
 package onoffrice.wikimovies.request
 
-import android.content.Context
 import android.util.Log
-import onoffrice.wikimovies.R
+import onoffrice.wikimovies.model.MovieVideoInfoList
 import onoffrice.wikimovies.model.Result
 import retrofit2.Call
 import retrofit2.http.GET
@@ -10,22 +9,25 @@ import retrofit2.http.QueryMap
 import retrofit2.http.Url
 import java.util.*
 
-class RequestMovies(private val context:Context){
+class RequestMovies{
 
     private val service:Service
+    private val API_KEY  = "037b83eda5aad6b5c90898ea8ea94da3"
+    private val params   = HashMap<String,Any?>()
+
+    /**
+     * Consturctor of the service
+     */
 
     init {
-        this.service = RetrofitClient.instance(context).create(Service::class.java)
+        this.service = RetrofitClient.instance().create(Service::class.java)
     }
-
-    private val API_KEY  = context.resources.getString(R.string.api_key)
-    private val params = HashMap<String,Any?>()
 
     /**
      * Return a movie list of Popular movies
      */
     fun getPopularsMovies(page: Int):Call<Result>{
-        val endpoint = context.resources.getString(R.string.url_movies_popular)
+        val endpoint = "movie/popular"
         params.put("api_key",API_KEY)
         params.put("page",page)
         Log.i("Request",endpoint + params)
@@ -38,7 +40,7 @@ class RequestMovies(private val context:Context){
      */
 
     fun getGenresMovieList(page: Int, genreId:Int?):Call<Result>{
-        val endpoint = context.resources.getString(R.string.url_movies_list_genres)
+        val endpoint = "discover/movie"
         params.put("api_key",API_KEY)
         params.put("page",page)
         params.put("with_genres",genreId)
@@ -51,7 +53,7 @@ class RequestMovies(private val context:Context){
      */
 
     fun getSimilarMovies(page: Int, movieId:Int?):Call<Result>{
-        val endpoint = (context.resources.getString(R.string.url_movie) + movieId + "/similar")
+        val endpoint = ("movie/$movieId/similar")
 
         params.put("api_key",API_KEY)
         params.put("page",page)
@@ -59,17 +61,44 @@ class RequestMovies(private val context:Context){
     }
 
     /**
-     * Return the result of the query
+     * Return the list movie result of the query
      */
 
-    fun getSearchedMovie(page: Int, query:Int?):Call<Result>{
-        val endpoint = (context.resources.getString(R.string.url_search_query))
+    fun getSearchedMovie(page: Int, query:String?):Call<Result>{
+        val endpoint = "search/movie"
 
         params.put("api_key",API_KEY)
         params.put("page",page)
         params.put("query",query)
-        return service.getSimilarMovies(endpoint,params)
+        return service.getSearchedMovie(endpoint,params)
     }
+
+    /**
+     * Get's the video list of the selected movie
+     */
+
+    fun getVideosFromMovie(movieId: Int):Call<MovieVideoInfoList>{
+        val endpoint = "movie/$movieId/videos"
+
+        params.put("api_key",API_KEY)
+        return service.getVideosFromMovie(endpoint,params)
+    }
+
+    /**
+     * Get's the upcoming movie list
+     */
+    fun getUpcoming(page: Int):Call<Result>{
+        val endpoint = "movie/upcoming"
+        params.put("api_key",API_KEY)
+        params.put("page",page)
+        Log.i("Request",endpoint + params)
+
+        return service.getUpcoming(endpoint,params)
+    }
+
+    /**
+     * Interface of the HTTP requests
+     */
 
     private interface Service {
 
@@ -79,12 +108,18 @@ class RequestMovies(private val context:Context){
         @GET
         fun getGenresMovieList(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
 
-
         @GET
         fun getSimilarMovies(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
 
-
+        @GET
         fun getSearchedMovie(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<Result>
+
+        @GET
+        fun getVideosFromMovie(@Url url: String, @QueryMap params:HashMap<String, Any?>):Call<MovieVideoInfoList>
+
+        @GET
+        fun getUpcoming(@Url url: String, @QueryMap params: HashMap<String, Any?>):Call<Result>
+
     }
 
 }

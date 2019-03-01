@@ -23,9 +23,21 @@
     </style>
 
     <style name="expanded_title_style" parent="android:Theme.Holo">
-        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">25sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="collapsed_title_style" parent="android:Theme.Holo">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="search_view_style" parent="Widget.AppCompat.Light.SearchView" >
+
+        <item name="android:textColorHint">@color/light_gray</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
+
     </style>
 
 </resources>

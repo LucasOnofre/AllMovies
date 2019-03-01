@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/colorPrimary"
         android:padding="15dp"
-        android:text="Action"
+        android:text="@string/example_string"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />

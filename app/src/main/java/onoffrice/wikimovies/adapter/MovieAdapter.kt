@@ -2,26 +2,27 @@ package onoffrice.wikimovies.adapter
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import kotlinx.android.synthetic.main.adapter_movie_item.view.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.extension.getScreenSize
 import onoffrice.wikimovies.extension.loadPicasso
 import onoffrice.wikimovies.model.Movie
-
-interface MovieInterface{
-    fun onMovieSelected(movie:Movie?)
-}
+import onoffrice.wikimovies.model.MovieInterface
+import onoffrice.wikimovies.model.MovieLongClickInterface
 
 
+class MoviesAdapter (
+        private val contextActivity:Activity,
+        private val movies:ArrayList<Movie>,
+        private val listener:MovieInterface,
+        private val listenerLongClickInterface:MovieLongClickInterface
 
-class MoviesAdapter (private val contextActivity: Activity, private val movies:ArrayList<Movie>, private val listener:MovieInterface) : RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>() {
+    ): RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>()
+{
 
     /**
      * Return a movie list from the Discover
@@ -44,11 +45,10 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      * Makes the bind for every item in the view
      */
     override fun onBindViewHolder(holder: ViewHolderItem, position: Int) {
-        val movie = movies[position]
-        val urlImage = contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
+        val movie    = movies[position]
 
         // Load's the image using picasso and open in an ImageView parameter
-        urlImage.loadPicasso(holder.poster)
+        setPosterPath(movie.posterPath, holder)
 
         if (!movie.isHeader) {
             getScreenSize(holder.poster)
@@ -58,57 +58,23 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
         holder.itemView.setOnClickListener { listener?.onMovieSelected(movie) }
 
         //Listener that when clicked show's a dropDown menu
-        holder.itemView.setOnLongClickListener { setLongClickListener(holder, movie)
-            true }
-    }
-
-
-    /**
-     * Set's the Long Click Listeners of the movies
-     */
-    private fun setLongClickListener(holder: ViewHolderItem, movie: Movie) {
-        val dropDownMenu = PopupMenu(contextActivity, holder.itemView)
-
-        dropDownMenu.menuInflater.inflate(R.menu.favorite_fragment_menu, dropDownMenu.menu)
-
-        setMenuItemForLongClick(movie, dropDownMenu)
-
-        dropDownMenu.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-
-                R.id.unFavorite -> {
-                    Toast.makeText(contextActivity, "Deletado", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-                R.id.favorite -> {
-                    Toast.makeText(contextActivity, "Favoritado", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-
-                else -> {
-                    false
-                }
-            }
+        holder.itemView.setOnLongClickListener {
+            listenerLongClickInterface.onMovieLongClickSelected(it,movie)
+            true
         }
-
-        dropDownMenu.show()
     }
 
-    /**
-     * Get's the menu item and shows only the right one according to the movie favorite status
-     */
-    private fun setMenuItemForLongClick(movie: Movie, dropDownMenu: PopupMenu) {
+    private fun setPosterPath(posterPath: String?, holder: ViewHolderItem) {
 
-        var menuItem: MenuItem? = if (movie.isFavorite) {
-        dropDownMenu.menu.findItem(R.id.favorite)
+        if (!posterPath.isNullOrEmpty()){
+            val url = contextActivity.resources.getString(R.string.base_url_images) + posterPath
+            url.loadPicasso(holder.poster)
 
-    } else {
-        dropDownMenu.menu.findItem(R.id.unFavorite)
-    }
-        menuItem?.isVisible = false
-        menuItem?.isEnabled = false
+        }
+        else {
+            holder.poster.visibility        = View.GONE
+            holder.noImageWarner.visibility = View.VISIBLE
+        }
     }
 
     /**
@@ -116,7 +82,9 @@ class MoviesAdapter (private val contextActivity: Activity, private val movies:A
      */
     class ViewHolderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val poster  = itemView.movie_poster!!
+        val poster      = itemView.movie_poster!!
+        val noImageWarner= itemView.noImageWarn
+
     }
 
     /**
