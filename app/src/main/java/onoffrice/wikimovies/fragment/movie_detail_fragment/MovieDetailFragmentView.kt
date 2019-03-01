@@ -132,9 +132,12 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
     /**
      * Update the movie Trailer with the result of the request
      */
-    override fun updateMovieVideoPath(videoInfo: MovieVideoInfo) {
+    override fun updateMovieVideoPath(videoInfo: MovieVideoInfo?) {
 
-        movie.trailerVideo = videoInfo.key
+        if (videoInfo != null)
+            movie.trailerVideo = videoInfo.key
+        else
+            movie.trailerVideo = null
 
     }
 
@@ -205,12 +208,23 @@ class MovieDetailFragmentView : BaseFragment(), MovieDetailFragmentContract.View
 
     override fun checkTrailers() {
 
-        openTrailer()
+        if (movie.trailerVideo != null)
+            openTrailer()
+        else
+            openBrowser()
+    }
+
+    private fun openBrowser() {
+
+        startActivity(Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.youtube.com/watch?v=${movie.originalTitle} $movieReleaseDate")))
+
     }
 
     private fun openTrailer() {
 
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=${movie.trailerVideo}")))
+        startActivity(Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.youtube.com/watch?v=${movie.trailerVideo}")))
     }
 
     /**

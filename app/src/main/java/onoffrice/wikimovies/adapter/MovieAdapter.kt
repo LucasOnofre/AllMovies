@@ -2,13 +2,10 @@ package onoffrice.wikimovies.adapter
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import kotlinx.android.synthetic.main.adapter_movie_item.view.*
 import onoffrice.wikimovies.R
 import onoffrice.wikimovies.extension.getScreenSize
@@ -19,10 +16,10 @@ import onoffrice.wikimovies.model.MovieLongClickInterface
 
 
 class MoviesAdapter (
-        private val contextActivity: Activity,
+        private val contextActivity:Activity,
         private val movies:ArrayList<Movie>,
-        private val listener: MovieInterface,
-        private val listenerLongClickInterface: MovieLongClickInterface
+        private val listener:MovieInterface,
+        private val listenerLongClickInterface:MovieLongClickInterface
 
     ): RecyclerView.Adapter<MoviesAdapter.ViewHolderItem>()
 {
@@ -49,10 +46,9 @@ class MoviesAdapter (
      */
     override fun onBindViewHolder(holder: ViewHolderItem, position: Int) {
         val movie    = movies[position]
-        val urlImage = contextActivity.resources.getString(R.string.base_url_images) + movie.posterPath
 
         // Load's the image using picasso and open in an ImageView parameter
-        urlImage.loadPicasso(holder.poster)
+        setPosterPath(movie.posterPath, holder)
 
         if (!movie.isHeader) {
             getScreenSize(holder.poster)
@@ -68,12 +64,27 @@ class MoviesAdapter (
         }
     }
 
+    private fun setPosterPath(posterPath: String?, holder: ViewHolderItem) {
+
+        if (!posterPath.isNullOrEmpty()){
+            val url = contextActivity.resources.getString(R.string.base_url_images) + posterPath
+            url.loadPicasso(holder.poster)
+
+        }
+        else {
+            holder.poster.visibility        = View.GONE
+            holder.noImageWarner.visibility = View.VISIBLE
+        }
+    }
+
     /**
      * Create a viewHolder
      */
     class ViewHolderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val poster  = itemView.movie_poster!!
+        val poster      = itemView.movie_poster!!
+        val noImageWarner= itemView.noImageWarn
+
     }
 
     /**

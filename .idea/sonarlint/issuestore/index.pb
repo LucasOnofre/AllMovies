@@ -131,3 +131,17 @@ s
 Capp/src/test/java/onoffrice/wikimovies/extension/ExtensionKtTest.kt,a\b\abcb171c7746f5452726b051137d6982a5c7ce12
 Ž
 ^app/src/test/java/onoffrice/wikimovies/fragment/category_fragment/CategoryFragmentModelTest.kt,d\8\d8d95deb6b2708b5878ccea64353d1854c1d732e
+E
+app/debug/output.json,d\a\da579bd365b05ebae0f0385f1643484af2b5c779
+\
+,app/src/main/res/anim/logo_in_transition.xml,c\1\c161bf5bb4b721f82483501954da9dc2512f1ee6
+^
+.app/src/main/res/drawable/bottom_item_tint.xml,0\8\085722f1c0735bcc84f0066365f3af799bc973d8
+d
+4app/src/main/res/drawable/ic_launcher_background.xml,4\9\49845c622cb06d895975c7b1e3f943e320bce688
+[
++app/src/main/res/layout/activity_splash.xml,1\3\13b26b9b6631cddf289c5ab7c4e546a180da97d8
+b
+2app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml,8\e\8e27ba16c655f421171956147d0fde89b7d25d17
+h
+8app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml,6\e\6ec7d34b130497a10dc92abcde9b313d370a89df

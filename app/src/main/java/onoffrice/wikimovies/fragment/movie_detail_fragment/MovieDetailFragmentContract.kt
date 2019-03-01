@@ -28,7 +28,7 @@ interface MovieDetailFragmentContract {
 
             fun updateFavoriteList(movies: ArrayList<Movie>)
             fun onResponseError(error: Throwable)
-            fun updateMovieVideoPath(videoInfo:MovieVideoInfo)
+            fun updateMovieVideoPath(videoInfo:MovieVideoInfo?)
             fun onResponseErrorTrailer(error: Throwable)
             fun checkTrailers()
 

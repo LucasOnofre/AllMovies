@@ -113,7 +113,8 @@ class MovieDetailFragmentPresenter:
 
         if ( videoInfo.size > 0)
             checkIsTrailer(videoInfo)
-            //CHECAR CASO VENHA UMA LISTA DE VIDEOS VAZIOS...
+        else
+            view?.updateMovieVideoPath(null)
 
     }
     /**
