@@ -2,7 +2,7 @@ WikiMovies
 ===========
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/LucasOnofre/WikiMovies/blob/master/LICENSE)
-[![License](https://img.shields.io/badge/app%20version-1.0-blue.svg)](https://github.com/LucasOnofre/WikiMovies/blob/master/LICENSE)
+[![PLay Store](https://img.shields.io/badge/app%20version-1.0-blue.svg)](https://play.google.com/store/apps/details?id=onoffrice.wikimoviesE)
 
 
 
