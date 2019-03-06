@@ -17,8 +17,6 @@ It is also possible to keep track of them by favoring them, just as you can view
 
 ## Tech Used
 
-Informations about what is used in NBA Stats: 
-
 - Kotlin
 
 - MVP Pattern
