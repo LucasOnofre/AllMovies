@@ -10,6 +10,11 @@ WikiMovies is an application for the purpose of finding and cataloging the movie
 It is also possible to keep track of them by favoring them, just as you can view any movie trailer  by just pressing a button.
 
 
+## App
+
+<img src="print1.png" width="200"/> <img src="print2.png" width="200"/> <img src="print3.png" width="200"/> <img src="print4.png" width="200" />
+
+
 ## Tech Used
 
 Informations about what is used in NBA Stats: 
