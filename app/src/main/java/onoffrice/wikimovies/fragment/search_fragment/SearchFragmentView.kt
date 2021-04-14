@@ -36,6 +36,15 @@ class SearchFragmentView : BaseFragment(), SearchFragmentContract.View {
     private var presenter        : SearchFragmentPresenter   = SearchFragmentPresenter()
 
 
+
+
+
+
+
+
+
+
+
     /**
      * Implementing interface to handle the click on the movie
      */
